@@ -18,7 +18,7 @@ public:
     void finish_bet(std::string a_name);
     void check_action(std::string a_name);
     void fold_action(std::string a_name);
-    void wake_up(int a_socket);
+    void wake_up();
 
 private:
     void name_and_message(std::string a_name, Message_type a_message);

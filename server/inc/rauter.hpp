@@ -28,9 +28,7 @@ private:
     void delete_deleted(); 
     void accept_new_client();
     void take_care_exists_clients();
-    void move_client_to_back(int a_client_socket, std::vector<int>::iterator& a_it);
     void fatal_error(std::string a_fail);
-
 
 private:
     bool m_stop;

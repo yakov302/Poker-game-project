@@ -19,6 +19,7 @@ class ServerSocket
 {
 public:
     ServerSocket(std::string a_server_ip, int a_servr_port);
+    ~ServerSocket();
 
     int& num_of_clients();
     int& listen_socket();

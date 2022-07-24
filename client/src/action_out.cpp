@@ -68,7 +68,7 @@ void ActionOut::fold_action(std::string a_name)
     name_and_message(a_name, FOLD_ACTION);
 }
 
-void ActionOut::wake_up(int a_socket)
+void ActionOut::wake_up()
 {
     name_and_message("player", WAKE_UP_SERVER);
 }

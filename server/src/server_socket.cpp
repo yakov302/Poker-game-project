@@ -64,6 +64,12 @@ ServerSocket::ServerSocket(std::string a_server_ip, int a_servr_port)
 	impl::set_listen_socket(m_listen_socket, *this);
 }
 
+ServerSocket::~ServerSocket()
+{
+    close(m_listen_socket);
+    close_all_clients_sockets();
+}
+
 void ServerSocket::delete_client(std::list<int>::iterator& a_it)
 {
 	std::cout << "delete_client\n";

@@ -7,7 +7,7 @@
 #include "router.hpp"
 #include "action_in.hpp"
 #include "action_out.hpp"
-#include "login.hpp"
+#include "client_socket.hpp"
 
 namespace poker
 {
@@ -24,6 +24,7 @@ private:
     Wallet m_chips;
     Self m_self;
     PlayersContainer m_players;
+    ClientSocket m_socket;
     TcpClient m_tcp;
     ActionOut m_action_out;
     Table m_table;
