@@ -1,0 +1,54 @@
+#pragma once
+
+#include <utility>
+
+#include "players_container.hpp"
+#include "self.hpp"
+#include "player.hpp"
+#include "hand.hpp"
+#include "wallet.hpp"
+#include "table.hpp"
+
+namespace poker
+{
+
+class ActionIn
+{
+public:
+    ActionIn(Hand& a_cards, Wallet& a_chips, PlayersContainer& a_players, Table& a_table, Self& a_self);
+
+    void get(char* a_buffer);
+
+private:
+    void registration_success();
+    void registration_duplicare_name();
+    void registration_wrong_gender();
+    void log_in_success(char* a_buffer);
+    void log_in_wrong_name();
+    void log_in_wrong_password();
+    void turn_on(char* a_buffer);
+    void turn_off(char* a_buffer);
+    void bet(char* a_buffer);
+    void check(char* a_buffer);
+    void fold(char* a_buffer);
+    void get_card(char* a_buffer);
+    void get_chips(char* a_buffer);
+    void clear_hand(char* a_buffer);
+    void get_player(char* a_buffer);
+    void delete_player(char* a_buffer);
+    void reveal_cards(char* a_buffer);
+    void table_get_card(char* a_buffer);
+    void table_get_chips(char* a_buffer);
+    void table_clear_hand(char* a_buffer);
+    void table_clear_chips(char* a_buffer);
+    
+private:
+    Hand& m_cards; 
+    Wallet& m_chips;
+    Table& m_table;
+    PlayersContainer& m_players;
+    Self& m_self;
+};
+
+
+}// poker namespace
