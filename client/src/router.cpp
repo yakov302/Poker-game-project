@@ -41,7 +41,9 @@ void Router::run()
         select(1024, &m_socket.fd(), 0, 0, 0);
         std::cout << "------exit select-------\n";
 
-        m_tcp.receive_from_server(m_buffer);
+        if(!m_tcp.receive_from_server(m_buffer))
+            m_table.stop();
+
         m_action_in.get(m_buffer);
     }
 }
