@@ -6,6 +6,8 @@
 #include "players_container.hpp"
 #include "rauter.hpp"
 #include "subscribs.hpp"
+#include "server_socket.hpp"
+
 
 namespace poker
 {
@@ -16,6 +18,7 @@ public:
     ServerManager(std::string a_server_ip, int a_servr_port);
 
 private:
+    ServerSocket m_socket;
     TcpServer m_tcp;
     ActionOut m_action_out;
     PlayersContainer m_players;

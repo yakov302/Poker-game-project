@@ -1,4 +1,5 @@
 #include "server_socket.hpp"
+#include <iostream>
 
 namespace poker
 {
@@ -63,6 +64,25 @@ ServerSocket::ServerSocket(std::string a_server_ip, int a_servr_port)
 	impl::set_listen_socket(m_listen_socket, *this);
 }
 
+void ServerSocket::delete_client(std::list<int>::iterator& a_it)
+{
+	std::cout << "delete_client\n";
+    int socket = *a_it;
+	close(socket);
+    FD_CLR(socket, &m_source_fd);
+    m_connected_sockets.erase(a_it);
+    m_deleted_sockets.emplace_front(socket);
+    --m_num_of_clients;
+    --a_it;
+}
+
+void ServerSocket::insert_client(int a_client_socket)
+{
+    FD_SET(a_client_socket, &m_source_fd);
+    m_connected_sockets.emplace_front(a_client_socket);
+	++m_num_of_clients;
+}
+
 int& ServerSocket::listen_socket()
 {
     return m_listen_socket;
@@ -78,31 +98,6 @@ int& ServerSocket::num_of_clients()
     return m_num_of_clients;
 }
 
-void ServerSocket::increase_num_of_clients()
-{
-    ++m_num_of_clients;
-}
-
-void ServerSocket::decrease_num_of_clients()
-{
-    --m_num_of_clients;
-}
-
-void ServerSocket::enter_to_source_fd(int a_socket)
-{
-    FD_SET(a_socket, &m_source_fd);	
-}
-
-void ServerSocket::delete_from_source_fd(int a_socket)
-{
-    FD_CLR(a_socket, &m_source_fd);
-}
-
-bool ServerSocket::is_in_source_fd(int a_socket)
-{
-    return FD_ISSET(a_socket, &m_source_fd);
-}
-
 bool ServerSocket::is_in_active_fd(int a_socket)
 {
     return FD_ISSET(a_socket, &m_active_fd);
@@ -113,18 +108,6 @@ fd_set& ServerSocket::copy_of_source_fd()
     FD_ZERO(&m_active_fd);
     m_active_fd = m_source_fd;
     return m_active_fd;
-}
-
-void ServerSocket::enter_to_connected_socket(int a_socket)
-{
-    m_connected_sockets.emplace_front(a_socket);
-}
-
-void ServerSocket::delete_from_connected_socket(std::list<int>::iterator& a_it)
-{
-    m_connected_sockets.erase(a_it);
-    //if(!m_connected_sockets.empty())
-        --a_it;
 }
 
 void ServerSocket::move_client_to_front(std::list<int>::iterator& a_it)
@@ -140,24 +123,18 @@ void ServerSocket::delete_less_active_client()
     m_connected_sockets.pop_back();
 }
 
-std::list<int>& ServerSocket::connected_socket()
+std::list<int>& ServerSocket::connected_sockets()
 {
     return m_connected_sockets;
 }
 
-void ServerSocket::enter_to_deleted_socket(int a_socket)
-{
-    m_deleted_sockets.emplace_front(a_socket);
-}
-
-void ServerSocket::delete_from_deleted_socket(std::list<int>::iterator& a_it)
+void ServerSocket::delete_from_deleted_sockets(std::list<int>::iterator& a_it)
 {
     m_deleted_sockets.erase(a_it);
-    //if(!m_deleted_sockets.empty())
-        --a_it;
+    --a_it;
 }
 
-std::list<int>& ServerSocket::deleted_socket()
+std::list<int>& ServerSocket::deleted_sockets()
 {
     return m_deleted_sockets;
 }

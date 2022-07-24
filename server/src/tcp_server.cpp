@@ -77,27 +77,18 @@ bool TcpServer::send_to_client(int a_client_socket, char* a_buffer, int a_messag
 
 void TcpServer::send_all_clients(char* a_buffer, int a_message_size)
 {
-	auto it = m_socket.connected_socket().begin();
-    auto end = m_socket.connected_socket().end();
+	auto it = m_socket.connected_sockets().begin();
+    auto end = m_socket.connected_sockets().end();
 		
 	while(it != end) 
 	{	
         int client_socket = *it;
 		if(!send_to_client(client_socket, a_buffer, a_message_size))
-			delete_client(client_socket, it);
+			m_socket.delete_client(it);
 		++it; 
 	} 
 }
 
-void TcpServer::delete_client(int a_client_socket, std::list<int>::iterator& a_it)
-{
-	std::cout << "delete_client\n";
-	close(a_client_socket);
-	m_socket.delete_from_source_fd(a_client_socket);
-	m_socket.delete_from_connected_socket(a_it);
-	m_socket.enter_to_deleted_socket(a_client_socket);
-	m_socket.decrease_num_of_clients();
-}
 
 
 }//namespace home

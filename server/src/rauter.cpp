@@ -58,13 +58,13 @@ void Rauter::run()
 
 void Rauter::delete_deleted()
 {
-	auto it = m_socket.deleted_socket().begin();
-	auto end = m_socket.deleted_socket().end();
+	auto it = m_socket.deleted_sockets().begin();
+	auto end = m_socket.deleted_sockets().end();
 
-	while(it != end && !m_socket.deleted_socket().empty())
+	while(it != end && !m_socket.deleted_sockets().empty())
 	{
 		m_players.delete_player(*it);
-		m_socket.delete_from_deleted_socket(it);
+		m_socket.delete_from_deleted_sockets(it);
 		++it;
 	}
 }
@@ -78,20 +78,13 @@ void Rauter::accept_new_client()
 	if(client_socket == -1)
 		fatal_error("Accept fail!\n");
 
-	insert_client(client_socket);
-}
-
-void Rauter::insert_client(int a_client_socket)
-{
-	m_socket.enter_to_source_fd(a_client_socket);
-	m_socket.enter_to_connected_socket(a_client_socket);
-	m_socket.increase_num_of_clients();
+	m_socket.insert_client(client_socket);
 }
 
 void Rauter::take_care_exists_clients()
 {
-    auto it = m_socket.connected_socket().begin();
-    auto end = m_socket.connected_socket().end();
+    auto it = m_socket.connected_sockets().begin();
+    auto end = m_socket.connected_sockets().end();
 		
 	while((it != end) && (m_activity > 0)) 
 	{	
@@ -99,7 +92,7 @@ void Rauter::take_care_exists_clients()
 		if(m_socket.is_in_active_fd(client_socket))
 		{
 			if(!m_tcp.receive_from_client(client_socket, m_buffer))
-				m_tcp.delete_client(client_socket, it);
+				m_socket.delete_client(it);
 
             else
             {

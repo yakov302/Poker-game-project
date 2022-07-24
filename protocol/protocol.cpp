@@ -106,8 +106,8 @@ int pack(char* a_buffer, Args& a_arganmats, Message_type a_message)
 
 Message_type unpack(char* a_buffer, Args& a_arganmats)
 {
-    // if(a_buffer == nullptr)
-    // {return BUFFER_NOT_INITIALIZE;}
+    if(a_buffer == nullptr)
+    {return BUFFER_NOT_INITIALIZE;}
 
     impl::decrypt("poker", a_buffer, message_size(a_buffer));
 
