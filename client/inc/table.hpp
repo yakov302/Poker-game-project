@@ -38,8 +38,8 @@ public:
     sf::RenderWindow& window();
 
 private:
-    void check_event_looged();
-    void check_event_not_looged();
+    void run_log_in();
+    void check_events();
     void draw_login_screen();
     void draw_log_in();
     void draw_register();

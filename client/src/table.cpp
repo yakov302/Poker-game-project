@@ -34,6 +34,13 @@ void texts_box_initialization(std::unordered_map<std::string, textBoxPointer>& a
     a_text_boxs["gender"] = textBoxPointer(new TextBox("./resources/images/text_box/text_box.png", 9, 835, 450, 1.2, "     gender ", -4, 22, 25));
 }
 
+static void set_flags(std::unordered_map<std::string, bool>& a_flags)
+{
+    a_flags["log_in"] = false;
+    a_flags["register"] = false;
+    a_flags["stop"] = false;
+}
+
 static void* thread_function(void* a_arg)
 {
     Table* table = static_cast<Table*>(a_arg);
@@ -41,12 +48,6 @@ static void* thread_function(void* a_arg)
     return 0;
 }
 
-static void set_flags(std::unordered_map<std::string, bool>& a_flags)
-{
-    a_flags["log_in"] = false;
-    a_flags["register"] = false;
-    a_flags["stop"] = false;
-}
 
 }//namespace impl
 
@@ -92,29 +93,25 @@ sf::RenderWindow& Table::window()
     return m_window;
 }
 
-void Table::check_event_looged()
+void Table::check_events()
 {
-    //swich case
     m_window.pollEvent(m_event);
 
-    if(m_event.type == sf::Event::Closed)
-        stop();
-}
-
-void Table::check_event_not_looged()
-{
-    //swich case
-    m_window.pollEvent(m_event);
-
-    if(m_event.type == sf::Event::Closed)
-        stop();
-
-    if(m_event.type == sf::Event::TextEntered)
+    switch (m_event.type)
     {
+    case sf::Event::Closed:
+        stop();
+        break;
+    
+    case sf::Event::TextEntered:
         m_text_boxs["name"].get()->get_char(m_event);
         m_text_boxs["password"].get()->get_char(m_event);
         m_text_boxs["gender"].get()->get_char(m_event);
         usleep(70000);
+        break;
+    
+    default:
+        break;
     }
 }
 
@@ -332,26 +329,31 @@ void Table::check_mouse_not_looged()
     {  
         if(m_flags["log_in"])
         {
-            if(check_name_bar()  
-            || check_password_bar()
-            || check_log_in_button(true))
-            return;
+            if(check_name_bar())
+                return;
+            if(check_password_bar())
+                return;
+            if(check_log_in_button(true))
+                return;
         }
         else if(!m_flags["log_in"])
         {
             if(check_log_in_button(false))
-            return;
+                return;
         }
 
         if(m_flags["register"])
         {
-            if(check_name_bar()  
-            || check_password_bar()
-            || check_gender_bar()
-            || check_register_button(true))
-            return;
+            if(check_name_bar())
+                return; 
+            if(check_password_bar())
+                return;
+            if(check_gender_bar())
+                return;
+            if(check_register_button(true))
+                return;
         }
-        else if(! m_flags["register"])
+        else if(!m_flags["register"])
         {
             check_register_button(false);
         }
@@ -478,21 +480,26 @@ bool Table::check_register_button(bool a_is_on)
 
 void Table::run()
 {
-    while (m_window.isOpen() && !m_self.is_flag_on("logged") && is_runing())
-    {
-        m_window.clear();
-        draw_login_screen();
-        check_mouse_not_looged();
-        check_event_not_looged();
-        m_window.display();
-    }
+    run_log_in();
 
     while (m_window.isOpen() && is_runing())
     {
         m_window.clear();
         draw_all();
         check_mouse_looged();
-        check_event_looged();
+        check_events();
+        m_window.display();
+    }
+}
+
+void Table::run_log_in()
+{
+    while (m_window.isOpen() && !m_self.is_flag_on("logged") && is_runing())
+    {
+        m_window.clear();
+        draw_login_screen();
+        check_mouse_not_looged();
+        check_events();
         m_window.display();
     }
 }
