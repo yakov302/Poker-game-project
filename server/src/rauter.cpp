@@ -51,8 +51,8 @@ void Rauter::run()
 			accept_new_client();
 			m_activity--;
 		}
-		delete_deleted();
 		take_care_exists_clients();
+		delete_deleted();
 	}
 }
 

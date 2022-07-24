@@ -480,6 +480,7 @@ void Table::run()
 {
     while (m_window.isOpen() && !m_self.is_flag_on("logged") && is_runing())
     {
+        m_window.clear();
         draw_login_screen();
         check_mouse_not_looged();
         check_event_not_looged();
@@ -488,6 +489,7 @@ void Table::run()
 
     while (m_window.isOpen() && is_runing())
     {
+        m_window.clear();
         draw_all();
         check_mouse_looged();
         check_event_looged();

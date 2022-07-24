@@ -17,8 +17,8 @@ static void* thread_function(void* a_arg)
 }//namespace impl
 
 Router::Router(ClientSocket& a_socket, ActionIn& a_action_in, TcpClient& a_tcp, Table& a_table)
-: m_socket(a_socket)
-, m_buffer(new char[1024])
+: m_buffer(new char[1024])
+, m_socket(a_socket)
 , m_tcp(a_tcp)
 , m_action_in(a_action_in)
 , m_table(a_table)
