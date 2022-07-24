@@ -13,10 +13,10 @@ ClientManager::ClientManager(std::string a_server_ip, int a_server_port)
 , m_tcp(m_socket)
 , m_action_out(m_tcp)
 , m_table(m_cards, m_chips, m_self , m_players, m_tcp, m_action_out)
-, m_action_in(m_cards, m_chips, m_players, m_table, m_self)
+, m_action_in(m_cards, m_chips, m_players, m_table, m_self, m_action_out)
 , m_router(m_socket, m_action_in, m_tcp, m_table)
 {
-    
+
 }
 
 

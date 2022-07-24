@@ -35,7 +35,8 @@ public:
     void table_get_chips(Args& a_arg);
     void table_clear_hand();
     void table_clear_chips();
-    void wake_up(int a_client_socket);
+    void wake_up_client(int a_client_socket);
+    void wake_up_server();
 
 private:
     void flag(std::string& a_name, std::string a_flag, Message_type a_message);

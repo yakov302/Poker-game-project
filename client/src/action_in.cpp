@@ -27,12 +27,13 @@ std::string get_name(char* a_buffer)
 }//namespace impl
 
 
-ActionIn::ActionIn(Hand& a_cards, Wallet& a_chips, PlayersContainer& a_players, Table& a_table, Self& a_self)
+ActionIn::ActionIn(Hand& a_cards, Wallet& a_chips, PlayersContainer& a_players, Table& a_table, Self& a_self, ActionOut& a_action_out)
 : m_cards(a_cards)
 , m_chips(a_chips)
 , m_table(a_table)
 , m_players(a_players)
 , m_self(a_self)
+, m_action_out(a_action_out)
 {
 
 }
@@ -123,11 +124,15 @@ void ActionIn::get(char* a_buffer)
         break;
 
     case TABLE_CLEAR_HAND:
-        table_clear_hand(a_buffer);
+        table_clear_hand();
         break;
 
     case TABLE_CLEAR_CHIPS:
-        table_clear_chips(a_buffer);
+        table_clear_chips();
+        break;
+
+    case WAKE_UP_SERVER:
+        wake_up_server();
         break;
 
     default:
@@ -177,7 +182,7 @@ void ActionIn::log_in_wrong_password()
 
 void ActionIn::user_name_alredy_log()
 {
-    m_table.set_text(" Username already logged in");
+    m_table.set_text("    User already logged in");
 }
 
 void ActionIn::turn_on(char* a_buffer)
@@ -266,15 +271,19 @@ void ActionIn::table_get_chips(char* a_buffer)
     m_chips.push(arg.m_ints[0]);
 }
 
-void ActionIn::table_clear_hand(char* a_buffer)
+void ActionIn::table_clear_hand()
 {
     m_cards.clear();
 }
 
-void ActionIn::table_clear_chips(char* a_buffer)
+void ActionIn::table_clear_chips()
 {
     m_chips.clear();
 }
     
+void ActionIn::wake_up_server()
+{
+   m_action_out.wake_up_server();
+}
 
 }// poker namespace

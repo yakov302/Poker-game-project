@@ -14,6 +14,7 @@ ActionOut::ActionOut(TcpClient& a_tcp)
 ActionOut::~ActionOut()
 {
     delete[] m_buffer;
+    m_buffer = nullptr;
 }
 
 void ActionOut::name_and_message(std::string a_name, Message_type a_message)
@@ -68,7 +69,12 @@ void ActionOut::fold_action(std::string a_name)
     name_and_message(a_name, FOLD_ACTION);
 }
 
-void ActionOut::wake_up()
+void ActionOut::wake_up_client()
+{
+    name_and_message("player", WAKE_UP_CLIENT);
+}
+
+void ActionOut::wake_up_server()
 {
     name_and_message("player", WAKE_UP_SERVER);
 }

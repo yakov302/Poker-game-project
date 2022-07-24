@@ -92,7 +92,6 @@ void ActionOut::log_in_wrong_password(int a_client_socket)
 
 void ActionOut::user_name_alredy_log(int a_client_socket)
 {
-    std::cout << "sent alredy log\n";
     just_message(USER_NAME_ALREADY_LOG, a_client_socket);
 }
 
@@ -178,9 +177,15 @@ void ActionOut::table_clear_chips()
 
 }
 
-void ActionOut::wake_up(int a_client_socket)
+void ActionOut::wake_up_client(int a_client_socket)
 {
     just_message(WAKE_UP_CLIENT, a_client_socket);
+}
+
+void ActionOut::wake_up_server()
+{
+    std::string server = "server";
+    name_and_message(server, WAKE_UP_SERVER);
 }
 
 

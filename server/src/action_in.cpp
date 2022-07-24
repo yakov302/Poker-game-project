@@ -62,8 +62,8 @@ ActionIn::~ActionIn()
         fold(a_buffer);
         break;
 
-    case WAKE_UP_SERVER:
-        wake_up(a_client_socket);
+    case WAKE_UP_CLIENT:
+        wake_up_client(a_client_socket);
         break;
 
     default:
@@ -128,9 +128,9 @@ void ActionIn::fold(char* a_buffer)
     m_action_out.fold(name);
 }
 
-void ActionIn::wake_up(int a_client_socket)
+void ActionIn::wake_up_client(int a_client_socket)
 {
-    m_action_out.wake_up(a_client_socket);
+    m_action_out.wake_up_client(a_client_socket);
 }
 
 

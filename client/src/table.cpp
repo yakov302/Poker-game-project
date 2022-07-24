@@ -77,9 +77,8 @@ Table::~Table()
 
 void Table::stop()
 {
-    std::cout << "stop\n";
     m_flags["stop"] = true;
-    m_action_out.wake_up();
+    m_action_out.wake_up_client();
     m_window.close();
 }
 

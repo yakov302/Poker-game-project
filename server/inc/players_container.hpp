@@ -27,7 +27,7 @@ public:
     void turn_off(std::string& a_name, std::string a_flag);
 
 private:
-    ActionOut m_action_out;
+    ActionOut& m_action_out;
     std::unordered_map<std::string, playerPointer> m_players;
 };
 

@@ -17,6 +17,8 @@ class ServerManager
 public:
     ServerManager(std::string a_server_ip, int a_servr_port);
 
+    void stop();
+
 private:
     ServerSocket m_socket;
     TcpServer m_tcp;

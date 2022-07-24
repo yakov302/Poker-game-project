@@ -15,5 +15,11 @@ ServerManager::ServerManager(std::string a_server_ip, int a_servr_port)
 
 }
 
+void ServerManager::stop()
+{
+    m_rauter.stop();
+    m_action_out.wake_up_server();
+}
+
 
 }// poker namespace

@@ -8,6 +8,7 @@
 #include "hand.hpp"
 #include "wallet.hpp"
 #include "table.hpp"
+#include "action_out.hpp"
 
 namespace poker
 {
@@ -15,7 +16,7 @@ namespace poker
 class ActionIn
 {
 public:
-    ActionIn(Hand& a_cards, Wallet& a_chips, PlayersContainer& a_players, Table& a_table, Self& a_self);
+    ActionIn(Hand& a_cards, Wallet& a_chips, PlayersContainer& a_players, Table& a_table, Self& a_self, ActionOut& a_action_out);
 
     void get(char* a_buffer);
 
@@ -40,8 +41,9 @@ private:
     void reveal_cards(char* a_buffer);
     void table_get_card(char* a_buffer);
     void table_get_chips(char* a_buffer);
-    void table_clear_hand(char* a_buffer);
-    void table_clear_chips(char* a_buffer);
+    void table_clear_hand();
+    void table_clear_chips();
+    void wake_up_server();
     
 private:
     Hand& m_cards; 
@@ -49,6 +51,7 @@ private:
     Table& m_table;
     PlayersContainer& m_players;
     Self& m_self;
+    ActionOut& m_action_out;
 };
 
 

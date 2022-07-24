@@ -19,7 +19,6 @@ bool PlayersContainer::log_in_chack(std::string a_name,  int a_client_socket)
         m_action_out.user_name_alredy_log(a_client_socket);
         return false;
     }
-    std::cout << "log in chaeck - true\n";
     return true;
 }
 
