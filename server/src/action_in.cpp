@@ -89,7 +89,8 @@ void ActionIn::log_in_reques(char* a_buffer, int a_client_socket)
     unpack(a_buffer, arg);
     
     std::string gender = m_subscribs[arg.m_strings[0]].m_gender;
-    if(m_subscribs.log_in_chack(arg.m_strings[0], arg.m_strings[1], a_client_socket))
+    if(m_subscribs.log_in_chack(arg.m_strings[0], arg.m_strings[1], a_client_socket)
+    && m_players.log_in_chack(arg.m_strings[0], a_client_socket))
         m_players.new_player(arg.m_strings[0], gender, arg.m_ints[0], a_client_socket);
 }
 

@@ -90,6 +90,12 @@ void ActionOut::log_in_wrong_password(int a_client_socket)
     just_message(LOG_IN_WRONG_PASSWORD, a_client_socket);
 }
 
+void ActionOut::user_name_alredy_log(int a_client_socket)
+{
+    std::cout << "sent alredy log\n";
+    just_message(USER_NAME_ALREADY_LOG, a_client_socket);
+}
+
 void ActionOut::turn_on(std::string& a_name, std::string a_flag)
 {
     flag(a_name, a_flag, TURN_ON_FLAG);

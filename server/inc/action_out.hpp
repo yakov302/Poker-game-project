@@ -18,6 +18,7 @@ public:
     void log_in_success(std::string& a_name, std::string& a_genderint, int a_client_socket);
     void log_in_wrong_name(int a_client_socket);
     void log_in_wrong_password(int a_client_socket);
+    void user_name_alredy_log(int a_client_socket);
     void turn_on(std::string& a_name, std::string a_flag);
     void turn_off(std::string& a_name, std::string a_flag);
     void bet(Args& a_arg);

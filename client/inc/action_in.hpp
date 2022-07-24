@@ -26,6 +26,7 @@ private:
     void log_in_success(char* a_buffer);
     void log_in_wrong_name();
     void log_in_wrong_password();
+    void user_name_alredy_log();
     void turn_on(char* a_buffer);
     void turn_off(char* a_buffer);
     void bet(char* a_buffer);

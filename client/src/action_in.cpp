@@ -67,6 +67,10 @@ void ActionIn::get(char* a_buffer)
         log_in_wrong_password();
         break;
 
+    case  USER_NAME_ALREADY_LOG:
+        user_name_alredy_log();
+        break;
+
     case TURN_ON_FLAG:
         turn_on(a_buffer);
         break;
@@ -169,6 +173,11 @@ void ActionIn::log_in_wrong_name()
 void ActionIn::log_in_wrong_password()
 {
     m_table.set_text("       Wrong password");
+}
+
+void ActionIn::user_name_alredy_log()
+{
+    m_table.set_text(" Username already logged in");
 }
 
 void ActionIn::turn_on(char* a_buffer)

@@ -15,6 +15,7 @@ class PlayersContainer
 public:
     PlayersContainer(ActionOut& a_action_out);
 
+    bool log_in_chack(std::string a_name, int a_client_socket);
     void new_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket);
     void delete_player(std::string& a_name);
     void delete_player(int a_client_socket);

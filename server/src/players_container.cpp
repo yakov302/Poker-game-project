@@ -1,4 +1,6 @@
 #include "players_container.hpp"
+#include <iostream>
+
 
 namespace poker
 {
@@ -8,6 +10,17 @@ PlayersContainer::PlayersContainer(ActionOut& a_action_out)
 , m_players()
 {
 
+}
+
+bool PlayersContainer::log_in_chack(std::string a_name,  int a_client_socket)
+{
+    if(m_players.find(a_name) != m_players.end())
+    {
+        m_action_out.user_name_alredy_log(a_client_socket);
+        return false;
+    }
+    std::cout << "log in chaeck - true\n";
+    return true;
 }
 
 void PlayersContainer::new_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket)
