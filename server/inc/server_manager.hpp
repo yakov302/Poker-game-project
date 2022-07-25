@@ -7,7 +7,10 @@
 #include "rauter.hpp"
 #include "subscribs.hpp"
 #include "server_socket.hpp"
-
+#include "table.hpp"
+#include "game.hpp"
+#include "card_round.hpp"
+#include "bet_round.hpp"
 
 namespace poker
 {
@@ -25,6 +28,10 @@ private:
     ActionOut m_action_out;
     PlayersContainer m_players;
     Subscribs m_subscribs;
+    Table m_table;
+    BetRound m_bet_round;
+    CardRound m_card_round;
+    Game m_game;
     ActionIn m_action_in;
     Rauter m_rauter;
 };

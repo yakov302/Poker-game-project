@@ -28,14 +28,19 @@ void ActionOut::just_message(Message_type a_message, int a_client_socket)
 {
     Args arg(1, 0); // bag to solve
     arg.m_strings.emplace_back("stam"); // bag to solve
-    int size = pack(m_buffer, arg, a_message);
-    m_tcp.send_to_client(a_client_socket, m_buffer, size);
+    pack_and_send_to_client(arg, a_message, a_client_socket);
 }
 
 void ActionOut::pack_and_send_all(Args& a_arg, Message_type a_message)
 {
     int size = pack(m_buffer, a_arg, a_message);
     m_tcp.send_all_clients(m_buffer, size);
+}
+
+void ActionOut::pack_and_send_to_client(Args& a_arg, Message_type a_message, int a_client_socket)
+{
+    int size = pack(m_buffer, a_arg, a_message);
+    m_tcp.send_to_client(a_client_socket, m_buffer, size);
 }
 
 void ActionOut::flag(std::string& a_name, std::string a_flag, Message_type a_message)
@@ -76,8 +81,7 @@ void ActionOut::log_in_success(std::string& a_name, std::string& a_gender, int a
     Args arg(2, 0);
     arg.m_strings.emplace_back(a_name);
     arg.m_strings.emplace_back(a_gender);
-    int size = pack(m_buffer, arg, LOG_IN_SUCCESS);
-    m_tcp.send_to_client(a_client_socket, m_buffer, size);
+    pack_and_send_to_client(arg, LOG_IN_SUCCESS, a_client_socket);
 }
 
 void ActionOut::log_in_wrong_name(int a_client_socket)
@@ -105,9 +109,19 @@ void ActionOut::turn_off(std::string& a_name, std::string a_flag)
     flag(a_name, a_flag, TURN_OFF_FLAG);
 }
 
-void ActionOut::bet(Args& a_arg)
+void ActionOut::bet(std::string& a_name, int a_amount)
 {
-    pack_and_send_all(a_arg, BET_UPDATE);
+    Args arg(1, 1);
+    arg.m_strings.emplace_back(a_name);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send_all(arg, BET_UPDATE);
+}
+
+void ActionOut::invalid_bet(int a_amount, int a_client_socket)
+{
+    Args arg(0, 1);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send_to_client(arg, INVALID_BET, a_client_socket);
 }
 
 void ActionOut::check(std::string& a_name)
@@ -120,19 +134,30 @@ void ActionOut::fold(std::string& a_name)
     name_and_message(a_name, FOLD_UPDATE);
 }
 
-void ActionOut::get_card()
+void ActionOut::get_card(std::string& a_name, Card& a_card)
 {
-
+    Args arg(2, 1);
+    arg.m_strings.emplace_back(a_name);
+    arg.m_strings.emplace_back(a_card.m_suit);
+    arg.m_ints.emplace_back(a_card.m_number);
+    pack_and_send_all(arg, GET_CARD);
 }
 
-void ActionOut::get_chips()
+void ActionOut::get_chips(std::string& a_name, std::vector<int>& a_chips)
 {
-
+    int size = a_chips.size();
+    Args arg(1, size);
+    arg.m_strings.emplace_back(a_name);
+    for(int i = 0; i < size; ++i)
+        arg.m_ints.emplace_back(a_chips[i]);
+    pack_and_send_all(arg, GET_CHIPS);
 }
 
 void ActionOut::clear_hand()
 {
-
+    Args arg(1, 0); // bug to solve
+    arg.m_strings.emplace_back("stam"); // bug to solve
+    pack_and_send_all(arg, CLEAR_HAND);
 }
 
 void ActionOut::get_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket)
@@ -152,19 +177,24 @@ void ActionOut::delete_player(std::string a_name)
     name_and_message(a_name, DELETE_PLAYER);
 }
 
-void ActionOut::reveal_cards()
+void ActionOut::reveal_cards(int a_client_socket)
 {
-
+    just_message(REVEAL_CARDS, a_client_socket);
 }
 
-void ActionOut::table_get_card()
+void ActionOut::table_get_card(Card& a_card)
 {
-
+    Args arg(1, 1);
+    arg.m_strings.emplace_back(a_card.m_suit);
+    arg.m_ints.emplace_back(a_card.m_number);
+    pack_and_send_all(arg, TABLE_GET_CARD);
 }
 
-void ActionOut::table_get_chips(Args& a_arg)
+void ActionOut::table_get_chips(int a_amount)
 {
-    pack_and_send_all(a_arg, TABLE_GET_CHIP);
+    Args arg(0, 1);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send_all(arg, TABLE_GET_CHIP); 
 }
 
 void ActionOut::table_clear_hand()

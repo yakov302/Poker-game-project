@@ -83,6 +83,10 @@ void ActionIn::get(char* a_buffer)
     case BET_UPDATE:
         bet(a_buffer);
         break;
+    
+    case INVALID_BET:
+        invalid_bet(a_buffer);
+        break;
 
     case CHECK_UPDATE:
         check(a_buffer);
@@ -142,19 +146,19 @@ void ActionIn::get(char* a_buffer)
 
 void ActionIn::registration_success()
 {
-    m_table.set_text("Registration was successful");
+    m_table.set_text("log_in", "Registration was successful");
     m_table.turn_off_flag("register");
     m_table.turn_on_flag("log_in");
 }
 
 void ActionIn::registration_duplicare_name()
 {
-    m_table.set_text("That name is already taken");
+    m_table.set_text("log_in", "That name is already taken");
 }
 
 void ActionIn::registration_wrong_gender()
 {
-    m_table.set_text("         Wrong gender\n\n Only male/female allowed");
+    m_table.set_text("log_in", "         Wrong gender\n\n Only male/female allowed");
 }
 
 void ActionIn::log_in_success(char* a_buffer)
@@ -172,17 +176,17 @@ void ActionIn::log_in_success(char* a_buffer)
 
 void ActionIn::log_in_wrong_name()
 {
-    m_table.set_text("           Wrong name");
+    m_table.set_text("log_in", "           Wrong name");
 }
 
 void ActionIn::log_in_wrong_password()
 {
-    m_table.set_text("       Wrong password");
+    m_table.set_text("log_in", "       Wrong password");
 }
 
 void ActionIn::user_name_alredy_log()
 {
-    m_table.set_text("    User already logged in");
+    m_table.set_text("log_in", "    User already logged in");
 }
 
 void ActionIn::turn_on(char* a_buffer)
@@ -202,6 +206,13 @@ void ActionIn::bet(char* a_buffer)
     Args arg(1,1);
     unpack(a_buffer, arg);
     m_players.bet(arg.m_strings[0], arg.m_ints[0]);
+}
+
+void ActionIn::invalid_bet(char* a_buffer)
+{   
+    Args arg(0, 1);
+    unpack(a_buffer, arg);
+    m_table.set_text("text", "Invalid bet \n Min bet: " + std::to_string(arg.m_ints[0]));
 }
 
 void ActionIn::check(char* a_buffer)

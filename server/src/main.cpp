@@ -18,7 +18,6 @@ int main()
     {
         if((int)c == 27)
         {
-            std::cout << "in\n";
             server.stop();
             break;
         }

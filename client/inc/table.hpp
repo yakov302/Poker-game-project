@@ -33,7 +33,7 @@ public:
     bool is_runing();
     void turn_on_flag(std::string a_flag);
     void turn_off_flag(std::string a_flag);
-    void set_text(std::string a_text, sf::Color a_color = sf::Color(255, 228, 156));
+    void set_text(std::string a_type, std::string a_text, sf::Color a_color = sf::Color(255, 228, 156));
 
     sf::RenderWindow& window();
 

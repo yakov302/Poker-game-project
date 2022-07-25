@@ -31,6 +31,7 @@ private:
     void turn_on(char* a_buffer);
     void turn_off(char* a_buffer);
     void bet(char* a_buffer);
+    void invalid_bet(char* a_buffer);
     void check(char* a_buffer);
     void fold(char* a_buffer);
     void get_card(char* a_buffer);

@@ -24,7 +24,7 @@ void buttons_initialization(std::unordered_map<std::string, buttonPointer>& a_bu
 void texts_initialization(std::unordered_map<std::string, textPointer>& a_texts)
 {
     a_texts["log_in"] = textPointer(new Text("./resources/fonts/arial.ttf", "", sf::Color(255, 228, 156), 30, 750, 80));
-  
+    a_texts["text"] = textPointer(new Text("./resources/fonts/arial.ttf", "", sf::Color(255, 228, 156), 30, 750, 80));   
 }
 
 void texts_box_initialization(std::unordered_map<std::string, textBoxPointer>& a_text_boxs)
@@ -153,6 +153,7 @@ void Table::draw_register()
 void Table::draw_all()
 {
     m_buttons["background"].get()->draw(m_window);
+    m_texts["text"].get()->draw(m_window);
 
     m_players.draw_Players(m_window);
 
@@ -292,7 +293,6 @@ bool Table::check_exchange_button()
 
     if(m_buttons["exchange"].get()->is_in_range(position.x, position.y) && !m_self.is_flag_on("bet"))
     {
-        std::cout << "table x: " << position.x << "table y: " << position.y << "\n";
         m_self.turn_on_flag("exchange");
         m_self.set_action("exchange");
         return true;
@@ -435,7 +435,6 @@ bool Table::check_log_in_button(bool a_is_on)
     {
         if(m_buttons["log_in"].get()->is_in_range(position.x, position.y))
         {
-            std::cout << "amunt: " <<  m_self.amount() << "\n";
             m_action_out.log_in_request(m_text_boxs["name"].get()->give_string(), m_text_boxs["password"].get()->give_string(), m_self.amount());
             m_text_boxs["name"].get()->clear();
             m_text_boxs["password"].get()->clear();
@@ -519,7 +518,7 @@ void Table::turn_off_flag(std::string a_flag)
     m_flags[a_flag] = false;
 }
 
-void Table::set_text(std::string a_text, sf::Color a_color)
+void Table::set_text(std::string a_type, std::string a_text, sf::Color a_color)
 {
     m_texts["log_in"].get()->set_text(a_text);
     m_texts["log_in"].get()->set_fill_color(a_color);

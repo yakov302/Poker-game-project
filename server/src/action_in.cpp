@@ -17,12 +17,13 @@ std::string get_name(char* a_buffer)
 }//namespace impl
 
 
-ActionIn::ActionIn(TcpServer& a_tcp, ActionOut& a_action_out, PlayersContainer& a_players, Subscribs& a_subscribs)
+ActionIn::ActionIn(TcpServer& a_tcp, ActionOut& a_action_out, PlayersContainer& a_players, Subscribs& a_subscribs, BetRound& a_bet_round)
 : m_buffer(new char[1024])
 , m_tcp(a_tcp)
 , m_action_out(a_action_out)
 , m_players(a_players)
 , m_subscribs(a_subscribs)
+, m_bet_round(a_bet_round)
 {
 
 }
@@ -49,7 +50,7 @@ ActionIn::~ActionIn()
     case BET_ACTION:
         bet(a_buffer);
         break;
-
+    
     case FINISH_BET:
         finish_bet(a_buffer);
         break;
@@ -99,18 +100,18 @@ void ActionIn::bet(char* a_buffer)
     Args arg(1,1);
     unpack(a_buffer, arg);
 
-    m_action_out.bet(arg);
-    m_action_out.table_get_chips(arg);
+    m_bet_round.bet_in(arg.m_ints[0]);
 }
 
 void ActionIn::finish_bet(char* a_buffer)
 {
-    // need to cheack if is a legal bet
-    std::string name = impl::get_name(a_buffer);
+    // // need to cheack if is a legal bet
+    // std::string name = impl::get_name(a_buffer);
 
-    //need to send to "bet round" and he will activate this function
-    m_action_out.turn_off(name, "my_turn");
-    m_action_out.turn_off(name, "bet");
+    // //need to send to "bet round" and he will activate this function
+    // m_action_out.turn_off(name, "my_turn");
+    // m_action_out.turn_off(name, "bet");
+    m_bet_round.finish_bet();
 }
 
 void ActionIn::check(char* a_buffer)

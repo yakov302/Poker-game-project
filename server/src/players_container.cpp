@@ -12,7 +12,12 @@ PlayersContainer::PlayersContainer(ActionOut& a_action_out)
 
 }
 
-bool PlayersContainer::log_in_chack(std::string a_name,  int a_client_socket)
+int PlayersContainer::num_of_players()const
+{
+    return m_players.size();
+}
+
+bool PlayersContainer::log_in_chack(std::string a_name,  int a_client_socket)const
 {
     if(m_players.find(a_name) != m_players.end())
     {
@@ -20,6 +25,16 @@ bool PlayersContainer::log_in_chack(std::string a_name,  int a_client_socket)
         return false;
     }
     return true;
+}
+
+playerIterator PlayersContainer::begin()const
+{
+    return  m_players.begin();
+}
+
+playerIterator PlayersContainer::end()const
+{
+    return m_players.end();
 }
 
 void PlayersContainer::new_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket)
@@ -93,9 +108,6 @@ void PlayersContainer::turn_on(std::string& a_name, std::string a_flag)
 {
     if(m_players.find(a_name) == m_players.end())
         return;
-
-    if(a_flag == "open")
-        m_players[a_name]->m_open = true;
     
     if(a_flag == "my_turn")
         m_players[a_name]->m_my_turn = true;
@@ -105,9 +117,6 @@ void PlayersContainer::turn_off(std::string& a_name, std::string a_flag)
 {
     if(m_players.find(a_name) == m_players.end())
         return;
-
-    if(a_flag == "open")
-        m_players[a_name]->m_open = false;
     
     if(a_flag == "my_turn")
         m_players[a_name]->m_my_turn = false;

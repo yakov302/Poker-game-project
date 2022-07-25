@@ -5,6 +5,7 @@
 #include "action_out.hpp"
 #include "players_container.hpp"
 #include "subscribs.hpp"
+#include "bet_round.hpp"
 
 namespace poker
 {
@@ -12,7 +13,7 @@ namespace poker
 class ActionIn
 {
 public:
-    ActionIn(TcpServer& m_tcp, ActionOut& a_action_out, PlayersContainer& a_players, Subscribs& a_subscribs);
+    ActionIn(TcpServer& m_tcp, ActionOut& a_action_out, PlayersContainer& a_players, Subscribs& a_subscribs, BetRound& a_bet_round);
     ~ActionIn();
 
     void get(char* a_buffer, int a_client_socket);
@@ -32,6 +33,7 @@ private:
     ActionOut& m_action_out; //ned to delete activate modols function
     PlayersContainer& m_players;
     Subscribs& m_subscribs;
+    BetRound& m_bet_round;
 };
 
 

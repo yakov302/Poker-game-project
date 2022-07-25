@@ -16,7 +16,7 @@ public:
     , m_gender(a_gender)
     , m_amount(a_amount)
     , m_socket(a_socket)
-    , m_open(false)
+    , m_fold(false)
     , m_my_turn(false)
     , m_hand()
     {
@@ -27,7 +27,7 @@ public:
     std::string m_gender;
     int m_amount;
     int m_socket;
-    bool m_open;
+    bool m_fold;
     bool m_my_turn;
     std::vector<Card> m_hand;
 };

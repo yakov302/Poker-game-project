@@ -45,6 +45,7 @@ typedef enum Message_type
     TURN_ON_FLAG = 9,
     TURN_OFF_FLAG = 10,
     BET_UPDATE = 11,
+    INVALID_BET = 80,
     CHECK_UPDATE = 12,
     FOLD_UPDATE = 13,
     GET_CARD = 14,
