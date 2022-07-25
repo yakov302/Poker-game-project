@@ -106,6 +106,7 @@ void ActionOut::turn_on(std::string& a_name, std::string a_flag)
 
 void ActionOut::turn_off(std::string& a_name, std::string a_flag)
 {
+    std::cout << "turn of out : " << a_name << " - " << a_flag << "\n";
     flag(a_name, a_flag, TURN_OFF_FLAG);
 }
 

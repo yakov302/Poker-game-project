@@ -74,8 +74,8 @@ void CardRound::deal_cards()
         while(it != end)
         {
             Card card = m_deck.pop_card();
-            m_players.get_card(it->second->m_name, card);
-            m_action_out.get_card(it->second->m_name, card);
+            m_players.get_card(it->second.get()->m_name, card);
+            m_action_out.get_card(it->second.get()->m_name, card);
             ++it;
         }
     }
@@ -116,15 +116,15 @@ void CardRound::reveal_cards()
 
     while(it != end)
     {
-        if(!it->second->m_fold)
-            m_action_out.reveal_cards(it->second->m_socket);
+        if(!it->second.get()->m_fold)
+            m_action_out.reveal_cards(it->second.get()->m_socket);
         ++it;
     }
 }
 
 std::string CardRound::chack_winer()
 {
-    return m_players.begin()->second->m_name;
+    return m_players.begin()->second.get()->m_name;
 }
 
 

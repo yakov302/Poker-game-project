@@ -38,8 +38,8 @@ void BetRound::finish_bet()
         m_wait_for_bet = false;
         m_min_bet = m_current_bet;
         m_current_bet = 0;
-        m_action_out.turn_off(m_turn->second->m_name, "my_turn");
-        m_action_out.turn_off(m_turn->second->m_name, "bet");
+        m_action_out.turn_off(m_turn->second.get()->m_name, "my_turn");
+        m_action_out.turn_off(m_turn->second.get()->m_name, "bet");
     }
 }
 
@@ -58,11 +58,10 @@ void BetRound::run(playerIterator a_open_player)
 
 void BetRound::bet()
 {
-    m_action_out.turn_on(m_turn->second->m_name, "my_turn");
+    m_action_out.turn_on(m_turn->second.get()->m_name, "my_turn");
     m_wait_for_bet = true;
     while(m_wait_for_bet)
-    {
-
+    {//cond var
     }
 }
 

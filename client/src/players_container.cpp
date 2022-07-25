@@ -98,8 +98,11 @@ void PlayersContainer::turn_on_flag(std::string& a_name, std::string a_flag)
 
 void PlayersContainer::turn_off_flag(std::string& a_name, std::string a_flag)
 {
+    std::cout << "turn of on players\n";
     if(m_players.find(a_name) == m_players.end())
         return;
+
+     std::cout << "turn of on players: " << a_name << "\n";
 
     m_players[a_name].get()->turn_off_flag(a_flag);
 }

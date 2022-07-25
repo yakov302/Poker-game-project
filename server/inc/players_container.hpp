@@ -9,7 +9,7 @@ namespace poker
 {
 
 using playerPointer = std::shared_ptr<Player>;
-using playerIterator = std::unordered_map<std::string, poker::playerPointer>::const_iterator;
+using playerIterator = std::unordered_map<std::string, poker::playerPointer>::iterator;
 
 class PlayersContainer
 {
@@ -27,8 +27,8 @@ public:
     void turn_off(std::string& a_name, std::string a_flag);
 
     bool log_in_chack(std::string a_name, int a_client_socket)const;
-    playerIterator begin() const;
-    playerIterator end() const;
+    playerIterator begin();
+    playerIterator end();
     int num_of_players()const;
 
 private:

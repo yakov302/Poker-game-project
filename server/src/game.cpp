@@ -27,14 +27,16 @@ Game::Game(PlayersContainer& a_players, CardRound& a_card_round)
 
 void Game::run()
 {
+    while (m_players.num_of_players() < 2)
+    {
+         //cond var
+    }
+
+    m_open_player = m_players.begin();
     while (!m_stop)
     {
-        //cond var
-        if(m_players.num_of_players() > 1)
-        {
-            m_card_round.run(m_open_player);
-            next();
-        }
+        m_card_round.run(m_open_player);
+        next();
     }
 }
 

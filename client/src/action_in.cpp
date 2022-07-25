@@ -1,4 +1,5 @@
 #include "action_in.hpp"
+#include <iostream>
 
 namespace poker
 {
@@ -198,6 +199,8 @@ void ActionIn::turn_on(char* a_buffer)
 void ActionIn::turn_off(char* a_buffer)
 {
     std::pair<std::string, std::string> pair = impl::name_and_flas(a_buffer);
+    std::cout << "turn of in : " << pair.first << " - " << pair.second << "\n";
+
     m_players.turn_off_flag(pair.first, pair.second);
 }
 

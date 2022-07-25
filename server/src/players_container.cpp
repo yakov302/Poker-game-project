@@ -9,7 +9,7 @@ PlayersContainer::PlayersContainer(ActionOut& a_action_out)
 : m_action_out(a_action_out)
 , m_players()
 {
-
+    
 }
 
 int PlayersContainer::num_of_players()const
@@ -27,12 +27,12 @@ bool PlayersContainer::log_in_chack(std::string a_name,  int a_client_socket)con
     return true;
 }
 
-playerIterator PlayersContainer::begin()const
+playerIterator PlayersContainer::begin()
 {
     return  m_players.begin();
 }
 
-playerIterator PlayersContainer::end()const
+playerIterator PlayersContainer::end()
 {
     return m_players.end();
 }
