@@ -60,6 +60,7 @@ typedef enum Message_type
     TABLE_CLEAR_HAND = 22,
     TABLE_CLEAR_CHIPS = 23,
     WAKE_UP_CLIENT = 24,
+    CLEAR_ACTION = 55,
 
     //client to server
 

@@ -21,7 +21,7 @@ public:
     void user_name_alredy_log(int a_client_socket);
     void turn_on(std::string& a_name, std::string a_flag);
     void turn_off(std::string& a_name, std::string a_flag);
-    void start_bet(std::string& a_name);
+    void start_bet(std::string& a_name, int a_amount);
     void bet(std::string& a_name, int a_amount);
     void invalid_bet(int a_amount, int a_client_socket);
     void check(std::string& a_name);
@@ -39,6 +39,7 @@ public:
     void table_clear_chips();
     void wake_up_client(int a_client_socket);
     void wake_up_server();
+    void clear_action(std::string& a_name);
 
 private:
     void flag(std::string& a_name, std::string a_flag, Message_type a_message);

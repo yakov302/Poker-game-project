@@ -26,6 +26,7 @@ public:
     void clear_hand(std::string& a_name);
 
     void set_action(std::string& a_name, std::string a_action);
+    void update_current_bet(std::string& a_name, int a_amount);
     void turn_on_flag(std::string& a_name, std::string a_flag);
     void turn_off_flag(std::string& a_name, std::string a_flag);
     void draw_Players(sf::RenderWindow& a_window);

@@ -95,8 +95,7 @@ void ActionIn::log_in_reques(char* a_buffer, int a_client_socket)
 
 void ActionIn::start_bet(char* a_buffer)
 {
-    std::string name = impl::get_name(a_buffer);
-    m_action_out.start_bet(name);
+    m_bet_round.start_bet();
 }
 
 void ActionIn::bet(char* a_buffer)

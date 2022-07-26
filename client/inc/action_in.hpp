@@ -46,6 +46,7 @@ private:
     void table_clear_hand();
     void table_clear_chips();
     void wake_up_server();
+    void clear_action(char* a_buffer);
     
 private:
     Hand& m_cards; 

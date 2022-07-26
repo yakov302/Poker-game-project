@@ -79,8 +79,8 @@ void Player::turn_on_flag(std::string a_flag)
 
     if(a_flag == "bet")
     {
-        m_current_bet = 0;
-        m_texts["action"].get()->set_text("bet " + std::to_string(m_current_bet));
+        // m_current_bet = 0;
+        // m_texts["action"].get()->set_text("bet " + std::to_string(m_current_bet));
     }
 }
 

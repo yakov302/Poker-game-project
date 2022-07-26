@@ -88,6 +88,14 @@ void PlayersContainer::set_action(std::string& a_name, std::string a_action)
     m_players[a_name].get()->set_action(a_action);
 }
 
+void PlayersContainer::update_current_bet(std::string& a_name, int a_amount)
+{
+    if(m_players.find(a_name) == m_players.end())
+        return;
+    
+    m_players[a_name].get()->m_current_bet = a_amount;
+}
+
 void PlayersContainer::turn_on_flag(std::string& a_name, std::string a_flag)
 {
     std::cout << "tourn on flag" << "\n";

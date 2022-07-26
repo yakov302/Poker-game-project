@@ -115,9 +115,12 @@ void ActionOut::turn_off(std::string& a_name, std::string a_flag)
     flag(a_name, a_flag, TURN_OFF_FLAG);
 }
 
-void ActionOut::start_bet(std::string& a_name)
+void ActionOut::start_bet(std::string& a_name, int a_amount)
 {
-    name_and_message(a_name, START_BET);
+    Args arg(1, 1);
+    arg.m_strings.emplace_back(a_name);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send_all(arg, START_BET);
 }
 
 void ActionOut::bet(std::string& a_name, int a_amount)
@@ -227,6 +230,11 @@ void ActionOut::wake_up_server()
 {
     std::string server = "server";
     name_and_message(server, WAKE_UP_SERVER);
+}
+
+void ActionOut::clear_action(std::string& a_name)
+{
+    name_and_message(a_name, CLEAR_ACTION);
 }
 
 

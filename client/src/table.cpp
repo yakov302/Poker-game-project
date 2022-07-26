@@ -24,7 +24,7 @@ void buttons_initialization(std::unordered_map<std::string, buttonPointer>& a_bu
 void texts_initialization(std::unordered_map<std::string, textPointer>& a_texts)
 {
     a_texts["log_in"] = textPointer(new Text("./resources/fonts/arial.ttf", "", sf::Color(255, 228, 156), 30, 750, 80));
-    a_texts["text"] = textPointer(new Text("./resources/fonts/arial.ttf", "", sf::Color(255, 228, 156), 30, 750, 80));   
+    a_texts["text"] = textPointer(new Text("./resources/fonts/arial.ttf", "", sf::Color(255, 228, 156), 30, 1570, 680));   
 }
 
 void texts_box_initialization(std::unordered_map<std::string, textBoxPointer>& a_text_boxs)
@@ -221,6 +221,7 @@ bool Table::check_go_button()
     {
         if(m_self.is_flag_on("bet"))
         {
+            set_text("text", "");
             m_action_out.finish_bet(m_self.name());
             usleep(100000);
         }
@@ -523,8 +524,8 @@ void Table::turn_off_flag(std::string a_flag)
 
 void Table::set_text(std::string a_type, std::string a_text, sf::Color a_color)
 {
-    m_texts["log_in"].get()->set_text(a_text);
-    m_texts["log_in"].get()->set_fill_color(a_color);
+    m_texts[a_type].get()->set_text(a_text);
+    m_texts[a_type].get()->set_fill_color(a_color);
 }
 
 }// poker namespace

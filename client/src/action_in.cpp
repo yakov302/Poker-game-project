@@ -144,6 +144,10 @@ void ActionIn::get(char* a_buffer)
         wake_up_server();
         break;
 
+    case CLEAR_ACTION:
+        clear_action(a_buffer);
+        break;
+
     default:
         break;
     }
@@ -210,9 +214,11 @@ void ActionIn::turn_off(char* a_buffer)
 
 void ActionIn::start_bet(char* a_buffer)
 {
-    std::string name = impl::get_name(a_buffer);
-    std::cout << "start bet : " << name << "\n";
-    m_players.turn_on_flag(name, "bet");
+    Args arg(1,1);
+    unpack(a_buffer, arg);
+    m_players.turn_on_flag(arg.m_strings[0], "bet");
+    m_players.set_action(arg.m_strings[0], "bet " + std::to_string(arg.m_ints[0]));
+    m_players.update_current_bet(arg.m_strings[0], arg.m_ints[0]);
 }
 
 void ActionIn::bet(char* a_buffer)
@@ -227,7 +233,7 @@ void ActionIn::invalid_bet(char* a_buffer)
     std::cout << "invalid bet \n";  
     Args arg(0, 1);
     unpack(a_buffer, arg);
-    m_table.set_text("text", "Invalid bet \n Min bet: " + std::to_string(arg.m_ints[0]));
+    m_table.set_text("text", "Invalid bet \nMin bet: " + std::to_string(arg.m_ints[0]));
 }
 
 void ActionIn::check(char* a_buffer)
@@ -310,6 +316,12 @@ void ActionIn::table_clear_chips()
 void ActionIn::wake_up_server()
 {
    m_action_out.wake_up_server();
+}
+
+void ActionIn::ActionIn::clear_action(char* a_buffer)
+{
+    std::string name = impl::get_name(a_buffer);
+    m_players.set_action(name, "");
 }
 
 
