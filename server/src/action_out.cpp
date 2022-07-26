@@ -5,75 +5,80 @@ namespace poker
 {
 
 ActionOut::ActionOut(TcpServer& a_tcp)
-: m_buffer(new char[1024])
-, m_tcp(a_tcp)
+: m_tcp(a_tcp)
 {
 
-}
-
-ActionOut::~ActionOut()
-{
-    delete[] m_buffer;
 }
 
 void ActionOut::name_and_message(std::string& a_name, Message_type a_message)
 {
+    char buffer[1024];
     Args arg(1, 0);
     arg.m_strings.emplace_back(a_name);
-    int size = pack(m_buffer, arg, a_message);
-    m_tcp.send_all_clients(m_buffer, size);
+    int size = pack(buffer, arg, a_message);
+    m_tcp.send_all_clients(buffer, size);
 }
 
-void ActionOut::just_message(Message_type a_message, int a_client_socket)
+void ActionOut::just_message_to_clienet(Message_type a_message, int a_client_socket)
 {
     Args arg(1, 0); // bag to solve
     arg.m_strings.emplace_back("stam"); // bag to solve
     pack_and_send_to_client(arg, a_message, a_client_socket);
 }
 
+void ActionOut::just_message_to_all(Message_type a_message)
+{
+    Args arg(1, 0); // bag to solve
+    arg.m_strings.emplace_back("stam"); // bag to solve
+    pack_and_send_all(arg, a_message);
+}
+
 void ActionOut::pack_and_send_all(Args& a_arg, Message_type a_message)
 {
-    int size = pack(m_buffer, a_arg, a_message);
-    m_tcp.send_all_clients(m_buffer, size);
+    char buffer[1024];
+    int size = pack(buffer, a_arg, a_message);
+    m_tcp.send_all_clients(buffer, size);
 }
 
 void ActionOut::pack_and_send_to_client(Args& a_arg, Message_type a_message, int a_client_socket)
 {
-    int size = pack(m_buffer, a_arg, a_message);
-    m_tcp.send_to_client(a_client_socket, m_buffer, size);
+    char buffer[1024];
+    int size = pack(buffer, a_arg, a_message);
+    m_tcp.send_to_client(a_client_socket, buffer, size);
 }
 
 void ActionOut::flag(std::string& a_name, std::string a_flag, Message_type a_message)
 {
+    char buffer[1024];
     Args arg(2, 0);
     arg.m_strings.emplace_back(a_name);
     arg.m_strings.emplace_back(a_flag);
-    int size = pack(m_buffer, arg, a_message);
-    m_tcp.send_all_clients(m_buffer, size);
+    int size = pack(buffer, arg, a_message);
+    m_tcp.send_all_clients(buffer, size);
 }
 
-int ActionOut::pack_player(std::string& a_name, std::string a_gender, int a_amount)
+int ActionOut::pack_player(char* a_buffer, std::string& a_name, std::string a_gender, int a_amount)
 {
     Args arg(2, 1);
     arg.m_strings.emplace_back(a_name);
     arg.m_strings.emplace_back(a_gender);
     arg.m_ints.emplace_back(a_amount);
-    return pack(m_buffer, arg, GET_PLAYER);
+    return pack(a_buffer, arg, GET_PLAYER);
 }
 
 void ActionOut::registration_success(int a_client_socket)
 {
-    just_message(REGISTRATION_SUCCESS, a_client_socket);
+    just_message_to_clienet(REGISTRATION_SUCCESS, a_client_socket);
 }
 
 void ActionOut::registration_duplicare_name(int a_client_socket)
 {
-    just_message(REGISTRATION_DUPLICATE_USER_NAME, a_client_socket);
+    just_message_to_clienet(REGISTRATION_DUPLICATE_USER_NAME, a_client_socket);
 }
 
 void ActionOut::registration_wrong_gender(int a_client_socket)
 {
-    just_message(REGISTRATION_WRONG_GENDER, a_client_socket);
+    just_message_to_clienet(REGISTRATION_WRONG_GENDER, a_client_socket);
 }
 
 void ActionOut::log_in_success(std::string& a_name, std::string& a_gender, int a_client_socket)
@@ -86,17 +91,17 @@ void ActionOut::log_in_success(std::string& a_name, std::string& a_gender, int a
 
 void ActionOut::log_in_wrong_name(int a_client_socket)
 {
-    just_message(LOG_IN_WRONG_USER_NAME, a_client_socket);
+    just_message_to_clienet(LOG_IN_WRONG_USER_NAME, a_client_socket);
 }
 
 void ActionOut::log_in_wrong_password(int a_client_socket)
 {
-    just_message(LOG_IN_WRONG_PASSWORD, a_client_socket);
+    just_message_to_clienet(LOG_IN_WRONG_PASSWORD, a_client_socket);
 }
 
 void ActionOut::user_name_alredy_log(int a_client_socket)
 {
-    just_message(USER_NAME_ALREADY_LOG, a_client_socket);
+    just_message_to_clienet(USER_NAME_ALREADY_LOG, a_client_socket);
 }
 
 void ActionOut::turn_on(std::string& a_name, std::string a_flag)
@@ -108,6 +113,11 @@ void ActionOut::turn_off(std::string& a_name, std::string a_flag)
 {
     std::cout << "turn of out : " << a_name << " - " << a_flag << "\n";
     flag(a_name, a_flag, TURN_OFF_FLAG);
+}
+
+void ActionOut::start_bet(std::string& a_name)
+{
+    name_and_message(a_name, START_BET);
 }
 
 void ActionOut::bet(std::string& a_name, int a_amount)
@@ -156,21 +166,21 @@ void ActionOut::get_chips(std::string& a_name, std::vector<int>& a_chips)
 
 void ActionOut::clear_hand()
 {
-    Args arg(1, 0); // bug to solve
-    arg.m_strings.emplace_back("stam"); // bug to solve
-    pack_and_send_all(arg, CLEAR_HAND);
+    just_message_to_all(CLEAR_HAND);
 }
 
 void ActionOut::get_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket)
 {
-    int size = pack_player(a_name, a_gender, a_amount);
-    m_tcp.send_to_client(a_client_socket, m_buffer, size);
+    char buffer[1024];
+    int size = pack_player(buffer, a_name, a_gender, a_amount);
+    m_tcp.send_to_client(a_client_socket, buffer, size);
 }
 
 void ActionOut::get_player(std::string a_name, std::string a_gender, int a_amount)
 {
-    int size = pack_player(a_name, a_gender, a_amount);
-    m_tcp.send_all_clients(m_buffer, size);
+    char buffer[1024];
+    int size = pack_player(buffer, a_name, a_gender, a_amount);
+    m_tcp.send_all_clients(buffer, size);
 }
 
 void ActionOut::delete_player(std::string a_name)
@@ -178,9 +188,9 @@ void ActionOut::delete_player(std::string a_name)
     name_and_message(a_name, DELETE_PLAYER);
 }
 
-void ActionOut::reveal_cards(int a_client_socket)
+void ActionOut::reveal_cards(std::string& a_name)
 {
-    just_message(REVEAL_CARDS, a_client_socket);
+    name_and_message(a_name, REVEAL_CARDS);
 }
 
 void ActionOut::table_get_card(Card& a_card)
@@ -200,17 +210,17 @@ void ActionOut::table_get_chips(int a_amount)
 
 void ActionOut::table_clear_hand()
 {
-
+    just_message_to_all(TABLE_CLEAR_HAND);
 }
 
 void ActionOut::table_clear_chips()
 {
-
+   just_message_to_all(TABLE_CLEAR_CHIPS);
 }
 
 void ActionOut::wake_up_client(int a_client_socket)
 {
-    just_message(WAKE_UP_CLIENT, a_client_socket);
+    just_message_to_clienet(WAKE_UP_CLIENT, a_client_socket);
 }
 
 void ActionOut::wake_up_server()

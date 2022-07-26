@@ -69,7 +69,7 @@ void ActionIn::get(char* a_buffer)
         log_in_wrong_password();
         break;
 
-    case  USER_NAME_ALREADY_LOG:
+    case USER_NAME_ALREADY_LOG:
         user_name_alredy_log();
         break;
 
@@ -79,6 +79,10 @@ void ActionIn::get(char* a_buffer)
 
     case TURN_OFF_FLAG:
         turn_off(a_buffer);
+        break;
+
+    case START_BET:
+        start_bet(a_buffer);
         break;
 
     case BET_UPDATE:
@@ -204,6 +208,13 @@ void ActionIn::turn_off(char* a_buffer)
     m_players.turn_off_flag(pair.first, pair.second);
 }
 
+void ActionIn::start_bet(char* a_buffer)
+{
+    std::string name = impl::get_name(a_buffer);
+    std::cout << "start bet : " << name << "\n";
+    m_players.turn_on_flag(name, "bet");
+}
+
 void ActionIn::bet(char* a_buffer)
 {
     Args arg(1,1);
@@ -212,7 +223,8 @@ void ActionIn::bet(char* a_buffer)
 }
 
 void ActionIn::invalid_bet(char* a_buffer)
-{   
+{ 
+    std::cout << "invalid bet \n";  
     Args arg(0, 1);
     unpack(a_buffer, arg);
     m_table.set_text("text", "Invalid bet \n Min bet: " + std::to_string(arg.m_ints[0]));
@@ -267,8 +279,8 @@ void ActionIn::delete_player(char* a_buffer)
 
 void ActionIn::reveal_cards(char* a_buffer)
 {
-    std::pair<std::string, std::string> pair = impl::name_and_flas(a_buffer);
-    m_players.turn_on_flag(pair.first, pair.second);
+   std::string name = impl::get_name(a_buffer);
+    m_players.turn_on_flag(name, "reveal_cards");
 }
 
 void ActionIn::table_get_card(char* a_buffer)
@@ -299,5 +311,6 @@ void ActionIn::wake_up_server()
 {
    m_action_out.wake_up_server();
 }
+
 
 }// poker namespace

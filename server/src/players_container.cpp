@@ -120,7 +120,6 @@ void PlayersContainer::turn_off(std::string& a_name, std::string a_flag)
     
     if(a_flag == "my_turn")
         m_players[a_name]->m_my_turn = false;
-
 }
 
 

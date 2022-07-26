@@ -44,6 +44,7 @@ typedef enum Message_type
     USER_NAME_ALREADY_LOG = 8,
     TURN_ON_FLAG = 9,
     TURN_OFF_FLAG = 10,
+    START_BET = 70,
     BET_UPDATE = 11,
     INVALID_BET = 80,
     CHECK_UPDATE = 12,

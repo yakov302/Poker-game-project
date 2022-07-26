@@ -46,9 +46,6 @@ void CardRound::run(playerIterator a_open_player)
             break;
 
         case 5:
-            if(!m_bet)
-                bet(a_open_player);
-            else
                 close_card_round();
             break;
         
@@ -101,9 +98,11 @@ void CardRound::close_card_round()
     std::string name = chack_winer();
     std::vector<int> chips = m_table.table_chips();
     m_action_out.get_chips(name, chips);
+    m_action_out.table_clear_chips();
+    m_action_out.table_clear_hand();
+    m_action_out.clear_hand();
     m_table.clear_chips();
     m_table.clear_cards();
-    m_action_out.clear_hand();
     m_deck.re_fill_decks();
     m_stop = true;
     m_bet = false;
@@ -117,7 +116,7 @@ void CardRound::reveal_cards()
     while(it != end)
     {
         if(!it->second.get()->m_fold)
-            m_action_out.reveal_cards(it->second.get()->m_socket);
+            m_action_out.reveal_cards(it->second.get()->m_name);
         ++it;
     }
 }

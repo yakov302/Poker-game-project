@@ -78,8 +78,8 @@ void Hand::draw_back(sf::RenderWindow& a_window)const
     if(m_cards.empty())
         return;
 
-    const int size = m_cards.size();
-    for(int i = 0; i < size; ++i)
+    //const int size = m_cards.size();
+    for(int i = 0; i < 2; ++i)
         m_back[i].get()->draw(a_window);
 }
 

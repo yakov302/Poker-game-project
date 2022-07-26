@@ -220,8 +220,10 @@ bool Table::check_go_button()
     if (m_buttons["go"].get()->is_in_range(position.x, position.y))
     {
         if(m_self.is_flag_on("bet"))
+        {
             m_action_out.finish_bet(m_self.name());
-
+            usleep(100000);
+        }
 
         if(m_self.is_flag_on("exchange"))
         {
@@ -243,7 +245,8 @@ bool Table::check_bet_button()
 
     if (m_buttons["bet"].get()->is_in_range(position.x, position.y) && !m_self.is_flag_on("exchange"))
     {
-        m_self.turn_on_flag("bet");
+        std::cout << "name in table : " << m_self.name() << "\n";
+        m_action_out.start_bet(m_self.name());
         return true;
     }
 

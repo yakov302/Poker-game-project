@@ -18,19 +18,13 @@ std::string get_name(char* a_buffer)
 
 
 ActionIn::ActionIn(TcpServer& a_tcp, ActionOut& a_action_out, PlayersContainer& a_players, Subscribs& a_subscribs, BetRound& a_bet_round)
-: m_buffer(new char[1024])
-, m_tcp(a_tcp)
+: m_tcp(a_tcp)
 , m_action_out(a_action_out)
 , m_players(a_players)
 , m_subscribs(a_subscribs)
 , m_bet_round(a_bet_round)
 {
 
-}
-
-ActionIn::~ActionIn()
-{
-    delete[] m_buffer;
 }
 
  void ActionIn::get(char* a_buffer, int a_client_socket)
@@ -45,6 +39,10 @@ ActionIn::~ActionIn()
 
     case LOG_IN_REQUEST:
         log_in_reques(a_buffer, a_client_socket);
+        break;
+
+    case START_BET:
+        start_bet(a_buffer);
         break;
 
     case BET_ACTION:
@@ -93,6 +91,12 @@ void ActionIn::log_in_reques(char* a_buffer, int a_client_socket)
     if(m_subscribs.log_in_chack(arg.m_strings[0], arg.m_strings[1], a_client_socket)
     && m_players.log_in_chack(arg.m_strings[0], a_client_socket))
         m_players.new_player(arg.m_strings[0], gender, arg.m_ints[0], a_client_socket);
+}
+
+void ActionIn::start_bet(char* a_buffer)
+{
+    std::string name = impl::get_name(a_buffer);
+    m_action_out.start_bet(name);
 }
 
 void ActionIn::bet(char* a_buffer)

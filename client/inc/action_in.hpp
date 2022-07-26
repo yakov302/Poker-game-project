@@ -30,6 +30,7 @@ private:
     void user_name_alredy_log();
     void turn_on(char* a_buffer);
     void turn_off(char* a_buffer);
+    void start_bet(char* a_buffer);
     void bet(char* a_buffer);
     void invalid_bet(char* a_buffer);
     void check(char* a_buffer);

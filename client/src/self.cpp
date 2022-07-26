@@ -39,7 +39,7 @@ int Self::bet(int a_x, int a_y)
     int amount = m_wallet.amount_by_position(a_x, a_y);
     //if(amount != 0)
         //SEND TO SERVER
-     m_texts["action"].get()->set_text("bet " + std::to_string(m_current_bet)); // nees do deleted
+     //m_texts["action"].get()->set_text("bet " + std::to_string(m_current_bet)); // nees do deleted
     return amount;
 }
 
@@ -52,6 +52,7 @@ void Self::set_name_and_gender(std::string a_name, std::string a_gender)
 {
     set_shape(m_shape, m_texture, a_gender,m_x, m_y);
     set_name(m_texts, a_name, m_x, m_y, m_total_amount);
+    m_name = a_name;
 }
 
 void Self::bet(int a_amount)

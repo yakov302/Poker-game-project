@@ -90,9 +90,11 @@ void PlayersContainer::set_action(std::string& a_name, std::string a_action)
 
 void PlayersContainer::turn_on_flag(std::string& a_name, std::string a_flag)
 {
+    std::cout << "tourn on flag" << "\n";
     if(m_players.find(a_name) == m_players.end())
         return;
 
+    std::cout << "tourn on flag : " << a_name <<" - " << a_flag<< "\n";
     m_players[a_name].get()->turn_on_flag(a_flag);
 }
 

@@ -11,7 +11,6 @@ class ActionOut
 {
 public:
     ActionOut(TcpServer& a_tcp);
-    ~ActionOut();
 
     void registration_success(int a_client_socket);
     void registration_duplicare_name(int a_client_socket);
@@ -22,6 +21,7 @@ public:
     void user_name_alredy_log(int a_client_socket);
     void turn_on(std::string& a_name, std::string a_flag);
     void turn_off(std::string& a_name, std::string a_flag);
+    void start_bet(std::string& a_name);
     void bet(std::string& a_name, int a_amount);
     void invalid_bet(int a_amount, int a_client_socket);
     void check(std::string& a_name);
@@ -32,7 +32,7 @@ public:
     void get_player(std::string a_name, std::string a_gender, int a_amount);
     void get_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket);
     void delete_player(std::string a_name);
-    void reveal_cards(int a_client_socket);
+    void reveal_cards(std::string& a_name);
     void table_get_card(Card& a_card);
     void table_get_chips(int a_amount);
     void table_clear_hand();
@@ -43,13 +43,13 @@ public:
 private:
     void flag(std::string& a_name, std::string a_flag, Message_type a_message);
     void name_and_message(std::string& a_name, Message_type a_message);
-    void just_message(Message_type a_message, int a_client_socket);
+    void just_message_to_clienet(Message_type a_message, int a_client_socket);
+    void just_message_to_all(Message_type a_message);
     void pack_and_send_all(Args& a_arg, Message_type a_message);
     void pack_and_send_to_client(Args& a_arg, Message_type a_message, int a_client_socket);
-    int pack_player(std::string& a_name, std::string a_gender, int a_amount);
+    int pack_player(char* a_buffer, std::string& a_name, std::string a_gender, int a_amount);
 
 private:
-    char* m_buffer;
     TcpServer& m_tcp;
 };
 
