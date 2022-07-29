@@ -62,9 +62,9 @@ void ActionOut::finish_bet(std::string a_name)
     name_and_message(a_name, FINISH_BET);
 }
 
-void ActionOut::check_action(std::string a_name)
+void ActionOut::check_action()
 {
-    name_and_message(a_name, CHECK_ACTION);
+    name_and_message("stam", CHECK_ACTION); // just massge function
 }
 
 void ActionOut::fold_action(std::string a_name)

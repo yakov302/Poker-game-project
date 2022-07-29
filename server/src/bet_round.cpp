@@ -32,6 +32,25 @@ void BetRound::bet_in(int a_amount)
     m_action_out.table_get_chips(a_amount);
 }
 
+void BetRound::chack_in()
+{
+    Lock lock(m_mutex);
+    std::cout << "----enter wait----\n";
+    m_cond_var.wait(lock, [this]() {return m_wait_for_bet;});
+    std::cout << "----exit wait----\n";
+
+    if(m_min_bet > 0)
+        m_action_out.invalid_bet(m_min_bet , m_turn->second->m_socket);
+    
+    else
+    {
+        m_wait_for_bet = false;
+        m_cond_var.notify_all();  
+        m_action_out.turn_off(m_turn->second->m_name, "my_turn");
+        m_action_out.check(m_turn->second->m_name);
+    }
+}
+
 void BetRound::finish_bet()
 {
     Lock lock(m_mutex);
@@ -63,7 +82,6 @@ void BetRound::run(playerIterator a_open_player)
 
     while(!m_stop)
     {
-        std::cout << "run\n";
         bet();
         next();
     }
@@ -83,6 +101,7 @@ void BetRound::bet()
 void BetRound::next()
 {
     ++m_turn;
+
     if(m_turn == m_players.end())
         m_turn = m_players.begin();
 

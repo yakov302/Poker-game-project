@@ -46,6 +46,9 @@ void CardRound::run(playerIterator a_open_player)
             break;
 
         case 5:
+            if(!m_bet)
+                bet(a_open_player);
+            else
                 close_card_round();
             break;
         

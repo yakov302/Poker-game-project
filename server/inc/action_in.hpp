@@ -23,7 +23,7 @@ private:
     void start_bet(char* a_buffer);
     void bet(char* a_buffer);
     void finish_bet(char* a_buffer);
-    void check(char* a_buffer);
+    void check();
     void fold(char* a_buffer);
     void wake_up_client(int a_client_socket);
 

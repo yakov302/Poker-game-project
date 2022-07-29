@@ -54,7 +54,7 @@ ActionIn::ActionIn(TcpServer& a_tcp, ActionOut& a_action_out, PlayersContainer& 
         break;
 
     case CHECK_ACTION:
-        check(a_buffer);
+        check();
         break;
 
     case FOLD_ACTION:
@@ -117,12 +117,9 @@ void ActionIn::finish_bet(char* a_buffer)
     m_bet_round.finish_bet();
 }
 
-void ActionIn::check(char* a_buffer)
+void ActionIn::check()
 {
-    std::string name = impl::get_name(a_buffer);
-
-    m_action_out.turn_off(name, "my_turn");
-    m_action_out.check(name);
+    m_bet_round.chack_in();
 }
 
 void ActionIn::fold(char* a_buffer)
