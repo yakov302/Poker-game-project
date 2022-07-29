@@ -19,6 +19,20 @@ BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& 
 
 }
 
+void BetRound::fold_in()
+{
+    Lock lock(m_mutex);
+    std::cout << "----enter wait----\n";
+    m_cond_var.wait(lock, [this]() {return m_wait_for_bet;});
+    std::cout << "----exit wait----\n";
+
+    m_wait_for_bet = false;
+    m_cond_var.notify_all(); 
+    m_players.turn_on(m_turn->second->m_name, "fold");
+    m_action_out.turn_off(m_turn->second->m_name, "my_turn");
+    m_action_out.fold(m_turn->second->m_name);
+}
+
 void BetRound::start_bet()
 {
     m_action_out.start_bet(m_turn->second->m_name, m_turn->second->m_bet);
@@ -89,6 +103,9 @@ void BetRound::run(playerIterator a_open_player)
 
 void BetRound::bet()
 {
+    if(m_turn->second.get()->m_fold)
+        return;
+        
     Lock lock(m_mutex);
     m_action_out.turn_on(m_turn->second.get()->m_name, "my_turn");
     m_wait_for_bet = true;

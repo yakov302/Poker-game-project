@@ -18,6 +18,7 @@ public:
     void run(playerIterator a_open_player);
     void bet_in(int a_amount);
     void chack_in();
+    void fold_in();
     void start_bet();
     void finish_bet();
 

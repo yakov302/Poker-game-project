@@ -283,7 +283,7 @@ bool Table::check_fold_button()
 
     if (m_buttons["fold"].get()->is_in_range(position.x, position.y))
     {
-        m_action_out.fold_action(m_self.name());
+        m_action_out.fold_action();
         return true;
     }
 

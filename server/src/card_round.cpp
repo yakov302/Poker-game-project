@@ -19,6 +19,7 @@ void CardRound::run(playerIterator a_open_player)
 {
     m_stop = false;
     deal_cards();
+    //turn off all folds
     while(!m_stop)
     {
         int num_of_cards = m_table.num_of_card();

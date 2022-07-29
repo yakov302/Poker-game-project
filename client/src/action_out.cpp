@@ -67,9 +67,9 @@ void ActionOut::check_action()
     name_and_message("stam", CHECK_ACTION); // just massge function
 }
 
-void ActionOut::fold_action(std::string a_name)
+void ActionOut::fold_action()
 {
-    name_and_message(a_name, FOLD_ACTION);
+    name_and_message("stam", FOLD_ACTION); // just massge function
 }
 
 void ActionOut::wake_up_client()

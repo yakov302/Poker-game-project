@@ -17,7 +17,7 @@ public:
     void bet_action(std::string a_name, int a_chip);
     void finish_bet(std::string a_name);
     void check_action();
-    void fold_action(std::string a_name);
+    void fold_action();
     void wake_up_client();
     void wake_up_server();
 

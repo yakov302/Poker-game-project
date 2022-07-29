@@ -124,9 +124,7 @@ void ActionIn::check()
 
 void ActionIn::fold(char* a_buffer)
 {
-    std::string name = impl::get_name(a_buffer);
-    m_action_out.turn_off(name, "my_turn");
-    m_action_out.fold(name);
+    m_bet_round.fold_in();
 }
 
 void ActionIn::wake_up_client(int a_client_socket)

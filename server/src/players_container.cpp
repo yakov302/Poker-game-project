@@ -111,6 +111,9 @@ void PlayersContainer::turn_on(std::string& a_name, std::string a_flag)
     
     if(a_flag == "my_turn")
         m_players[a_name]->m_my_turn = true;
+
+    if(a_flag == "fold")
+        m_players[a_name]->m_fold = true;
 }
 
 void PlayersContainer::turn_off(std::string& a_name, std::string a_flag)
@@ -120,6 +123,9 @@ void PlayersContainer::turn_off(std::string& a_name, std::string a_flag)
     
     if(a_flag == "my_turn")
         m_players[a_name]->m_my_turn = false;
+    
+    if(a_flag == "fold")
+        m_players[a_name]->m_fold = false;
 }
 
 
