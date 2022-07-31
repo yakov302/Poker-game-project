@@ -1,10 +1,11 @@
 #pragma once
 
-#include <condition_variable>
 #include <unordered_map>
 #include <memory>
 #include "player.hpp"
 #include "action_out.hpp"
+#include "wait.hpp"
+
 
 namespace poker
 {
@@ -26,7 +27,7 @@ public:
     void clear_hand(std::string& a_name);
     void turn_on(std::string& a_name, std::string a_flag);
     void turn_off(std::string& a_name, std::string a_flag);
-    std::condition_variable& cond_var();
+    Wait& wait();
 
     bool log_in_chack(std::string a_name, int a_client_socket)const;
     playerIterator begin();
@@ -34,8 +35,8 @@ public:
     int num_of_players()const;
 
 private:
+    Wait m_wait;
     ActionOut& m_action_out;
-    std::condition_variable m_cond_var;
     std::unordered_map<std::string, playerPointer> m_players;
 };
 

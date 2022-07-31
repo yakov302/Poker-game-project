@@ -28,10 +28,14 @@ Game::Game(PlayersContainer& a_players, CardRound& a_card_round)
 
 void Game::run()
 {
-    m_open_player = m_players.begin();
     while (!m_stop)
     {
-        wait();
+        if(m_players.num_of_players()< 2)
+        {
+            m_players.wait().enter_wait();
+            m_open_player = m_players.begin();
+        }
+        
         m_card_round.run(m_open_player);
         next();
     }
@@ -45,12 +49,12 @@ void Game::next()
 }
 
 
-void Game::wait()
-{
-    Lock lock(m_mutex);
-    std::cout << "----enter game wait----\n";
-    m_players.cond_var().wait(lock, [this]() {return m_players.num_of_players() > 1;});
-    std::cout << "----exit game wait----\n";
-}
+// void Game::wait()
+// {
+//     Lock lock(m_mutex);
+//     std::cout << "----enter game wait----\n";
+//     m_players.cond_var().wait(lock, [this]() {return m_players.num_of_players() > 1;});
+//     std::cout << "----exit game wait----\n";
+// }
 
 }// poker namespace

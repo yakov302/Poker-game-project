@@ -26,8 +26,6 @@ public:
 private:
     void bet();
     void next();
-    void enter_wait();
-    void exit_wait();
     void close_bet_round();
     bool one_player_left();
     void zero_bets_and_clear_actions();
@@ -35,11 +33,11 @@ private:
 private:
     int m_min_bet;
     bool m_stop;
-    bool m_wait_for_bet;
-    
+
     std::mutex m_mutex;
     std::condition_variable m_cond_var;
 
+    Wait m_wait;
     PlayersContainer& m_players;
     ActionOut& m_action_out;
     Table& m_table;

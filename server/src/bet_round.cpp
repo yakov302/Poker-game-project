@@ -8,9 +8,9 @@ namespace poker
 BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table)
 : m_min_bet(0)
 , m_stop(false)
-, m_wait_for_bet(false)
 , m_mutex()
 , m_cond_var()
+, m_wait()
 , m_players(a_players)
 , m_action_out(a_action_out)
 , m_table(a_table)
@@ -44,23 +44,7 @@ void BetRound::bet()
         return;
         
     m_action_out.turn_on(m_turn->second.get()->m_name, "my_turn");
-    enter_wait();
-}
-
-void BetRound::enter_wait()
-{
-    Lock lock(m_mutex);
-    m_wait_for_bet = true;
-    std::cout << "----enter wait----\n";
-    m_cond_var.wait(lock, [this]() {return !m_wait_for_bet;});
-    std::cout << "----exit wait----\n";
-    m_cond_var.notify_all();
-}
-
-void BetRound::exit_wait()
-{
-    m_wait_for_bet = false;
-    m_cond_var.notify_all();
+    m_wait.enter_wait();
 }
 
 void BetRound::next()
@@ -98,7 +82,7 @@ void BetRound::finish_bet()
         if(m_turn->second->m_bet > m_min_bet)
             m_open_player = m_turn;
 
-        exit_wait();
+        m_wait.exit_wait();
         m_min_bet = m_turn->second->m_bet;
         m_action_out.turn_off(m_turn->second.get()->m_name, "my_turn");
         m_action_out.turn_off(m_turn->second.get()->m_name, "bet");
@@ -112,7 +96,7 @@ void BetRound::chack_in()
     
     else
     {
-        exit_wait();
+        m_wait.exit_wait();
         m_action_out.turn_off(m_turn->second->m_name, "my_turn");
         m_action_out.check(m_turn->second->m_name);
     }
@@ -120,10 +104,10 @@ void BetRound::chack_in()
 
 void BetRound::fold_in()
 {
+    m_wait.exit_wait();
     m_players.turn_on(m_turn->second->m_name, "fold");
     m_action_out.fold(m_turn->second->m_name);
     m_action_out.turn_off(m_turn->second->m_name, "my_turn");
-    exit_wait();
 }
 
 bool BetRound::one_player_left()
@@ -150,7 +134,6 @@ void BetRound::close_bet_round()
 {
     m_stop = true; 
     m_min_bet = 0;
-    m_wait_for_bet = false;
     zero_bets_and_clear_actions();
 }
 

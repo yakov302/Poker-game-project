@@ -6,7 +6,8 @@ namespace poker
 {
 
 PlayersContainer::PlayersContainer(ActionOut& a_action_out)
-: m_action_out(a_action_out)
+: m_wait()
+, m_action_out(a_action_out)
 , m_players()
 {
     
@@ -51,7 +52,7 @@ void PlayersContainer::new_player(std::string a_name, std::string a_gender, int 
     m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, a_client_socket));
 
     if(num_of_players() > 1)
-        m_cond_var.notify_all();
+        m_wait.exit_wait();
 
 }
 
@@ -132,10 +133,11 @@ void PlayersContainer::turn_off(std::string& a_name, std::string a_flag)
         m_players[a_name]->m_fold = false;
 }
 
-std::condition_variable& PlayersContainer::cond_var()
+Wait& PlayersContainer::wait()
 {
-    return m_cond_var;
+    return m_wait;
 }
+
 
 
 }// poker namespace
