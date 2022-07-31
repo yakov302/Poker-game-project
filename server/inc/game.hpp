@@ -9,6 +9,8 @@
 namespace poker
 {
 
+using Lock = std::unique_lock<std::mutex>;
+
 class Game
 {
 public:
@@ -16,9 +18,12 @@ public:
 
     void run();
     void next();
+    void wait();
 
 private:
     bool m_stop;
+    
+    std::mutex m_mutex;
     std::thread* m_thread;
     PlayersContainer& m_players;
     CardRound& m_card_round;

@@ -59,10 +59,6 @@ void BetRound::enter_wait()
 
 void BetRound::exit_wait()
 {
-    Lock lock(m_mutex);
-    std::cout << "----enter wait----\n";
-    m_cond_var.wait(lock, [this]() {return m_wait_for_bet;});
-    std::cout << "----exit wait----\n";
     m_wait_for_bet = false;
     m_cond_var.notify_all();
 }

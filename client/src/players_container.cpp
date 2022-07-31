@@ -85,7 +85,7 @@ void PlayersContainer::set_fold(std::string& a_name, std::string a_text)
     if(m_players.find(a_name) == m_players.end())
         return;
 
-    m_players[a_name].get()->set_fold(a_text);
+    m_players[a_name].get()->set_action(a_text);
 }
 
 void PlayersContainer::set_action(std::string& a_name, std::string a_action)

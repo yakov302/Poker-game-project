@@ -49,6 +49,10 @@ void PlayersContainer::new_player(std::string a_name, std::string a_gender, int 
         m_action_out.get_player(player.second->m_name, player.second->m_gender, player.second->m_amount, a_client_socket);
 
     m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, a_client_socket));
+
+    if(num_of_players() > 1)
+        m_cond_var.notify_all();
+
 }
 
 void PlayersContainer::delete_player(std::string& a_name)
@@ -126,6 +130,11 @@ void PlayersContainer::turn_off(std::string& a_name, std::string a_flag)
     
     if(a_flag == "fold")
         m_players[a_name]->m_fold = false;
+}
+
+std::condition_variable& PlayersContainer::cond_var()
+{
+    return m_cond_var;
 }
 
 
