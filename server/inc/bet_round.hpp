@@ -23,6 +23,7 @@ public:
     void finish_bet();
 
 private:
+    bool only_one_player_left();
     void bet();
     void next();
     void close_bet_round();

@@ -18,11 +18,15 @@ CardRound::CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_a
 void CardRound::run(playerIterator a_open_player)
 {
     m_stop = false;
+    turn_off_folds();
     deal_cards();
-    //turn off all folds
+
     while(!m_stop)
     {
         int num_of_cards = m_table.num_of_card();
+        if(one_player_left())
+            close_card_round();
+
         switch (num_of_cards)
         {
         case 0:
@@ -65,8 +69,23 @@ void CardRound::bet(playerIterator a_open_player)
     m_bet = true;
 }
 
+void CardRound::turn_off_folds()
+{
+    auto it = m_players.begin();
+    auto end = m_players.end();
+
+    while(it != end)
+    {
+        if(it->second.get()->m_fold)
+            m_action_out.clear_fold(it->second.get()->m_name);
+
+        ++it;
+    }
+}
+
 void CardRound::deal_cards()
 {
+    m_deck.shuffle();
     for(int i = 0; i < 2; ++i)
     {
         auto it = m_players.begin();
@@ -96,9 +115,45 @@ void CardRound::open_card()
     m_bet = false;
 }
 
+bool CardRound::one_player_left()
+{
+    int count = 0;
+    auto it = m_players.begin();
+    auto end = m_players.end();
+
+    while(it != end)
+    {
+        if(!it->second.get()->m_fold)
+            ++count;
+        
+        if(count > 1)
+            return false;
+
+        ++it;
+    }
+
+    return true;
+}
+
+std::string CardRound::one_player()
+{
+    auto it = m_players.begin();
+    auto end = m_players.end();
+
+    while(it != end)
+    {
+        if(!it->second.get()->m_fold)
+            return it->second.get()->m_name;
+        
+        ++it;
+    }
+    return "";
+}
+
 void CardRound::close_card_round()
 {
-    reveal_cards();
+    if(!one_player_left())
+        reveal_cards();
     std::string name = chack_winer();
     std::vector<int> chips = m_table.table_chips();
     m_action_out.get_chips(name, chips);
@@ -127,6 +182,9 @@ void CardRound::reveal_cards()
 
 std::string CardRound::chack_winer()
 {
+    if(one_player_left())
+        return one_player();
+
     return m_players.begin()->second.get()->m_name;
 }
 

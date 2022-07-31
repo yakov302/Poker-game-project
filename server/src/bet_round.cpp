@@ -31,6 +31,9 @@ void BetRound::fold_in()
     m_players.turn_on(m_turn->second->m_name, "fold");
     m_action_out.turn_off(m_turn->second->m_name, "my_turn");
     m_action_out.fold(m_turn->second->m_name);
+
+    if(only_one_player_left())
+        close_bet_round();
 }
 
 void BetRound::start_bet()
@@ -99,6 +102,26 @@ void BetRound::run(playerIterator a_open_player)
         bet();
         next();
     }
+}
+
+bool BetRound::only_one_player_left()
+{
+    int count = 0;
+    auto it = m_players.begin();
+    auto end = m_players.end();
+
+    while(it != end)
+    {
+        if(!it->second.get()->m_fold)
+            ++count;
+        
+        if(count > 1)
+            return false;
+
+        ++it;
+    }
+
+    return true; 
 }
 
 void BetRound::bet()

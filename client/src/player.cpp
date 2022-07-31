@@ -19,6 +19,7 @@ void set_texts(std::unordered_map<std::string, textPointer>& a_texts, std::strin
     a_texts["your_turn"] = textPointer(new Text("./resources/fonts/arial.ttf", "Your turn", sf::Color(255, 228, 156), 25, a_x + 18, a_y - 37));
     a_texts["amount"] = textPointer(new Text("./resources/fonts/arial.ttf", std::to_string(a_amount), sf::Color(255, 228, 156), 25, a_x + 50, a_y + 140));
     a_texts["action"] = textPointer(new Text("./resources/fonts/arial.ttf", "", sf::Color(255, 228, 156), 25, a_x + 30, a_y + 167));
+    a_texts["fold"] = textPointer(new Text("./resources/fonts/arial.ttf", "", sf::Color(255, 228, 156), 25, a_x + 30, a_y + 167));
 }
 
 
@@ -70,6 +71,11 @@ void Player::set_action(std::string a_action)
     m_texts["action"].get()->set_text(a_action);
 }
 
+void Player::set_fold(std::string a_text)
+{
+    m_texts["fold"].get()->set_text(a_text);
+}
+
 void Player::turn_on_flag(std::string a_flag)
 {
     if(m_flags.find(a_flag) == m_flags.end())
@@ -100,6 +106,7 @@ void Player::draw_player(sf::RenderWindow& a_window)
     m_texts["name"].get()->draw(a_window);
     m_texts["amount"].get()->draw(a_window);
     m_texts["action"].get()->draw(a_window);
+    m_texts["fold"].get()->draw(a_window);
 
     if(m_flags["my_turn"])
        m_texts["your_turn"].get()->draw(a_window);

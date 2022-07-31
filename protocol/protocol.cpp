@@ -146,6 +146,27 @@ Message_type message_type(char* a_buffer)
     return type;
 }
 
+int num_of_ints(char* a_buffer)
+{
+    int size =  message_size(a_buffer);
+    impl::decrypt("poker", a_buffer, size);
+
+    int bytes = sizeof(int) + 1;              // "total size" meta data place  +   Message type
+    int num_of_strings = *(a_buffer + bytes);
+    ++bytes;
+
+    for(int i = 0; i < num_of_strings; ++i)
+    {
+        int str_size = *(a_buffer + bytes);
+        bytes += (str_size + 1);               // str size + str_size place
+    }
+
+    int num_of_ints = *(a_buffer + bytes);
+
+    impl::encrypt("poker", a_buffer, size);
+
+    return num_of_ints;
+}
 
 }// poker namespace
 

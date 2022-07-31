@@ -35,6 +35,7 @@ private:
     void invalid_bet(char* a_buffer);
     void check(char* a_buffer);
     void fold(char* a_buffer);
+    void clear_fold(char* a_buffer);
     void get_card(char* a_buffer);
     void get_chips(char* a_buffer);
     void clear_hand(char* a_buffer);

@@ -10,7 +10,7 @@ PlayersContainer::PlayersContainer()
 , m_players()
 {
 
-}
+} 
 
 void PlayersContainer::get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_of_printing)
 {
@@ -78,6 +78,14 @@ void PlayersContainer::clear_hand(std::string& a_name)
         return;
 
     m_players[a_name].get()->clear_hand();
+}
+
+void PlayersContainer::set_fold(std::string& a_name, std::string a_text)
+{
+    if(m_players.find(a_name) == m_players.end())
+        return;
+
+    m_players[a_name].get()->set_fold(a_text);
 }
 
 void PlayersContainer::set_action(std::string& a_name, std::string a_action)

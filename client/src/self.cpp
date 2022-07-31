@@ -101,6 +101,7 @@ void Self::draw_player(sf::RenderWindow& a_window)
 
     m_texts["name"].get()->draw(a_window);
     m_texts["action"].get()->draw(a_window);
+    m_texts["fold"].get()->draw(a_window);
 
     if(m_flags["my_turn"])
        m_texts["your_turn"].get()->draw(a_window);

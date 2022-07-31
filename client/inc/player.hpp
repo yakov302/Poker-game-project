@@ -20,6 +20,7 @@ public:
     void get_card(std::string& a_suit, int a_number);
     void clear_hand();
 
+    void set_fold(std::string a_action);
     void set_action(std::string a_action);
     virtual void turn_on_flag(std::string a_flag);
     virtual void turn_off_flag(std::string a_flag);

@@ -100,6 +100,10 @@ void ActionIn::get(char* a_buffer)
     case FOLD_UPDATE:
         fold(a_buffer);
         break;
+    
+    case CLEAR_FOLD:
+        clear_fold(a_buffer);
+        break;
 
     case GET_CARD:
         get_card(a_buffer);
@@ -245,8 +249,14 @@ void ActionIn::check(char* a_buffer)
 void ActionIn::fold(char* a_buffer)
 {
     std::string name = impl::get_name(a_buffer);
-    m_players.set_action(name, "fold");
+    m_players.set_fold(name, "fold");
     m_players.clear_hand(name);
+}
+
+void ActionIn::clear_fold(char* a_buffer)
+{
+    std::string name = impl::get_name(a_buffer);
+    m_players.set_fold(name, "");
 }
 
 void ActionIn::get_card(char* a_buffer)
@@ -258,10 +268,10 @@ void ActionIn::get_card(char* a_buffer)
 
 void ActionIn::get_chips(char* a_buffer)
 {
-    // need to rite function
-    std::string player_name = a_buffer;
-    std::vector<int> chips({5,5,5});
-    m_players.get_chips(player_name, chips);
+    int num_of_chips = num_of_ints(a_buffer);
+    Args arg(1, num_of_chips);
+    unpack(a_buffer, arg);
+    m_players.get_chips(arg.m_strings[0], arg.m_ints);
 }
 
 void ActionIn::clear_hand(char* a_buffer)

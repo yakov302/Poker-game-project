@@ -25,6 +25,7 @@ public:
     void get_card(std::string& a_name, std::string& a_suit, int a_number);
     void clear_hand(std::string& a_name);
 
+    void set_fold(std::string& a_name, std::string a_text);
     void set_action(std::string& a_name, std::string a_action);
     void update_current_bet(std::string& a_name, int a_amount);
     void turn_on_flag(std::string& a_name, std::string a_flag);
