@@ -26,7 +26,10 @@ void CardRound::run(playerIterator a_open_player)
     {
         int num_of_cards = m_table.num_of_card();
         if(one_player_left())
+        {
             close_card_round();
+            break;
+        }
 
         switch (num_of_cards)
         {
@@ -66,6 +69,7 @@ void CardRound::run(playerIterator a_open_player)
 
 void CardRound::turn_off_folds()
 {
+    std::cout << "----------------------------> turn_off_folds\n";
     auto it = m_players.begin();
     auto end = m_players.end();
 
@@ -83,6 +87,7 @@ void CardRound::turn_off_folds()
 
 void CardRound::deal_cards()
 {
+    std::cout << "----------------------------> deal_cards\n";
     m_deck.shuffle();
     for(int i = 0; i < 2; ++i)
     {
