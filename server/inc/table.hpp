@@ -17,6 +17,7 @@ public:
     void get_chip(int a_chip);
     std::vector<Card>& table_cards();
     std::vector<int>& table_chips();
+    int table_amount();
     void clear_cards();
     void clear_chips();
 

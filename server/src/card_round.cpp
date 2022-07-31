@@ -1,4 +1,5 @@
 #include "card_round.hpp"
+#include <iostream>
 
 namespace poker
 {
@@ -63,12 +64,6 @@ void CardRound::run(playerIterator a_open_player)
     }
 }
 
-void CardRound::bet(playerIterator a_open_player)
-{
-    m_bet_round.run(a_open_player);
-    m_bet = true;
-}
-
 void CardRound::turn_off_folds()
 {
     auto it = m_players.begin();
@@ -77,7 +72,10 @@ void CardRound::turn_off_folds()
     while(it != end)
     {
         if(it->second.get()->m_fold)
+        {
+            m_players.turn_off(it->second.get()->m_name, "fold");
             m_action_out.clear_fold(it->second.get()->m_name);
+        }
 
         ++it;
     }
@@ -99,6 +97,12 @@ void CardRound::deal_cards()
             ++it;
         }
     }
+}
+
+void CardRound::bet(playerIterator a_open_player)
+{
+    m_bet_round.run(a_open_player);
+    m_bet = true;
 }
 
 void CardRound::open_three_cards()
@@ -132,7 +136,7 @@ bool CardRound::one_player_left()
         ++it;
     }
 
-    return true;
+    return true; 
 }
 
 std::string CardRound::one_player()
@@ -154,15 +158,19 @@ void CardRound::close_card_round()
 {
     if(!one_player_left())
         reveal_cards();
+
     std::string name = chack_winer();
-    std::vector<int> chips = m_table.table_chips();
-    m_action_out.get_chips(name, chips);
+
+    m_action_out.get_chips(name, m_table.table_chips());
     m_action_out.table_clear_chips();
     m_action_out.table_clear_hand();
-    m_action_out.clear_hand();
+    clear_hands();
+
+    m_players.increase(name, m_table.table_amount());
     m_table.clear_chips();
     m_table.clear_cards();
     m_deck.re_fill_decks();
+
     m_stop = true;
     m_bet = false;
 }
@@ -178,6 +186,17 @@ void CardRound::reveal_cards()
             m_action_out.reveal_cards(it->second.get()->m_name);
         ++it;
     }
+
+    usleep(5000000);
+
+    it = m_players.begin();
+    end = m_players.end();
+
+    while(it != end)
+    {
+        m_action_out.turn_off(it->second.get()->m_name, "reveal_cards");
+        ++it;
+    }
 }
 
 std::string CardRound::chack_winer()
@@ -186,6 +205,20 @@ std::string CardRound::chack_winer()
         return one_player();
 
     return m_players.begin()->second.get()->m_name;
+}
+
+void CardRound::clear_hands()
+{
+    auto it = m_players.begin();
+    auto end = m_players.end();
+
+    while(it != end)
+    {
+        if(!it->second.get()->m_fold)
+            m_action_out.clear_hand(it->second.get()->m_name);
+
+        ++it;
+    }
 }
 
 

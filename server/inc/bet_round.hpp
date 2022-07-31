@@ -1,6 +1,7 @@
 #pragma once
 
 #include <condition_variable>
+
 #include "players_container.hpp"
 #include "action_out.hpp"
 #include "table.hpp"
@@ -17,30 +18,34 @@ public:
 
     void run(playerIterator a_open_player);
     void bet_in(int a_amount);
-    void chack_in();
-    void fold_in();
     void start_bet();
     void finish_bet();
+    void chack_in();
+    void fold_in();
 
 private:
-    bool only_one_player_left();
     void bet();
     void next();
+    void enter_wait();
+    void exit_wait();
     void close_bet_round();
+    bool one_player_left();
     void zero_bets_and_clear_actions();
 
 private:
     int m_min_bet;
     bool m_stop;
     bool m_wait_for_bet;
+    
     std::mutex m_mutex;
-    std::condition_variable m_cond_var;  
+    std::condition_variable m_cond_var;
 
     PlayersContainer& m_players;
     ActionOut& m_action_out;
     Table& m_table;
-    playerIterator m_open_player;
+
     playerIterator m_turn;
+    playerIterator m_open_player;
 };
 
 

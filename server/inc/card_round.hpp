@@ -17,15 +17,16 @@ public:
     void run(playerIterator a_open_player);
 
 private:
-    bool one_player_left();
-    std::string one_player();
-    void turn_off_folds();
     void deal_cards();
+    void turn_off_folds();
     void bet(playerIterator a_open_player);
     void open_three_cards();
     void open_card();
     void close_card_round();
     void reveal_cards();
+    void clear_hands();
+    bool one_player_left();
+    std::string one_player();
     std::string chack_winer();
 
 private:

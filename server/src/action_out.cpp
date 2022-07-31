@@ -172,9 +172,9 @@ void ActionOut::get_chips(std::string& a_name, std::vector<int>& a_chips)
     pack_and_send_all(arg, GET_CHIPS);
 }
 
-void ActionOut::clear_hand()
+void ActionOut::clear_hand(std::string& a_name)
 {
-    just_message_to_all(CLEAR_HAND);
+    name_and_message(a_name, CLEAR_HAND);
 }
 
 void ActionOut::get_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket)

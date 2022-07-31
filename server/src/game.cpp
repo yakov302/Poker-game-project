@@ -47,4 +47,5 @@ void Game::next()
         m_open_player = m_players.begin();
 }
 
+
 }// poker namespace

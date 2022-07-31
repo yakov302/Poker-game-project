@@ -36,6 +36,15 @@ std::vector<int>& Table::table_chips()
     return m_chips;
 }
 
+int Table::table_amount()
+{
+    int amount = 0;
+    for(auto chip : m_chips)
+        amount += chip;
+
+    return amount;
+}
+
 void Table::clear_cards()
 {
     m_cards.clear();

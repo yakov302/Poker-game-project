@@ -29,7 +29,7 @@ public:
     void clear_fold(std::string& a_name);
     void get_card(std::string& a_name, Card& a_card);
     void get_chips(std::string& a_name, std::vector<int>& a_chips);
-    void clear_hand();
+    void clear_hand(std::string& a_name);
     void get_player(std::string a_name, std::string a_gender, int a_amount);
     void get_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket);
     void delete_player(std::string a_name);
