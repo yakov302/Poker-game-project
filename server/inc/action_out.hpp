@@ -41,6 +41,9 @@ public:
     void wake_up_client(int a_client_socket);
     void wake_up_server();
     void clear_action(std::string& a_name);
+    void round_winer(std::string& a_name);
+    void game_winer(std::string& a_name);
+    void clear_text();
 
 private:
     void flag(std::string& a_name, std::string a_flag, Message_type a_message);

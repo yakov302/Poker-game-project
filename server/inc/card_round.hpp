@@ -25,6 +25,8 @@ private:
     void close_card_round();
     void reveal_cards();
     void clear_hands();
+    void turn_off_reveal_cards();
+    void chack_money();
     bool one_player_left();
     std::string one_player();
     std::string chack_winer();

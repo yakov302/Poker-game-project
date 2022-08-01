@@ -18,6 +18,7 @@ public:
     , m_socket(a_socket)
     , m_bet(0)
     , m_fold(false)
+    , m_viewer(false)
     , m_my_turn(false)
     , m_hand()
     {
@@ -30,6 +31,7 @@ public:
     int m_socket;
     int m_bet;
     bool m_fold;
+    bool m_viewer;
     bool m_my_turn;
     std::vector<Card> m_hand;
 };

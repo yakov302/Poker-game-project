@@ -15,7 +15,7 @@ class PlayersContainer
 public:
     PlayersContainer();
 
-    void get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_x_self = 0 , int a_y_self = 50, int a_x_card = 0, int a_y_card = 0, float a_scale_card = 0.5, int a_gap_of_printing = 5);
+    void get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_x_self = 0 , int a_y_self = 50, int a_x_card = 0, int a_y_card = 0, float a_scale_card = 0.5, int a_gap_of_printing = 10);
     void get_player(std::string& a_name, Self& a_player);
     void delete_player(std::string& a_name);
 

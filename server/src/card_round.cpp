@@ -95,11 +95,14 @@ void CardRound::deal_cards()
         auto end = m_players.end();
 
         while(it != end)
-        {
-            Card card = m_deck.pop_card();
-            m_players.get_card(it->second.get()->m_name, card);
-            m_action_out.get_card(it->second.get()->m_name, card);
-            ++it;
+        {   
+            if(!it->second.get()->m_viewer)
+            {
+                Card card = m_deck.pop_card();
+                m_players.get_card(it->second.get()->m_name, card);
+                m_action_out.get_card(it->second.get()->m_name, card);
+                ++it;
+            }
         }
     }
 }
@@ -132,7 +135,7 @@ bool CardRound::one_player_left()
 
     while(it != end)
     {
-        if(!it->second.get()->m_fold)
+        if(!it->second.get()->m_fold && !it->second.get()->m_viewer)
             ++count;
         
         if(count > 1)
@@ -151,7 +154,7 @@ std::string CardRound::one_player()
 
     while(it != end)
     {
-        if(!it->second.get()->m_fold)
+        if(!it->second.get()->m_fold && !it->second.get()->m_viewer)
             return it->second.get()->m_name;
         
         ++it;
@@ -165,11 +168,16 @@ void CardRound::close_card_round()
         reveal_cards();
 
     std::string name = chack_winer();
+    m_action_out.round_winer(name);
+    usleep(3000000);
 
     m_action_out.get_chips(name, m_table.table_chips());
     m_action_out.table_clear_chips();
     m_action_out.table_clear_hand();
+    m_action_out.clear_text();
+    turn_off_reveal_cards();
     clear_hands();
+    chack_money();
 
     m_players.increase(name, m_table.table_amount());
     m_table.clear_chips();
@@ -191,11 +199,13 @@ void CardRound::reveal_cards()
             m_action_out.reveal_cards(it->second.get()->m_name);
         ++it;
     }
-
     usleep(5000000);
+}
 
-    it = m_players.begin();
-    end = m_players.end();
+void CardRound::turn_off_reveal_cards()
+{
+    auto it = m_players.begin();
+    auto end = m_players.end();
 
     while(it != end)
     {
@@ -221,6 +231,20 @@ void CardRound::clear_hands()
     {
         if(!it->second.get()->m_fold)
             m_action_out.clear_hand(it->second.get()->m_name);
+
+        ++it;
+    }
+}
+
+void CardRound::chack_money()
+{
+    auto it = m_players.begin();
+    auto end = m_players.end();
+
+    while(it != end)
+    {
+        if(it->second.get()->m_amount == 0)
+            it->second.get()->m_viewer = true;
 
         ++it;
     }

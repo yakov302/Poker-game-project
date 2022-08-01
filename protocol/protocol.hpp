@@ -62,16 +62,19 @@ typedef enum Message_type
     TABLE_CLEAR_CHIPS = 26,
     WAKE_UP_CLIENT = 27,
     CLEAR_ACTION = 28,
+    ROUND_WINER = 29,
+    GAME_WINER = 30,
+    CLEAR_TEXT = 31,
 
     //client to server
 
-    REGISTRATION_REQUES = 29,
-    LOG_IN_REQUEST = 30,
-    BET_ACTION = 31,
-    FINISH_BET = 32,
-    CHECK_ACTION = 33,
-    FOLD_ACTION = 34,
-    WAKE_UP_SERVER = 35
+    REGISTRATION_REQUES = 32,
+    LOG_IN_REQUEST = 33,
+    BET_ACTION = 34,
+    FINISH_BET = 35,
+    CHECK_ACTION = 36,
+    FOLD_ACTION = 37,
+    WAKE_UP_SERVER = 38
 
 }Message_type;
 

@@ -30,6 +30,15 @@ bool PlayersContainer::log_in_chack(std::string a_name,  int a_client_socket)con
 
 playerIterator PlayersContainer::begin()
 {
+    auto it = m_players.begin();
+    auto end = m_players.end();
+
+    while(it != end)
+    {
+        std::cout << "player name: " << it->second.get()->m_name << "\n";
+        ++it;
+    }
+
     return  m_players.begin();
 }
 

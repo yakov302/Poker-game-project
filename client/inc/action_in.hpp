@@ -48,6 +48,9 @@ private:
     void table_clear_chips();
     void wake_up_server();
     void clear_action(char* a_buffer);
+    void round_winer(char* a_buffer);
+    void game_winer(char* a_buffer);
+    void clear_text();
     
 private:
     Hand& m_cards; 

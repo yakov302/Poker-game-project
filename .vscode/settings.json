@@ -53,6 +53,11 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "condition_variable": "cpp"
+        "condition_variable": "cpp",
+        "variant": "cpp",
+        "bitset": "cpp",
+        "complex": "cpp",
+        "iomanip": "cpp",
+        "typeindex": "cpp"
     }
 }

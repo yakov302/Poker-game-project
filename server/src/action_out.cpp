@@ -242,5 +242,20 @@ void ActionOut::clear_action(std::string& a_name)
     name_and_message(a_name, CLEAR_ACTION);
 }
 
+void ActionOut::round_winer(std::string& a_name)
+{
+    name_and_message(a_name, ROUND_WINER);
+}
+
+void ActionOut::game_winer(std::string& a_name)
+{
+    name_and_message(a_name, GAME_WINER);
+}
+
+void ActionOut::clear_text()
+{
+    just_message_to_all(CLEAR_TEXT);
+}
+
 
 }// poker namespace

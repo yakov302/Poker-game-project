@@ -152,6 +152,18 @@ void ActionIn::get(char* a_buffer)
         clear_action(a_buffer);
         break;
 
+    case ROUND_WINER:
+        round_winer(a_buffer);
+        break;
+
+    case GAME_WINER:
+        game_winer(a_buffer);
+        break;
+
+    case CLEAR_TEXT:
+        clear_text();
+        break;
+
     default:
         break;
     }
@@ -234,7 +246,6 @@ void ActionIn::bet(char* a_buffer)
 
 void ActionIn::invalid_bet(char* a_buffer)
 { 
-    std::cout << "invalid bet \n";  
     Args arg(0, 1);
     unpack(a_buffer, arg);
     m_table.set_text("text", "Invalid bet \nMin bet: " + std::to_string(arg.m_ints[0]));
@@ -334,5 +345,21 @@ void ActionIn::ActionIn::clear_action(char* a_buffer)
     m_players.set_action(name, "");
 }
 
+void ActionIn::round_winer(char* a_buffer)
+{
+    std::string name = impl::get_name(a_buffer);
+    m_table.set_text("text", name + " won!");
+}
+
+void ActionIn::game_winer(char* a_buffer)
+{
+    std::string name = impl::get_name(a_buffer);
+    m_table.set_text("text", name + " won the game!");
+}
+
+void ActionIn::clear_text()
+{
+    m_table.set_text("text", "");
+}
 
 }// poker namespace
