@@ -12,7 +12,7 @@ ActionOut::ActionOut(TcpClient& a_tcp)
 
 void ActionOut::name_and_message(std::string a_name, Message_type a_message)
 {
-    char buffer[1024];
+    char buffer[BUFFER_SIZE];
     Args arg(1, 0);
     arg.m_strings.emplace_back(a_name);
     int size = pack(buffer, arg, a_message);
@@ -21,7 +21,7 @@ void ActionOut::name_and_message(std::string a_name, Message_type a_message)
 
 void ActionOut::pack_and_send(Args& a_arg, Message_type a_message)
 {
-    char buffer[1024];
+    char buffer[BUFFER_SIZE];
     int size = pack(buffer, a_arg, a_message);
     m_tcp.send_to_server(buffer, size);
 }

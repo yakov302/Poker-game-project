@@ -5,14 +5,15 @@ namespace poker
 {
 
 TcpClient::TcpClient(ClientSocket& a_socket)
-: m_socket(a_socket)
+: m_mutex()
+, m_socket(a_socket)
 {
 
 }
 
 bool TcpClient::send_to_server(char* a_buffer, int a_length)
 {
-	Lock(m_mutex);
+	Lock lock(m_mutex);
 	std::cout <<  "\n\n" << "*************" << "\n\n";
 	std::cout << "client sent: " << "\n";
 	std::cout << "size: " << message_size(a_buffer) << "\n";
@@ -41,7 +42,7 @@ bool TcpClient::send_to_server(char* a_buffer, int a_length)
 
 bool TcpClient::receive_from_server(char* a_buffer)
 {
-	Lock(m_mutex);
+	Lock lock(m_mutex);
 	std::cout <<  "\n\n" << "*************" << "\n\n";
 	std::cout << "client recive: " << "\n";
 	std::cout << "to socet: " << m_socket.socket() << "\n";

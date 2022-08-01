@@ -3,6 +3,8 @@
 #include "tcp_client.hpp"
 #include "protocol.hpp"
 
+#define BUFFER_SIZE 2048
+
 namespace poker
 {
 

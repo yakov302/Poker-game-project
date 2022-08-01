@@ -9,6 +9,7 @@
 #include "table.hpp"
 #include "client_socket.hpp"
 
+#define BUFFER_SIZE 2048
 
 namespace poker
 {

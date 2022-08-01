@@ -98,9 +98,8 @@ int pack(char* a_buffer, Args& a_arganmats, Message_type a_message)
     impl::pack_strings(a_buffer, a_arganmats, bytes);
     impl::pack_ints(a_buffer, a_arganmats, bytes);
 
-    *a_buffer = bytes;
+    *(int*)a_buffer = bytes;
     impl::encrypt("poker", a_buffer, bytes);
-
     return bytes;
 }
 
@@ -133,7 +132,7 @@ Message_type unpack(char* a_buffer, Args& a_arganmats)
 int message_size(char* a_buffer)
 {
     impl::decrypt("poker", a_buffer, sizeof(int));
-    int size = *(a_buffer);
+    int size = *(int*)(a_buffer);
     impl::encrypt("poker", a_buffer, sizeof(int));
     return size;
 }

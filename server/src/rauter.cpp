@@ -18,7 +18,7 @@ static void* thread_function(void* arg)
 
 Rauter::Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action_in, PlayersContainer& a_players)
 : m_stop(false)
-, m_buffer(new char[1024])
+, m_buffer(new char[BUFFER_SIZE])
 , m_activity(0)
 , m_socket(a_socket)
 , m_tcp(a_tcp)

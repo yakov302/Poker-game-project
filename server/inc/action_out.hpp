@@ -4,6 +4,8 @@
 #include "protocol.hpp"
 #include "card.hpp"
 
+#define BUFFER_SIZE 2048
+
 namespace poker
 {
 

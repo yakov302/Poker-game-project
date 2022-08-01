@@ -57,7 +57,7 @@ void Game::next()
     ++m_open_player;
     if(m_open_player == m_players.end())
         m_open_player = m_players.begin();
-        
+
     while(m_open_player->second.get()->m_viewer)
     {
         ++m_open_player;

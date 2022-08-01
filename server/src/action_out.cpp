@@ -12,7 +12,7 @@ ActionOut::ActionOut(TcpServer& a_tcp)
 
 void ActionOut::name_and_message(std::string& a_name, Message_type a_message)
 {
-    char buffer[1024];
+    char buffer[BUFFER_SIZE];
     Args arg(1, 0);
     arg.m_strings.emplace_back(a_name);
     int size = pack(buffer, arg, a_message);
@@ -35,21 +35,21 @@ void ActionOut::just_message_to_all(Message_type a_message)
 
 void ActionOut::pack_and_send_all(Args& a_arg, Message_type a_message)
 {
-    char buffer[1024];
+    char buffer[BUFFER_SIZE];
     int size = pack(buffer, a_arg, a_message);
     m_tcp.send_all_clients(buffer, size);
 }
 
 void ActionOut::pack_and_send_to_client(Args& a_arg, Message_type a_message, int a_client_socket)
 {
-    char buffer[1024];
+    char buffer[BUFFER_SIZE];
     int size = pack(buffer, a_arg, a_message);
     m_tcp.send_to_client(a_client_socket, buffer, size);
 }
 
 void ActionOut::flag(std::string& a_name, std::string a_flag, Message_type a_message)
 {
-    char buffer[1024];
+    char buffer[BUFFER_SIZE];
     Args arg(2, 0);
     arg.m_strings.emplace_back(a_name);
     arg.m_strings.emplace_back(a_flag);
@@ -179,14 +179,14 @@ void ActionOut::clear_hand(std::string& a_name)
 
 void ActionOut::get_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket)
 {
-    char buffer[1024];
+    char buffer[BUFFER_SIZE];
     int size = pack_player(buffer, a_name, a_gender, a_amount);
     m_tcp.send_to_client(a_client_socket, buffer, size);
 }
 
 void ActionOut::get_player(std::string a_name, std::string a_gender, int a_amount)
 {
-    char buffer[1024];
+    char buffer[BUFFER_SIZE];
     int size = pack_player(buffer, a_name, a_gender, a_amount);
     m_tcp.send_all_clients(buffer, size);
 }
