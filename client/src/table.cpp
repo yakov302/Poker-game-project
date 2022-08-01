@@ -51,7 +51,7 @@ static void* thread_function(void* a_arg)
 
 }//namespace impl
 
-Table::Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_players, TcpClient& a_tcp, ActionOut& a_action_out)
+Table::Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_players, ActionOut& a_action_out)
 : m_window(sf::VideoMode::getDesktopMode(), "Poker game")
 , m_texts()
 , m_buttons()
@@ -60,7 +60,6 @@ Table::Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_p
 , m_chips(a_chips)
 , m_self(a_self)
 , m_players(a_players)
-, m_tcp(a_tcp)
 , m_action_out(a_action_out)
 {
     impl::buttons_initialization(m_buttons);

@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <memory>
 #include <string>
+#include <mutex>
 
 #include "chip.hpp"
 #include "text.hpp"
@@ -11,6 +12,7 @@
 namespace poker
 {
 
+using Lock = std::unique_lock<std::mutex>;
 using chipPointer = std::shared_ptr<Chip>;
 
 class Wallet
@@ -39,6 +41,7 @@ private:
 private:
     Text m_amount;
     size_t m_total_amount;
+    mutable std::mutex m_mutex;
     std::unordered_map<int, std::vector<chipPointer>> m_wallet;
 };
 

@@ -1,10 +1,13 @@
 #pragma once
 
+#include <mutex>
 #include"player.hpp"
 #include"wallet.hpp"
 
 namespace poker
 {
+
+//using Lock = std::unique_lock<std::mutex>;
 
 class Self : public Player
 {
@@ -29,6 +32,7 @@ public:
 
 private:
     Wallet m_wallet;
+    //mutable std::mutex m_mutex;
     std::string m_name;
 };
 

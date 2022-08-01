@@ -1,12 +1,14 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include "card.hpp"
 
 namespace poker
 {
 
+using Lock = std::unique_lock<std::mutex>;
 using cardPointer = std::shared_ptr<Card>;
 
 class Hand 
@@ -26,6 +28,7 @@ private:
     int m_x;
     int m_y;
     int m_gap_of_prints;
+    mutable std::mutex m_mutex;
     std::vector<cardPointer> m_cards;
     std::vector<cardPointer> m_back; 
 };

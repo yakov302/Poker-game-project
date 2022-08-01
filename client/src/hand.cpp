@@ -32,6 +32,7 @@ Hand::Hand(int a_num_of_cards_front, int a_num_of_cards_back, int a_x, int a_y, 
 : m_x(a_x)
 , m_y(a_y)
 , m_gap_of_prints(a_gap_of_prints)
+, m_mutex()
 , m_cards()
 , m_back()
 {
@@ -42,6 +43,7 @@ Hand::Hand(int a_num_of_cards_front, int a_num_of_cards_back, int a_x, int a_y, 
 
 void Hand::push(std::string& a_suit, int a_number)
 {
+   // Lock lock(m_mutex);
     std::string imagePath = "./resources/images/cards/" + a_suit + "-" + std::to_string(a_number) + ".png";
     m_cards.emplace_back(cardPointer(new Card(a_suit, a_number, imagePath)));
     impl::set_position(m_cards, m_x, m_y, m_gap_of_prints);
@@ -62,11 +64,13 @@ void Hand::push(std::vector<std::pair<std::string, int>> a_cards)
 
 void Hand::clear()
 {
+    Lock lock(m_mutex);
     m_cards.clear();
 }
 
 void Hand::draw_front(sf::RenderWindow& a_window)const
 {
+    Lock lock(m_mutex);
     for(auto& card : m_cards)
     {
         card.get()->draw(a_window);
@@ -75,16 +79,18 @@ void Hand::draw_front(sf::RenderWindow& a_window)const
 
 void Hand::draw_back(sf::RenderWindow& a_window)const
 {
+    Lock lock(m_mutex);
     if(m_cards.empty())
         return;
 
-    //const int size = m_cards.size();
-    for(int i = 0; i < 2; ++i)
+    const int size = m_cards.size();
+    for(int i = 0; i < size; ++i)
         m_back[i].get()->draw(a_window);
 }
 
 bool Hand::is_in_back_range(int a_x, int a_y)const
 {
+    //Lock lock(m_mutex);
     if( a_x <= m_back[1].get()->right()  &&
         a_x >= m_back[0].get()->left()   &&
         a_y <= m_back[0].get()->bottom() &&

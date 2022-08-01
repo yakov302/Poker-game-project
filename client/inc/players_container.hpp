@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <mutex>
 
 #include"player.hpp"
 #include"self.hpp"
@@ -8,6 +9,7 @@
 namespace poker
 {
 
+//using Lock = std::unique_lock<std::mutex>;
 using playerPointer = std::shared_ptr<Player>;
 
 class PlayersContainer 
@@ -34,6 +36,7 @@ public:
 
 private:
     int m_num_of_players;
+    //std::mutex m_mutex;
     std::unordered_map<std::string, playerPointer> m_players;
 };
 

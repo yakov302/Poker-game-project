@@ -25,7 +25,7 @@ using textBoxPointer  = std::shared_ptr<TextBox>;
 class Table
 {
 public:
-    Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_other_players, TcpClient& a_tcp, ActionOut& a_action_out);
+    Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_other_players, ActionOut& a_action_out);
     ~Table();
     
     void run();
@@ -73,7 +73,6 @@ private:
     Wallet& m_chips;
     Self& m_self;
     PlayersContainer& m_players;
-    TcpClient& m_tcp;
     ActionOut& m_action_out;
 };
 

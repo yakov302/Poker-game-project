@@ -29,6 +29,7 @@ void make_reserve(std::unordered_map<int, std::vector<chipPointer>>& a_wallet)
 Wallet::Wallet(int a_x, int a_y, std::vector<int> a_amounts)
 : m_amount("./resources/fonts/arial.ttf", "0", sf::Color(255, 228, 156), 25, a_x, a_y)
 , m_total_amount(0)
+, m_mutex()
 , m_wallet()
 {
     impl::make_reserve(m_wallet);
@@ -40,6 +41,7 @@ Wallet::Wallet(int a_x, int a_y, std::vector<int> a_amounts)
 
 void Wallet::push(int a_amount)
 {
+    //Lock lock(m_mutex);
     std::string imagePath = "./resources/images/chips/" + std::to_string(a_amount) + ".png";
     m_wallet[a_amount].emplace_back(chipPointer(new Chip(a_amount, imagePath)));
     m_total_amount += a_amount;
@@ -56,6 +58,7 @@ void Wallet::push(std::vector<int> a_amounts)
 
 void Wallet::pop(int a_amount)
 {
+    //Lock lock(m_mutex);
     if(!m_wallet[a_amount].empty())
     {
         m_wallet[a_amount].pop_back();
@@ -65,6 +68,7 @@ void Wallet::pop(int a_amount)
 
 std::vector<int> Wallet::pop_wallet()
 {
+    //Lock lock(m_mutex);
     std::vector<int> a_amounts;
     a_amounts.reserve(size());
     for(auto& vec : m_wallet)
@@ -77,6 +81,7 @@ std::vector<int> Wallet::pop_wallet()
 
 void Wallet::clear()
 {
+    Lock lock(m_mutex);
     for(auto& vec : m_wallet)
     {
         vec.second.clear();
@@ -86,6 +91,7 @@ void Wallet::clear()
 
 void Wallet::draw(sf::RenderWindow& a_window, int a_x, int a_y, int a_gapDirection)const
 {
+    Lock lock(m_mutex);
     for(auto& vec : m_wallet)
     {
         if(!vec.second.empty())
@@ -108,6 +114,7 @@ size_t Wallet::amount() const
 
 int Wallet::amount_by_position(int a_x, int a_y)const
 {
+    //Lock lock(m_mutex);
     for(auto& vec : m_wallet)
     {
         if(!vec.second.empty())
