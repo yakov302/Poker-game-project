@@ -1,11 +1,15 @@
 #pragma once
 
+#include <mutex>
+
 #include "client_socket.hpp"
 #include "protocol.hpp"
 
 
 namespace poker
 {
+
+using Lock = std::unique_lock<std::mutex>;
 
 class TcpClient
 {
@@ -16,7 +20,8 @@ public:
     bool receive_from_server(char* a_buffer);
 
 private:
-   ClientSocket& m_socket;
+    std::mutex m_mutex;
+    ClientSocket& m_socket;
 };
 
 

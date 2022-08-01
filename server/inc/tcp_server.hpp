@@ -1,9 +1,13 @@
 #pragma once
 
+#include <mutex>
+
 #include "server_socket.hpp"
 
 namespace poker
 {
+
+using Lock = std::unique_lock<std::mutex>;
 
 class TcpServer
 {
@@ -18,6 +22,7 @@ public:
     void send_all_clients(char* a_buffer, int a_message_size);
 
 private:
+    std::mutex m_mutex;
     ServerSocket& m_socket;   
 };
 

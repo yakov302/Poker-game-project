@@ -43,7 +43,7 @@ Hand::Hand(int a_num_of_cards_front, int a_num_of_cards_back, int a_x, int a_y, 
 void Hand::push(std::string& a_suit, int a_number)
 {
     std::string imagePath = "./resources/images/cards/" + a_suit + "-" + std::to_string(a_number) + ".png";
-    m_cards.emplace_back(cardPointer(new Card(a_suit, a_number,imagePath)));
+    m_cards.emplace_back(cardPointer(new Card(a_suit, a_number, imagePath)));
     impl::set_position(m_cards, m_x, m_y, m_gap_of_prints);
 }
 
@@ -78,8 +78,8 @@ void Hand::draw_back(sf::RenderWindow& a_window)const
     if(m_cards.empty())
         return;
 
-    const int size = m_cards.size();
-    for(int i = 0; i < size; ++i)
+    //const int size = m_cards.size();
+    for(int i = 0; i < 2; ++i)
         m_back[i].get()->draw(a_window);
 }
 

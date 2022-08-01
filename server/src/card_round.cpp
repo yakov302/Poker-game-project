@@ -101,8 +101,8 @@ void CardRound::deal_cards()
                 Card card = m_deck.pop_card();
                 m_players.get_card(it->second.get()->m_name, card);
                 m_action_out.get_card(it->second.get()->m_name, card);
-                ++it;
             }
+            ++it;
         }
     }
 }
