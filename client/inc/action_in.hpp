@@ -32,7 +32,8 @@ private:
     void turn_off(char* a_buffer);
     void start_bet(char* a_buffer);
     void bet(char* a_buffer);
-    void invalid_bet(char* a_buffer);
+    void invalid_bet_min(char* a_buffer);
+    void invalid_bet_max(char* a_buffer);
     void check(char* a_buffer);
     void fold(char* a_buffer);
     void clear_fold(char* a_buffer);

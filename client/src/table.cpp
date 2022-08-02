@@ -218,20 +218,24 @@ bool Table::check_go_button()
 
     if (m_buttons["go"].get()->is_in_range(position.x, position.y))
     {
+        if(m_self.is_flag_on("exchange"))
+        {
+            m_self.turn_off_flag("exchange");
+            m_self.set_action("");
+            usleep(200000);
+            if(m_self.is_flag_on("bet"))
+                m_action_out.start_bet(m_self.name());
+
+            return true;
+        }
+
         if(m_self.is_flag_on("bet"))
         {
             set_text("text", "");
             m_action_out.finish_bet(m_self.name());
             usleep(100000);
+            return true;
         }
-
-        if(m_self.is_flag_on("exchange"))
-        {
-            m_self.turn_off_flag("exchange");
-            m_self.set_action("");
-        }
-
-        return true;
     }
 
     return false;
@@ -294,7 +298,7 @@ bool Table::check_exchange_button()
     sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
     sf::Vector2f position = m_window.mapPixelToCoords(pixelPos);
 
-    if(m_buttons["exchange"].get()->is_in_range(position.x, position.y) && !m_self.is_flag_on("bet"))
+    if(m_buttons["exchange"].get()->is_in_range(position.x, position.y) /*&& !m_self.is_flag_on("bet")*/)
     {
         m_self.turn_on_flag("exchange");
         m_self.set_action("exchange");

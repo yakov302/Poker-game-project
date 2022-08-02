@@ -131,11 +131,18 @@ void ActionOut::bet(std::string& a_name, int a_amount)
     pack_and_send_all(arg, BET_UPDATE);
 }
 
-void ActionOut::invalid_bet(int a_amount, int a_client_socket)
+void ActionOut::invalid_bet_min(int a_amount, int a_client_socket)
 {
     Args arg(0, 1);
     arg.m_ints.emplace_back(a_amount);
-    pack_and_send_to_client(arg, INVALID_BET, a_client_socket);
+    pack_and_send_to_client(arg, INVALID_BET_MIN, a_client_socket);
+}
+
+void ActionOut::invalid_bet_max(int a_amount, int a_client_socket)
+{
+    Args arg(0, 1);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send_to_client(arg, INVALID_BET_MAX, a_client_socket);
 }
 
 void ActionOut::check(std::string& a_name)

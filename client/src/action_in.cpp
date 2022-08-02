@@ -89,8 +89,12 @@ void ActionIn::get(char* a_buffer)
         bet(a_buffer);
         break;
     
-    case INVALID_BET:
-        invalid_bet(a_buffer);
+    case INVALID_BET_MIN:
+        invalid_bet_min(a_buffer);
+        break;
+
+    case INVALID_BET_MAX:
+        invalid_bet_max(a_buffer);
         break;
 
     case CHECK_UPDATE:
@@ -244,11 +248,18 @@ void ActionIn::bet(char* a_buffer)
     m_players.bet(arg.m_strings[0], arg.m_ints[0]);
 }
 
-void ActionIn::invalid_bet(char* a_buffer)
+void ActionIn::invalid_bet_min(char* a_buffer)
 { 
     Args arg(0, 1);
     unpack(a_buffer, arg);
     m_table.set_text("text", "Invalid bet \nMin bet: " + std::to_string(arg.m_ints[0]));
+}
+
+void ActionIn::invalid_bet_max(char* a_buffer)
+{ 
+    Args arg(0, 1);
+    unpack(a_buffer, arg);
+    m_table.set_text("text", "Invalid bet \nMax bet: " + std::to_string(arg.m_ints[0]));
 }
 
 void ActionIn::check(char* a_buffer)

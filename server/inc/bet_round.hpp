@@ -26,12 +26,14 @@ public:
 private:
     void bet();
     void next();
+    void set_max_bet();
     void close_bet_round();
     bool one_player_left();
     void zero_bets_and_clear_actions();
 
 private:
     int m_min_bet;
+    int m_max_bet;
     bool m_stop;
 
     std::mutex m_mutex;

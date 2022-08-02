@@ -25,7 +25,8 @@ public:
     void turn_off(std::string& a_name, std::string a_flag);
     void start_bet(std::string& a_name, int a_amount);
     void bet(std::string& a_name, int a_amount);
-    void invalid_bet(int a_amount, int a_client_socket);
+    void invalid_bet_min(int a_amount, int a_client_socket);
+    void invalid_bet_max(int a_amount, int a_client_socket);
     void check(std::string& a_name);
     void fold(std::string& a_name);
     void clear_fold(std::string& a_name);

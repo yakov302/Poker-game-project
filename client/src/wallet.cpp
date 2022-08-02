@@ -58,7 +58,7 @@ void Wallet::push(std::vector<int> a_amounts)
 
 void Wallet::pop(int a_amount)
 {
-    //Lock lock(m_mutex);
+    Lock lock(m_mutex);
     if(!m_wallet[a_amount].empty())
     {
         m_wallet[a_amount].pop_back();

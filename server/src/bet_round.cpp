@@ -28,15 +28,35 @@ void BetRound::run(playerIterator a_open_player)
 
     while(!m_stop)
     {
+        set_max_bet();
         bet();
         if(one_player_left())
         {
-            std::cout << "                      close_bet_round in while \n";
             close_bet_round();
             break;
         }
         next();
     }
+}
+
+void BetRound::set_max_bet()
+{
+    auto it = m_players.begin();
+    auto end = m_players.end();
+    int min = 100000;
+
+    while(it != end)
+    {
+        if(!it->second.get()->m_fold 
+        && !it->second.get()->m_viewer
+        && it->second.get()->m_hand.size() > 0)
+        {
+            if(it->second.get()->m_amount + it->second.get()->m_bet < min)
+                min = it->second.get()->m_amount + it->second.get()->m_bet;
+        }
+        ++it;
+    }
+    m_max_bet = min;
 }
 
 void BetRound::bet()
@@ -71,17 +91,23 @@ void BetRound::start_bet()
 
 void BetRound::bet_in(int a_amount)
 {
-    m_turn->second->m_bet += a_amount;
-    m_turn->second->m_amount -= a_amount;
-    m_table.get_chip(a_amount);
-    m_action_out.bet(m_turn->second->m_name, a_amount);
-    m_action_out.table_get_chips(a_amount);
+    if(m_turn->second->m_bet + a_amount > m_max_bet)
+        m_action_out.invalid_bet_max(m_max_bet , m_turn->second->m_socket);
+
+    else
+    {
+        m_turn->second->m_bet += a_amount;
+        m_turn->second->m_amount -= a_amount;
+        m_table.get_chip(a_amount);
+        m_action_out.bet(m_turn->second->m_name, a_amount);
+        m_action_out.table_get_chips(a_amount);
+    }
 }
 
 void BetRound::finish_bet()
 {
     if(m_turn->second->m_bet < m_min_bet)
-        m_action_out.invalid_bet(m_min_bet , m_turn->second->m_socket);
+        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_socket);
  
     else
     {
@@ -98,7 +124,7 @@ void BetRound::finish_bet()
 void BetRound::chack_in()
 {
     if(m_min_bet > 0)
-        m_action_out.invalid_bet(m_min_bet , m_turn->second->m_socket);
+        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_socket);
     
     else
     {
@@ -126,7 +152,9 @@ bool BetRound::one_player_left()
     while(it != end)
     {
         std::cout << "name: " << it->second.get()->m_name << " fold: " << it->second.get()->m_fold << " viewer: " << it->second.get()->m_viewer << "\n";
-        if(!it->second.get()->m_fold && !it->second.get()->m_viewer)
+        if(!it->second.get()->m_fold 
+        && !it->second.get()->m_viewer
+        && it->second.get()->m_hand.size() > 0)
             ++count;
         std::cout << "count: " << count <<  "\n";
 

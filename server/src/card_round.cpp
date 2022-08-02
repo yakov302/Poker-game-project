@@ -135,7 +135,9 @@ bool CardRound::one_player_left()
 
     while(it != end)
     {
-        if(!it->second.get()->m_fold && !it->second.get()->m_viewer)
+        if(!it->second.get()->m_fold 
+        && !it->second.get()->m_viewer
+        && it->second.get()->m_hand.size() > 0)
             ++count;
         
         if(count > 1)
@@ -154,7 +156,9 @@ std::string CardRound::one_player()
 
     while(it != end)
     {
-        if(!it->second.get()->m_fold && !it->second.get()->m_viewer)
+        if(!it->second.get()->m_fold 
+        && !it->second.get()->m_viewer
+        && it->second.get()->m_hand.size() > 0)
             return it->second.get()->m_name;
         
         ++it;
@@ -177,12 +181,12 @@ void CardRound::close_card_round()
     m_action_out.clear_text();
     turn_off_reveal_cards();
     clear_hands();
-    chack_money();
 
     m_players.increase(name, m_table.table_amount());
     m_table.clear_chips();
     m_table.clear_cards();
     m_deck.re_fill_decks();
+    chack_money();
 
     m_stop = true;
     m_bet = false;
