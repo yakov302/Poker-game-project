@@ -5,6 +5,8 @@
 #include "table.hpp"
 #include "action_out.hpp"
 #include "bet_round.hpp"
+#include "winner.hpp"
+
 
 namespace poker
 {
@@ -27,6 +29,7 @@ private:
     void clear_hands();
     void turn_off_reveal_cards();
     void chack_money();
+    void print_result();
     bool one_player_left();
     std::string one_player();
     std::string chack_winer();

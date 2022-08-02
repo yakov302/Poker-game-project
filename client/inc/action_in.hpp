@@ -52,6 +52,7 @@ private:
     void round_winer(char* a_buffer);
     void game_winer(char* a_buffer);
     void clear_text();
+    void print_result(char* a_buffer);
     
 private:
     Hand& m_cards; 

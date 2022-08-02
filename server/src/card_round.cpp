@@ -173,7 +173,8 @@ void CardRound::close_card_round()
 
     std::string name = chack_winer();
     m_action_out.round_winer(name);
-    usleep(3000000);
+    print_result();
+    usleep(7000000);
 
     m_action_out.get_chips(name, m_table.table_chips());
     m_action_out.table_clear_chips();
@@ -203,7 +204,6 @@ void CardRound::reveal_cards()
             m_action_out.reveal_cards(it->second.get()->m_name);
         ++it;
     }
-    usleep(5000000);
 }
 
 void CardRound::turn_off_reveal_cards()
@@ -223,7 +223,7 @@ std::string CardRound::chack_winer()
     if(one_player_left())
         return one_player();
 
-    return m_players.begin()->second.get()->m_name;
+    return chack_winner(m_players, m_table.table_cards());
 }
 
 void CardRound::clear_hands()
@@ -234,7 +234,10 @@ void CardRound::clear_hands()
     while(it != end)
     {
         if(!it->second.get()->m_fold)
+        {
             m_action_out.clear_hand(it->second.get()->m_name);
+            m_players.clear_hand(it->second.get()->m_name);
+        }
 
         ++it;
     }
@@ -254,5 +257,20 @@ void CardRound::chack_money()
     }
 }
 
+ void CardRound::print_result()
+ {
+    auto it = m_players.begin();
+    auto end = m_players.end();
+
+    while(it != end)
+    {
+        if(!it->second.get()->m_fold 
+        && !it->second.get()->m_viewer
+        && it->second.get()->m_hand.size() > 0)
+            m_action_out.print_result(it->second.get()->m_name, it->second.get()->m_result);
+
+        ++it;
+    }
+}
 
 }// poker namespace

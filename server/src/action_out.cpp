@@ -264,5 +264,13 @@ void ActionOut::clear_text()
     just_message_to_all(CLEAR_TEXT);
 }
 
+void ActionOut::print_result(std::string& a_name, int a_result)
+{
+    Args arg(1, 1);
+    arg.m_strings.emplace_back(a_name);
+    arg.m_ints.emplace_back(a_result);
+    pack_and_send_all(arg, RESULT); 
+}
+
 
 }// poker namespace

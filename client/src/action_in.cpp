@@ -24,6 +24,55 @@ std::string get_name(char* a_buffer)
     return arg.m_strings[0];
 }
 
+std::string result(int a_result)
+{
+    switch (a_result)
+    {
+    case 1:
+        return "High Card";
+        break;
+    
+    case 2:
+        return "One Pair";
+        break;
+
+    case 3:
+        return "Two Pair";
+        break;
+
+    case 4:
+        return "Three of a Kind";
+        break;
+
+    case 5:
+        return " Straight";
+        break;
+
+    case 6:
+        return "Flush";
+        break;
+
+    case 7:
+        return "Full House";
+        break;
+
+    case 8:
+        return "Four of a Kind";
+        break;
+
+    case 9:
+        return "Straight Flush";
+        break;
+
+    case 10:
+        return "Royal Straight Flush";
+        break;
+    
+    default:
+        break;
+    }
+    return "";
+}
 
 }//namespace impl
 
@@ -166,6 +215,10 @@ void ActionIn::get(char* a_buffer)
 
     case CLEAR_TEXT:
         clear_text();
+        break;
+
+    case RESULT:
+        print_result(a_buffer);
         break;
 
     default:
@@ -371,6 +424,13 @@ void ActionIn::game_winer(char* a_buffer)
 void ActionIn::clear_text()
 {
     m_table.set_text("text", "");
+}
+
+void ActionIn::print_result(char* a_buffer)
+{
+    Args arg(1, 1);
+    unpack(a_buffer, arg);
+    m_players.set_action(arg.m_strings[0], impl::result(arg.m_ints[0]));
 }
 
 }// poker namespace

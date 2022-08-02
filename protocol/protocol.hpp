@@ -66,16 +66,17 @@ typedef enum Message_type
     ROUND_WINER = 30,
     GAME_WINER = 31,
     CLEAR_TEXT = 32,
+    RESULT = 33,
 
     //client to server
 
-    REGISTRATION_REQUES = 33,
-    LOG_IN_REQUEST = 34,
-    BET_ACTION = 35,
-    FINISH_BET = 36,
-    CHECK_ACTION = 37,
-    FOLD_ACTION = 38,
-    WAKE_UP_SERVER = 39
+    REGISTRATION_REQUES = 34,
+    LOG_IN_REQUEST = 35,
+    BET_ACTION = 36,
+    FINISH_BET = 37,
+    CHECK_ACTION = 38,
+    FOLD_ACTION = 33,
+    WAKE_UP_SERVER = 40
 
 }Message_type;
 

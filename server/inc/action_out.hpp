@@ -47,6 +47,7 @@ public:
     void round_winer(std::string& a_name);
     void game_winer(std::string& a_name);
     void clear_text();
+    void print_result(std::string& a_name, int a_result);
 
 private:
     void flag(std::string& a_name, std::string a_flag, Message_type a_message);
