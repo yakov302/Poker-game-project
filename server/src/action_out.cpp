@@ -169,13 +169,11 @@ void ActionOut::get_card(std::string& a_name, Card& a_card)
     pack_and_send_all(arg, GET_CARD);
 }
 
-void ActionOut::get_chips(std::string& a_name, std::vector<int>& a_chips)
+void ActionOut::get_chips(std::string& a_name, int a_chip)
 {
-    int size = a_chips.size();
-    Args arg(1, size);
+    Args arg(1, 1);
     arg.m_strings.emplace_back(a_name);
-    for(int i = 0; i < size; ++i)
-        arg.m_ints.emplace_back(a_chips[i]);
+    arg.m_ints.emplace_back(a_chip);
     pack_and_send_all(arg, GET_CHIPS);
 }
 

@@ -39,13 +39,10 @@ Player::Player(std::string a_name, std::string a_gender, int a_amount, int a_x_s
     impl::set_flags(m_flags); 
 }
 
-void Player::get_chips(std::vector<int>& a_chips)
+void Player::get_chip(int a_chip)
 {
-    for(auto chip : a_chips)
-    {
-        m_total_amount += chip;
-        m_texts["amount"].get()->set_text(std::to_string(m_total_amount));
-    }
+    m_total_amount += a_chip;
+    m_texts["amount"].get()->set_text(std::to_string(m_total_amount));
 }
 
 void Player::bet(int a_amount)

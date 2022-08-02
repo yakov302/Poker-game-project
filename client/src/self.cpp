@@ -65,11 +65,9 @@ void Self::bet(int a_amount)
     m_texts["action"].get()->set_text("bet " + std::to_string(m_current_bet));
 }
 
-void Self::get_chips(std::vector<int>& a_chips)
+void Self::get_chip(int  a_chip)
 {
-    //Lock lock(m_mutex);
-    for(auto chip : a_chips)
-        m_wallet.push(chip);
+    m_wallet.push(a_chip);
 }
 
 bool Self::exchange(int a_x, int a_y)

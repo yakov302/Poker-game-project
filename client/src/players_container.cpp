@@ -52,13 +52,12 @@ void PlayersContainer::delete_player(std::string& a_name)
     --m_num_of_players;
 }
 
-void PlayersContainer::get_chips(std::string& a_name, std::vector<int>& a_chips)
+void PlayersContainer::get_chip(std::string& a_name, int a_chip)
 {
-    //Lock lock(m_mutex);
     if(m_players.find(a_name) == m_players.end())
         return;
 
-    m_players[a_name].get()->get_chips(a_chips);
+    m_players[a_name].get()->get_chip(a_chip);
 }
 
 void PlayersContainer::bet(std::string& a_name, int a_amount)

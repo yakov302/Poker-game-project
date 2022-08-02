@@ -69,7 +69,6 @@ void CardRound::run(playerIterator a_open_player)
 
 void CardRound::turn_off_folds()
 {
-    std::cout << "----------------------------> turn_off_folds\n";
     auto it = m_players.begin();
     auto end = m_players.end();
 
@@ -87,7 +86,6 @@ void CardRound::turn_off_folds()
 
 void CardRound::deal_cards()
 {
-    std::cout << "----------------------------> deal_cards\n";
     m_deck.shuffle();
     for(int i = 0; i < 2; ++i)
     {
@@ -101,6 +99,7 @@ void CardRound::deal_cards()
                 Card card = m_deck.pop_card();
                 m_players.get_card(it->second.get()->m_name, card);
                 m_action_out.get_card(it->second.get()->m_name, card);
+                usleep(500000);
             }
             ++it;
         }
@@ -174,14 +173,15 @@ void CardRound::close_card_round()
     std::string name = chack_winer();
     m_action_out.round_winer(name);
     print_result();
-    usleep(7000000);
+    usleep(1000000);
 
-    m_action_out.get_chips(name, m_table.table_chips());
+    pay_to_winner(name);
     m_action_out.table_clear_chips();
     m_action_out.table_clear_hand();
     m_action_out.clear_text();
     turn_off_reveal_cards();
     clear_hands();
+    clear_actions();
 
     m_players.increase(name, m_table.table_amount());
     m_table.clear_chips();
@@ -204,6 +204,7 @@ void CardRound::reveal_cards()
             m_action_out.reveal_cards(it->second.get()->m_name);
         ++it;
     }
+    usleep(6000000);
 }
 
 void CardRound::turn_off_reveal_cards()
@@ -224,6 +225,15 @@ std::string CardRound::chack_winer()
         return one_player();
 
     return chack_winner(m_players, m_table.table_cards());
+}
+
+void CardRound::pay_to_winner(std::string& a_winner)
+{
+   while(!m_table.is_wallet_empty())
+   {
+        m_action_out.get_chips(a_winner, m_table.pop_chip());
+        usleep(100000);
+   } 
 }
 
 void CardRound::clear_hands()
@@ -268,6 +278,24 @@ void CardRound::chack_money()
         && !it->second.get()->m_viewer
         && it->second.get()->m_hand.size() > 0)
             m_action_out.print_result(it->second.get()->m_name, it->second.get()->m_result);
+
+        ++it;
+    }
+}
+
+void CardRound::clear_actions()
+{
+    auto it = m_players.begin();
+    auto end = m_players.end();
+
+    while(it != end)
+    {
+        if(!it->second.get()->m_fold 
+        && !it->second.get()->m_viewer)
+        {
+            m_action_out.clear_action(it->second.get()->m_name);
+            it->second.get()->m_result = 0;
+        }
 
         ++it;
     }

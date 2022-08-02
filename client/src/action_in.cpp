@@ -343,10 +343,10 @@ void ActionIn::get_card(char* a_buffer)
 
 void ActionIn::get_chips(char* a_buffer)
 {
-    int num_of_chips = num_of_ints(a_buffer);
-    Args arg(1, num_of_chips);
+    Args arg(1, 1);
     unpack(a_buffer, arg);
-    m_players.get_chips(arg.m_strings[0], arg.m_ints);
+    m_chips.pop(arg.m_ints[0]);
+    m_players.get_chip(arg.m_strings[0], arg.m_ints[0]);
 }
 
 void ActionIn::clear_hand(char* a_buffer)

@@ -1,5 +1,5 @@
 #pragma once
-
+#include <unistd.h>
 #include <mutex>
 #include"player.hpp"
 #include"wallet.hpp"
@@ -18,7 +18,7 @@ public:
     bool exchange(int a_x, int a_y);
 
     void bet(int amount) override;
-    void get_chips(std::vector<int>& a_chips) override;
+    void get_chip(int  a_chip) override;
     void draw_player(sf::RenderWindow& a_window) override;
 
     int amount();

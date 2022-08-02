@@ -14,7 +14,7 @@ class Player : public Shape
 public:
     Player(std::string a_name, std::string a_gender, int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_of_printing);
 
-    virtual void get_chips(std::vector<int>& a_chips);
+    virtual void get_chip(int a_chip);
     virtual void bet(int a_amount);
 
     void get_card(std::string& a_suit, int a_number);

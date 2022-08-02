@@ -15,11 +15,12 @@ public:
     int num_of_card()const;
     void get_card(Card a_card);
     void get_chip(int a_chip);
+    int pop_chip();
     std::vector<Card>& table_cards();
-    std::vector<int>& table_chips();
     int table_amount();
     void clear_cards();
     void clear_chips();
+    bool is_wallet_empty();
 
 private:
     std::vector<Card> m_cards;

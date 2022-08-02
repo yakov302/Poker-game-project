@@ -26,15 +26,23 @@ void Table::get_chip(int a_chip)
     m_chips.emplace_back(a_chip);
 }
 
+int Table::pop_chip()
+{
+    int chip = m_chips[m_chips.size()-1];
+    m_chips.pop_back();
+    return chip;
+}
+
+
 std::vector<Card>& Table::table_cards()
 {
     return m_cards;
 }
 
-std::vector<int>& Table::table_chips()
-{
-    return m_chips;
-}
+// std::vector<int>& Table::table_chips()
+// {
+//     return m_chips;
+// }
 
 int Table::table_amount()
 {
@@ -55,5 +63,9 @@ void Table::clear_chips()
     m_chips.clear();
 }
 
+bool Table::is_wallet_empty()
+{
+    return m_chips.empty();
+}
 
 }// poker namespace

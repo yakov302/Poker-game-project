@@ -21,7 +21,7 @@ public:
     void get_player(std::string& a_name, Self& a_player);
     void delete_player(std::string& a_name);
 
-    void get_chips(std::string& a_name, std::vector<int>& a_chips);
+    void get_chip(std::string& a_name, int a_chip);
     void bet(std::string& a_name, int a_amount);
 
     void get_card(std::string& a_name, std::string& a_suit, int a_number);
