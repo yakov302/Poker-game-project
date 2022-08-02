@@ -96,10 +96,10 @@ void CardRound::deal_cards()
         {   
             if(!it->second.get()->m_viewer)
             {
+                usleep(500000);
                 Card card = m_deck.pop_card();
                 m_players.get_card(it->second.get()->m_name, card);
                 m_action_out.get_card(it->second.get()->m_name, card);
-                usleep(500000);
             }
             ++it;
         }
@@ -116,10 +116,12 @@ void CardRound::open_three_cards()
 {
     for(int i = 0; i < 3; ++i)
         open_card();
+
 }
 
 void CardRound::open_card()
 {
+    usleep(500000);
     Card card = m_deck.pop_card();
     m_table.get_card(card);
     m_action_out.table_get_card(card);
@@ -167,13 +169,21 @@ std::string CardRound::one_player()
 
 void CardRound::close_card_round()
 {
+    std::string name;
     if(!one_player_left())
+    {
         reveal_cards();
-
-    std::string name = chack_winer();
-    m_action_out.round_winer(name);
-    print_result();
-    usleep(1000000);
+        std::string name = chack_winner(m_players, m_table.table_cards());
+        m_action_out.round_winer(name);
+        print_result();
+        usleep(5000000);
+    }
+    else
+    {
+        name = one_player();
+        m_action_out.round_winer(name);
+        usleep(1000000);
+    }
 
     pay_to_winner(name);
     m_action_out.table_clear_chips();
@@ -204,7 +214,6 @@ void CardRound::reveal_cards()
             m_action_out.reveal_cards(it->second.get()->m_name);
         ++it;
     }
-    usleep(6000000);
 }
 
 void CardRound::turn_off_reveal_cards()
@@ -219,19 +228,13 @@ void CardRound::turn_off_reveal_cards()
     }
 }
 
-std::string CardRound::chack_winer()
-{
-    if(one_player_left())
-        return one_player();
-
-    return chack_winner(m_players, m_table.table_cards());
-}
-
 void CardRound::pay_to_winner(std::string& a_winner)
 {
    while(!m_table.is_wallet_empty())
    {
-        m_action_out.get_chips(a_winner, m_table.pop_chip());
+        int chip = m_table.pop_chip();
+        m_action_out.get_chips(a_winner, chip);
+        m_players.increase(a_winner, chip);
         usleep(100000);
    } 
 }

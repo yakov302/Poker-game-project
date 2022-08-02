@@ -51,6 +51,8 @@ void BetRound::set_max_bet()
         && !it->second.get()->m_viewer
         && it->second.get()->m_hand.size() > 0)
         {
+            std::cout << it->second.get()->m_name << " : " << it->second.get()->m_amount << 
+            " + " << it->second.get()->m_bet << "\n";
             if(it->second.get()->m_amount + it->second.get()->m_bet < min)
                 min = it->second.get()->m_amount + it->second.get()->m_bet;
         }
@@ -78,10 +80,7 @@ void BetRound::next()
         m_turn = m_players.begin();
 
     if(m_turn == m_open_player)
-    {
-        std::cout << "                      close_bet_round in next \n";
         close_bet_round();
-    }
 }
 
 void BetRound::start_bet()
@@ -139,24 +138,22 @@ void BetRound::fold_in()
     m_players.turn_on(m_turn->second->m_name, "fold");
     m_action_out.fold(m_turn->second->m_name);
     m_action_out.turn_off(m_turn->second->m_name, "my_turn");
+    usleep(1000000);
     m_wait.exit_wait();
 }
 
 bool BetRound::one_player_left()
 {
-    std::cout << "********************>one_player_left\n";
     int count = 0;
     auto it = m_players.begin();
     auto end = m_players.end();
 
     while(it != end)
     {
-        std::cout << "name: " << it->second.get()->m_name << " fold: " << it->second.get()->m_fold << " viewer: " << it->second.get()->m_viewer << "\n";
         if(!it->second.get()->m_fold 
         && !it->second.get()->m_viewer
         && it->second.get()->m_hand.size() > 0)
             ++count;
-        std::cout << "count: " << count <<  "\n";
 
         if(count > 1)
             return false;

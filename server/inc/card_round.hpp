@@ -34,7 +34,6 @@ private:
     void pay_to_winner(std::string& a_winner);
     bool one_player_left();
     std::string one_player();
-    std::string chack_winer();
 
 private:
     bool m_stop;
