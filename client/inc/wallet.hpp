@@ -7,6 +7,7 @@
 
 #include "chip.hpp"
 #include "text.hpp"
+#include "sound.hpp"
 
 
 namespace poker
@@ -24,7 +25,7 @@ public:
     void push(std::vector<int> a_amounts);
 
     void pop(int a_amount);
-    std::vector<int> pop_wallet();
+    //std::vector<int> pop_wallet();
 
     void clear();
     void exchange(int a_amount);
@@ -40,6 +41,7 @@ private:
     
 private:
     Text m_amount;
+    Sound m_sound;
     size_t m_total_amount;
     mutable std::mutex m_mutex;
     std::unordered_map<int, std::vector<chipPointer>> m_wallet;

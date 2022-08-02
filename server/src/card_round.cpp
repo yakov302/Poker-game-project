@@ -173,7 +173,7 @@ void CardRound::close_card_round()
     if(!one_player_left())
     {
         reveal_cards();
-        std::string name = chack_winner(m_players, m_table.table_cards());
+        name = chack_winner(m_players, m_table.table_cards());
         m_action_out.round_winer(name);
         print_result();
         usleep(5000000);
@@ -232,6 +232,7 @@ void CardRound::pay_to_winner(std::string& a_winner)
 {
    while(!m_table.is_wallet_empty())
    {
+        std::cout << "***" << a_winner << "***\n";
         int chip = m_table.pop_chip();
         m_action_out.get_chips(a_winner, chip);
         m_players.increase(a_winner, chip);

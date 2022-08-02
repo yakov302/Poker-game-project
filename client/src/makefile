@@ -18,7 +18,7 @@ CPPFLAGS = -I$(INC_DIR) -I$(PROTOCOL_DIR)
 TARGET = main
 OBJS = ./main.o ./table.o ./wallet.o ./hand.o ./player.o ./text.o ./players_container.o 
 OBJS += ./client_manager.o ./self.o ./router.o ./tcp_client.o ./action_in.o ./action_out.o 
-OBJS += ./text_box.o ./client_socket.o
+OBJS += ./text_box.o ./client_socket.o ./sound.o
 OBJS += $(PROTOCOL_DIR)/protocol.o
 
 $(TARGET):$(OBJS)

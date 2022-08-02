@@ -43,28 +43,29 @@ Hand::Hand(int a_num_of_cards_front, int a_num_of_cards_back, int a_x, int a_y, 
 
 void Hand::push(std::string& a_suit, int a_number)
 {
-   // Lock lock(m_mutex);
+    m_sound.play_card();
     std::string imagePath = "./resources/images/cards/" + a_suit + "-" + std::to_string(a_number) + ".png";
     m_cards.emplace_back(cardPointer(new Card(a_suit, a_number, imagePath)));
     impl::set_position(m_cards, m_x, m_y, m_gap_of_prints);
 }
 
-void Hand::push(std::vector<std::pair<std::string, int>> a_cards)
-{
-    std::string suit;
-    int number;
+// void Hand::push(std::vector<std::pair<std::string, int>> a_cards)
+// {
+//     std::string suit;
+//     int number;
 
-    for(auto& pair : a_cards)
-    {
-        suit = pair.first;
-        number = pair.second;
-        push(suit, number);
-    }
-}
+//     for(auto& pair : a_cards)
+//     {
+//         suit = pair.first;
+//         number = pair.second;
+//         push(suit, number);
+//     }
+// }
 
 void Hand::clear()
 {
     Lock lock(m_mutex);
+    m_sound.play_card();
     m_cards.clear();
 }
 

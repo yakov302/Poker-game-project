@@ -41,7 +41,7 @@ Wallet::Wallet(int a_x, int a_y, std::vector<int> a_amounts)
 
 void Wallet::push(int a_amount)
 {
-    //Lock lock(m_mutex);
+    m_sound.play_chip_in();
     std::string imagePath = "./resources/images/chips/" + std::to_string(a_amount) + ".png";
     m_wallet[a_amount].emplace_back(chipPointer(new Chip(a_amount, imagePath)));
     m_total_amount += a_amount;
@@ -59,6 +59,7 @@ void Wallet::push(std::vector<int> a_amounts)
 void Wallet::pop(int a_amount)
 {
     Lock lock(m_mutex);
+    m_sound.play_chip_out();
     if(!m_wallet[a_amount].empty())
     {
         m_wallet[a_amount].pop_back();
@@ -66,22 +67,23 @@ void Wallet::pop(int a_amount)
     }
 }
 
-std::vector<int> Wallet::pop_wallet()
-{
-    //Lock lock(m_mutex);
-    std::vector<int> a_amounts;
-    a_amounts.reserve(size());
-    for(auto& vec : m_wallet)
-    {
-        for(auto& chip : vec.second)
-            a_amounts.emplace_back(chip.get()->amount());
-    } 
-    return a_amounts;
-}
+// std::vector<int> Wallet::pop_wallet()
+// {
+//     //Lock lock(m_mutex);
+//     std::vector<int> a_amounts;
+//     a_amounts.reserve(size());
+//     for(auto& vec : m_wallet)
+//     {
+//         for(auto& chip : vec.second)
+//             a_amounts.emplace_back(chip.get()->amount());
+//     } 
+//     return a_amounts;
+// }
 
 void Wallet::clear()
 {
     Lock lock(m_mutex);
+   // m_sound.play_chip_out();
     for(auto& vec : m_wallet)
     {
         vec.second.clear();

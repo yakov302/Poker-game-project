@@ -12,6 +12,7 @@
 #include "tcp_client.hpp"
 #include "action_out.hpp"
 #include "text_box.hpp"
+#include "sound.hpp"
 
 #include "players_container.hpp"
 
@@ -74,6 +75,7 @@ private:
     Self& m_self;
     PlayersContainer& m_players;
     ActionOut& m_action_out;
+    Sound m_sound;
 };
 
 
