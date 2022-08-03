@@ -4,7 +4,6 @@
 #include <mutex>
 
 #include "card.hpp"
-#include "sound.hpp"
 
 namespace poker
 {
@@ -15,7 +14,7 @@ using cardPointer = std::shared_ptr<Card>;
 class Hand 
 {
 public:
-   Hand(int a_num_of_cards_front, int a_num_of_cards_back, int a_x, int a_y, float a_scale, int a_gap_of_prints);
+   Hand(int a_num_of_cards_front, int a_num_of_cards_back, int a_x, int a_y, float a_scale, int a_gap_front, int a_gap_back);
 
    void push(std::string& a_suit, int a_number);
    void pop();
@@ -31,7 +30,6 @@ private:
     mutable std::mutex m_mutex;
     std::vector<cardPointer> m_cards;
     std::vector<cardPointer> m_back; 
-    //Sound m_sound;
 };
 
 

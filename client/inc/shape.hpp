@@ -1,8 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <iostream>
 
 namespace poker
 {
@@ -55,6 +53,7 @@ public:
         return m_shape.getGlobalBounds().height;
     }
 
+protected:
     sf::Sprite m_shape;
     sf::Texture m_texture;
 };

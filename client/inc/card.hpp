@@ -1,8 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-
 #include "shape.hpp"
 
 namespace poker
@@ -11,13 +8,13 @@ namespace poker
 class Card : public Shape
 {
 public:
-    Card(std::string a_suit, int a_number, std::string a_image_path)
+    Card(std::string a_suit, int a_number, std::string a_image_path, float a_scale = 0.7)
     : m_suit(a_suit)
     , m_number(a_number)
     {
         m_texture.loadFromFile(a_image_path);
         m_shape.setTexture(m_texture);
-        m_shape.scale(0.7, 0.7);
+        m_shape.scale(a_scale, a_scale);
     };
 
     std::string& suit() const

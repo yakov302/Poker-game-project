@@ -1,12 +1,8 @@
 #pragma once
 
-#include <string>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <string.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <cstring>
 #include <string>
 
 namespace poker

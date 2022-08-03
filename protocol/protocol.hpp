@@ -50,7 +50,6 @@ typedef enum Message_type
     INVALID_BET_MAX = 14,
     CHECK_UPDATE = 15,
     FOLD_UPDATE = 16,
-    CLEAR_FOLD = 17,
     GET_CARD = 18,
     GET_CHIP = 19,
     GIVE_CARD = 20,

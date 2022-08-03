@@ -1,13 +1,12 @@
 #include "client_manager.hpp"
-#include <iostream>
 
 namespace poker
 {
 
 ClientManager::ClientManager(std::string a_server_ip, int a_server_port)
-: m_cards(2, 0, 850, 350, 1.8, 140)
+: m_cards(5, 0, 850, 350, 1.8, 150, 0)
 , m_chips(745, 565, {})
-, m_self("player", "male", 0, 1060, 650, 1280, 640, 1.8, 20)
+, m_self("player", "male", 0, 1060, 650, 1260, 630, 1.8, 30, 15)
 , m_players()
 , m_socket(a_server_ip, a_server_port)
 , m_tcp(m_socket)

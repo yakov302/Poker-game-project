@@ -1,7 +1,5 @@
 #include "wallet.hpp"
 
-#include <iostream>
-
 namespace poker
 {
 
@@ -24,7 +22,6 @@ void make_reserve(std::unordered_map<int, std::vector<chipPointer>>& a_wallet)
 
 
 }//namespace impl
-
 
 Wallet::Wallet(int a_x, int a_y, std::vector<int> a_amounts)
 : m_amount("./resources/fonts/arial.ttf", "0", sf::Color(255, 228, 156), 25, a_x, a_y)
@@ -67,30 +64,6 @@ void Wallet::pop(int a_amount)
     }
 }
 
-// std::vector<int> Wallet::pop_wallet()
-// {
-//     //Lock lock(m_mutex);
-//     std::vector<int> a_amounts;
-//     a_amounts.reserve(size());
-//     for(auto& vec : m_wallet)
-//     {
-//         for(auto& chip : vec.second)
-//             a_amounts.emplace_back(chip.get()->amount());
-//     } 
-//     return a_amounts;
-// }
-
-// void Wallet::clear()
-// {
-//     Lock lock(m_mutex);
-//    // m_sound.play_chip_out();
-//     for(auto& vec : m_wallet)
-//     {
-//         vec.second.clear();
-//     }
-//     m_total_amount = 0;
-// }
-
 void Wallet::draw(sf::RenderWindow& a_window, int a_x, int a_y, int a_gapDirection)const
 {
     Lock lock(m_mutex);
@@ -104,7 +77,7 @@ void Wallet::draw(sf::RenderWindow& a_window, int a_x, int a_y, int a_gapDirecti
                 chip.get()->set_position(a_x, y -= 7);
                 chip.get()->draw(a_window);
             }
-            a_x += a_gapDirection*90;
+            a_x += a_gapDirection*CHIP_SIZE;
         }
     }
 }
@@ -116,7 +89,6 @@ size_t Wallet::amount() const
 
 int Wallet::amount_by_position(int a_x, int a_y)const
 {
-    //Lock lock(m_mutex);
     for(auto& vec : m_wallet)
     {
         if(!vec.second.empty())

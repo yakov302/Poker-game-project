@@ -1,7 +1,4 @@
 #include "table.hpp"
-#include "player.hpp"
-
-#include <unistd.h>
 
 namespace poker
 {
@@ -34,7 +31,7 @@ void texts_box_initialization(std::unordered_map<std::string, textBoxPointer>& a
     a_text_boxs["gender"] = textBoxPointer(new TextBox("./resources/images/text_box/text_box.png", 9, 835, 450, 1.2, "     gender ", -4, 22, 25));
 }
 
-static void set_flags(std::unordered_map<std::string, bool>& a_flags)
+static void flags_initialization(std::unordered_map<std::string, bool>& a_flags)
 {
     a_flags["log_in"] = false;
     a_flags["register"] = false;
@@ -52,20 +49,21 @@ static void* thread_function(void* a_arg)
 }//namespace impl
 
 Table::Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_players, ActionOut& a_action_out)
-: m_window(sf::VideoMode::getDesktopMode(), "Poker game")
+: m_window(sf::VideoMode::getDesktopMode(), "My Texas Hold'em")
 , m_texts()
 , m_buttons()
 , m_text_boxs()
+, m_sound()
+, m_self(a_self)
 , m_cards(a_cards)
 , m_chips(a_chips)
-, m_self(a_self)
-, m_players(a_players)
 , m_action_out(a_action_out)
+, m_players(a_players)
 {
     impl::buttons_initialization(m_buttons);
     impl::texts_initialization(m_texts);
     impl::texts_box_initialization(m_text_boxs);
-    impl::set_flags(m_flags);
+    impl::flags_initialization(m_flags);
     m_thread = new std::thread(impl::thread_function, this);
 }
 
@@ -164,9 +162,7 @@ void Table::draw_all()
     m_buttons["exchange"].get()->draw(m_window);
 
     if(m_self.is_flag_on("my_turn"))
-    {
         draw_your_turn();
-    }
 }
 
 void Table::draw_your_turn()
@@ -220,6 +216,7 @@ bool Table::check_go_button()
     {
         m_sound.play_button();
         usleep(100000);
+
         if(m_self.is_flag_on("exchange"))
         {
             m_self.turn_off_flag("exchange");
@@ -241,7 +238,6 @@ bool Table::check_go_button()
     return false;
 }
 
-
 bool Table::check_bet_button()
 {
     sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
@@ -250,8 +246,8 @@ bool Table::check_bet_button()
     if (m_buttons["bet"].get()->is_in_range(position.x, position.y) && !m_self.is_flag_on("exchange"))
     {
         m_sound.play_button();
-        usleep(100000);
         m_action_out.start_bet(m_self.name());
+        usleep(100000);
         return true;
     }
 
@@ -291,6 +287,7 @@ bool Table::check_fold_button()
     {
         m_sound.play_button();
         m_action_out.fold_action();
+        usleep(100000);
         return true;
     }
 
@@ -537,8 +534,24 @@ void Table::turn_off_flag(std::string a_flag)
 
 void Table::set_text(std::string a_type, std::string a_text, sf::Color a_color)
 {
+    int x, y;
     m_texts[a_type].get()->set_text(a_text);
     m_texts[a_type].get()->set_fill_color(a_color);
+
+    if(a_type == "log_in")
+    {
+        x = 740 + ((MAX_TEXTS_SIZE - a_text.size())/2)*12;
+        y = 80;
+    }
+
+    if(a_type == "text")
+    {
+        x = 1550 + (MAX_TEXTS_SIZE - a_text.size())/2;
+        y = 680;
+    }
+
+    m_texts[a_type].get()->set_position(x, y);
 }
+
 
 }// poker namespace

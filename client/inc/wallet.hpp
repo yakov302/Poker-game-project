@@ -1,14 +1,13 @@
 #pragma once
 
 #include <unordered_map>
-#include <memory>
-#include <string>
 #include <mutex>
 
 #include "chip.hpp"
 #include "text.hpp"
 #include "sound.hpp"
 
+#define CHIP_SIZE 90
 
 namespace poker
 {
@@ -25,7 +24,6 @@ public:
     void push(std::vector<int> a_amounts);
     void pop(int a_amount);
 
-    //void clear();
     void exchange(int a_amount);
     void print_amount(sf::RenderWindow& a_window);
 

@@ -115,7 +115,8 @@ void PlayersContainer::give_card(std::string& a_name)
     if(m_players.find(a_name) == m_players.end())
         return;
 
-    m_players[a_name]->m_hand.pop_back();
+    if(!m_players[a_name]->m_hand.empty())
+        m_players[a_name]->m_hand.pop_back();
 }
 
 void PlayersContainer::turn_on(std::string& a_name, std::string a_flag)

@@ -75,10 +75,7 @@ void CardRound::turn_off_folds()
     while(it != end)
     {
         if(it->second.get()->m_fold)
-        {
             m_players.turn_off(it->second.get()->m_name, "fold");
-            m_action_out.clear_fold(it->second.get()->m_name);
-        }
 
         ++it;
     }
@@ -303,8 +300,7 @@ void CardRound::clear_actions()
 
     while(it != end)
     {
-        if(!it->second.get()->m_fold 
-        && !it->second.get()->m_viewer)
+        if(!it->second.get()->m_viewer)
         {
             m_action_out.clear_action(it->second.get()->m_name);
             it->second.get()->m_result = 0;

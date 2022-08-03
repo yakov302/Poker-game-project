@@ -154,11 +154,6 @@ void ActionOut::fold(std::string& a_name)
     name_and_message(a_name, FOLD_UPDATE);
 }
 
-void ActionOut::clear_fold(std::string& a_name)
-{
-    name_and_message(a_name, CLEAR_FOLD);
-}
-
 void ActionOut::get_card(std::string& a_name, Card& a_card)
 {
     Args arg(2, 1);

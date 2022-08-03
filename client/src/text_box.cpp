@@ -1,6 +1,5 @@
 #include "text_box.hpp"
 
-
 namespace poker
 {
 
@@ -8,8 +7,8 @@ TextBox::TextBox(std::string a_image_path, int a_limet, int a_x , int a_y, float
 : Button(a_image_path, a_x, a_y, a_scale, a_text , a_x_gap, a_y_gap, a_text_size)
 , m_background_string(a_text)
 , m_string()
-, m_limet(a_limet)
 , m_is_select(false)
+, m_limet(a_limet)
 {
     m_text.set_fill_color(sf::Color(183, 218, 191));
 }
@@ -23,7 +22,7 @@ void TextBox::get_char(sf::Event a_typing)
     if(typing > 128)
         return;
 
-    if((int)m_string.size() < m_limet)
+    if(static_cast<int>(m_string.size()) < m_limet)
         input(typing);
     else if(typing == DELETE)
         delete_char();    
@@ -77,7 +76,6 @@ void TextBox::delete_char()
 {
     m_string.resize( m_string.size()-1);
 }
-
 
 
 }// poker namespace

@@ -179,7 +179,8 @@ void BetRound::zero_bets_and_clear_actions()
     while(it != end)
     {
         it->second.get()->m_bet = 0;
-        m_action_out.clear_action(it->second.get()->m_name);
+        if(!it->second.get()->m_fold)
+            m_action_out.clear_action(it->second.get()->m_name);
         ++it;
     }
 }

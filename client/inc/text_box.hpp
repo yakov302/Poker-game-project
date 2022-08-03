@@ -1,7 +1,5 @@
 #pragma once
 
- #include <unistd.h>
-
 #include "button.hpp"
 
 #define DELETE 8
@@ -28,8 +26,8 @@ private:
 private:
     std::string m_background_string;
     std::string m_string;
-    int m_limet;
     bool m_is_select;
+    int m_limet;
 };
 
 

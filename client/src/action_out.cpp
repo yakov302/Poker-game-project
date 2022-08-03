@@ -1,5 +1,4 @@
 #include "action_out.hpp"
-#include <iostream>
 
 namespace poker
 {
@@ -8,6 +7,14 @@ ActionOut::ActionOut(TcpClient& a_tcp)
 : m_tcp(a_tcp)
 {
 
+}
+
+void ActionOut::just_message(Message_type a_message)
+{
+    char buffer[BUFFER_SIZE];
+    Args arg(0, 0);
+    int size = pack(buffer, arg, a_message);
+    m_tcp.send_to_server(buffer, size);
 }
 
 void ActionOut::name_and_message(std::string a_name, Message_type a_message)
@@ -64,22 +71,22 @@ void ActionOut::finish_bet(std::string a_name)
 
 void ActionOut::check_action()
 {
-    name_and_message("stam", CHECK_ACTION); // just massge function
+    just_message(CHECK_ACTION);
 }
 
 void ActionOut::fold_action()
 {
-    name_and_message("stam", FOLD_ACTION); // just massge function
+    just_message(FOLD_ACTION); 
 }
 
 void ActionOut::wake_up_client()
 {
-    name_and_message("player", WAKE_UP_CLIENT);
+    just_message(WAKE_UP_CLIENT);
 }
 
 void ActionOut::wake_up_server()
 {
-    name_and_message("player", WAKE_UP_SERVER);
+    just_message(WAKE_UP_SERVER);
 }
 
 

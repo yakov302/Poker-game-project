@@ -14,7 +14,7 @@ void fatal_error(std::string a_fail)
 
 void sin_setting(struct sockaddr_in& a_sin, std::string& a_server_ip, int& a_servr_port)
 {
-	memset (&a_sin, 0, sizeof(a_sin)); 
+	memset(&a_sin, 0, sizeof(a_sin)); 
 	a_sin.sin_family = AF_INET;
 	a_sin.sin_addr.s_addr =  inet_addr(a_server_ip.c_str());
 	a_sin.sin_port = htons(a_servr_port);

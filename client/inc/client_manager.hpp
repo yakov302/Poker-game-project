@@ -1,18 +1,16 @@
 #pragma once
 
-#include "table.hpp"
-#include "players_container.hpp"
 #include "self.hpp"
-#include "tcp_client.hpp"
+#include "table.hpp"
 #include "router.hpp"
 #include "action_in.hpp"
 #include "action_out.hpp"
+#include "tcp_client.hpp"
 #include "client_socket.hpp"
+#include "players_container.hpp"
 
 namespace poker
 {
-
-using playerPointer = std::shared_ptr<Player>;
 
 class ClientManager
 {

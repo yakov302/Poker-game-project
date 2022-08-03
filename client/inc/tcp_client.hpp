@@ -2,9 +2,8 @@
 
 #include <mutex>
 
-#include "client_socket.hpp"
 #include "protocol.hpp"
-
+#include "client_socket.hpp"
 
 namespace poker
 {

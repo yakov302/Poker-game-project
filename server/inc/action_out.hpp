@@ -29,7 +29,6 @@ public:
     void invalid_bet_max(int a_amount, int a_client_socket);
     void check(std::string& a_name);
     void fold(std::string& a_name);
-    void clear_fold(std::string& a_name);
     void get_card(std::string& a_name, Card& a_card);
     void get_chips(std::string& a_name, int a_chip);
     void give_card(std::string& a_name);

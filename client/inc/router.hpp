@@ -1,15 +1,13 @@
 #pragma once
 
-#include <unordered_map>
 #include <thread>
 
-#include "tcp_client.hpp"
-#include "protocol.hpp"
-#include "action_in.hpp"
 #include "table.hpp"
+#include "action_in.hpp"
+#include "tcp_client.hpp"
 #include "client_socket.hpp"
 
-#define BUFFER_SIZE 2048
+#define BUFFER_SIZE 256
 
 namespace poker
 {
@@ -26,10 +24,10 @@ private:
     char* m_buffer;
     std::thread* m_thread;
 
-    ClientSocket& m_socket;
+    Table& m_table;
     TcpClient& m_tcp;
     ActionIn& m_action_in;
-    Table& m_table;
+    ClientSocket& m_socket;
 };
 
 
