@@ -39,10 +39,7 @@ std::vector<Card>& Table::table_cards()
     return m_cards;
 }
 
-// std::vector<int>& Table::table_chips()
-// {
-//     return m_chips;
-// }
+
 
 int Table::table_amount()
 {
@@ -53,19 +50,23 @@ int Table::table_amount()
     return amount;
 }
 
-void Table::clear_cards()
+void Table::give_card()
 {
-    m_cards.clear();
+    if(m_cards.empty())
+        return;
+
+    m_cards.pop_back();
 }
 
-void Table::clear_chips()
-{
-    m_chips.clear();
-}
 
 bool Table::is_wallet_empty()
 {
     return m_chips.empty();
+}
+
+bool Table::is_hand_empty()
+{
+    return m_cards.empty();
 }
 
 }// poker namespace

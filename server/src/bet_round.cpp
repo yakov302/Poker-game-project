@@ -99,7 +99,7 @@ void BetRound::bet_in(int a_amount)
         m_turn->second->m_amount -= a_amount;
         m_table.get_chip(a_amount);
         m_action_out.bet(m_turn->second->m_name, a_amount);
-        m_action_out.table_get_chips(a_amount);
+        m_action_out.table_get_chip(a_amount);
     }
 }
 

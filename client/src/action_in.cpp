@@ -162,11 +162,12 @@ void ActionIn::get(char* a_buffer)
         get_card(a_buffer);
         break;   
 
-    case GET_CHIPS:
-        get_chips(a_buffer);
+    case GET_CHIP:
+        get_chip(a_buffer);
         break;
-    case CLEAR_HAND:
-        clear_hand(a_buffer);
+
+    case GIVE_CARD:
+        give_card(a_buffer);
         break;
 
     case GET_PLAYER:
@@ -186,15 +187,15 @@ void ActionIn::get(char* a_buffer)
         break;
 
     case TABLE_GET_CHIP:
-        table_get_chips(a_buffer);
+        table_get_chip(a_buffer);
         break;
 
-    case TABLE_CLEAR_HAND:
-        table_clear_hand();
+    case TABLE_GIVE_CARD:
+        table_give_card();
         break;
 
-    case TABLE_CLEAR_CHIPS:
-        table_clear_chips();
+    case TABLE_GIVE_CHIP:
+        table_give_chip(a_buffer);
         break;
 
     case WAKE_UP_SERVER:
@@ -228,6 +229,7 @@ void ActionIn::get(char* a_buffer)
 
 void ActionIn::registration_success()
 {
+    m_sound.play_positive();
     m_table.set_text("log_in", "Registration was successful");
     m_table.turn_off_flag("register");
     m_table.turn_on_flag("log_in");
@@ -235,16 +237,19 @@ void ActionIn::registration_success()
 
 void ActionIn::registration_duplicare_name()
 {
+    m_sound.play_invalid();
     m_table.set_text("log_in", "That name is already taken");
 }
 
 void ActionIn::registration_wrong_gender()
 {
+    m_sound.play_invalid();
     m_table.set_text("log_in", "         Wrong gender\n\n Only male/female allowed");
 }
 
 void ActionIn::log_in_success(char* a_buffer)
 {
+    m_sound.play_positive();
     Args arg (2, 0);
     unpack(a_buffer, arg);
     std::string name = arg.m_strings[0];
@@ -258,16 +263,19 @@ void ActionIn::log_in_success(char* a_buffer)
 
 void ActionIn::log_in_wrong_name()
 {
+    m_sound.play_invalid();
     m_table.set_text("log_in", "           Wrong name");
 }
 
 void ActionIn::log_in_wrong_password()
 {
+    m_sound.play_invalid();
     m_table.set_text("log_in", "       Wrong password");
 }
 
 void ActionIn::user_name_alredy_log()
 {
+    m_sound.play_invalid();
     m_table.set_text("log_in", "    User already logged in");
 }
 
@@ -302,7 +310,8 @@ void ActionIn::bet(char* a_buffer)
 }
 
 void ActionIn::invalid_bet_min(char* a_buffer)
-{ 
+{
+    m_sound.play_invalid(); 
     Args arg(0, 1);
     unpack(a_buffer, arg);
     m_table.set_text("text", "Invalid bet \nMin bet: " + std::to_string(arg.m_ints[0]));
@@ -310,6 +319,7 @@ void ActionIn::invalid_bet_min(char* a_buffer)
 
 void ActionIn::invalid_bet_max(char* a_buffer)
 { 
+    m_sound.play_invalid();
     Args arg(0, 1);
     unpack(a_buffer, arg);
     m_table.set_text("text", "Invalid bet \nMax bet: " + std::to_string(arg.m_ints[0]));
@@ -325,7 +335,12 @@ void ActionIn::fold(char* a_buffer)
 {
     std::string name = impl::get_name(a_buffer);
     m_players.set_fold(name, "fold");
-    m_players.clear_hand(name);
+    for(int i = 0; i < 2; ++i)
+    {
+        usleep(100000);
+        m_sound.play_card();
+        m_players.give_card(name);
+    }
 }
 
 void ActionIn::clear_fold(char* a_buffer)
@@ -338,21 +353,22 @@ void ActionIn::get_card(char* a_buffer)
 {
     Args arg(2, 1);
     unpack(a_buffer, arg);
+    m_sound.play_card();
     m_players.get_card(arg.m_strings[0], arg.m_strings[1], arg.m_ints[0]);
 }
 
-void ActionIn::get_chips(char* a_buffer)
+void ActionIn::get_chip(char* a_buffer)
 {
     Args arg(1, 1);
     unpack(a_buffer, arg);
-    m_chips.pop(arg.m_ints[0]);
     m_players.get_chip(arg.m_strings[0], arg.m_ints[0]);
 }
 
-void ActionIn::clear_hand(char* a_buffer)
+void ActionIn::give_card(char* a_buffer)
 {
     std::string name = impl::get_name(a_buffer);
-    m_players.clear_hand(name);
+    m_sound.play_card();
+    m_players.give_card(name);
 }
 
 void ActionIn::get_player(char* a_buffer)
@@ -378,24 +394,28 @@ void ActionIn::table_get_card(char* a_buffer)
 {
     Args arg(1,1);
     unpack(a_buffer, arg);
+    m_sound.play_card();
     m_cards.push(arg.m_strings[0], arg.m_ints[0]);
 }
 
-void ActionIn::table_get_chips(char* a_buffer)
+void ActionIn::table_get_chip(char* a_buffer)
 {
     Args arg(0, 1);
     unpack(a_buffer, arg);
     m_chips.push(arg.m_ints[0]);
 }
 
-void ActionIn::table_clear_hand()
+void ActionIn::table_give_card()
 {
-    m_cards.clear();
+    m_sound.play_card();
+    m_cards.pop();
 }
 
-void ActionIn::table_clear_chips()
+void ActionIn::table_give_chip(char* a_buffer)
 {
-    m_chips.clear();
+    Args arg(0, 1);
+    unpack(a_buffer, arg);
+    m_chips.pop(arg.m_ints[0]);
 }
     
 void ActionIn::wake_up_server()
@@ -411,6 +431,7 @@ void ActionIn::ActionIn::clear_action(char* a_buffer)
 
 void ActionIn::round_winer(char* a_buffer)
 {
+    m_sound.play_positive();
     std::string name = impl::get_name(a_buffer);
     m_table.set_text("text", name + " won!");
 }
@@ -418,6 +439,8 @@ void ActionIn::round_winer(char* a_buffer)
 void ActionIn::game_winer(char* a_buffer)
 {
     std::string name = impl::get_name(a_buffer);
+    if(name == m_self.name())
+        m_sound.play_positive();
     m_table.set_text("text", name + " won the game!");
 }
 

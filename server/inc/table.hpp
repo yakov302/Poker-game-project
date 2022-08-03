@@ -18,9 +18,9 @@ public:
     int pop_chip();
     std::vector<Card>& table_cards();
     int table_amount();
-    void clear_cards();
-    void clear_chips();
+    void give_card();
     bool is_wallet_empty();
+    bool is_hand_empty();
 
 private:
     std::vector<Card> m_cards;

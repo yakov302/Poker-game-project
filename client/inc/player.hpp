@@ -18,7 +18,7 @@ public:
     virtual void bet(int a_amount);
 
     void get_card(std::string& a_suit, int a_number);
-    void clear_hand();
+    void give_card();
 
     void set_fold(std::string a_action);
     void set_action(std::string a_action);

@@ -78,13 +78,13 @@ void PlayersContainer::get_card(std::string& a_name, std::string& a_suit, int a_
     m_players[a_name].get()->get_card(a_suit, a_number);
 }
 
-void PlayersContainer::clear_hand(std::string& a_name)
+void PlayersContainer::give_card(std::string& a_name)
 {
     //Lock lock(m_mutex);
     if(m_players.find(a_name) == m_players.end())
         return;
 
-    m_players[a_name].get()->clear_hand();
+    m_players[a_name].get()->give_card();
 }
 
 void PlayersContainer::set_fold(std::string& a_name, std::string a_text)

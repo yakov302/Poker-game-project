@@ -25,7 +25,7 @@ public:
     void bet(std::string& a_name, int a_amount);
 
     void get_card(std::string& a_name, std::string& a_suit, int a_number);
-    void clear_hand(std::string& a_name);
+    void give_card(std::string& a_name);
 
     void set_fold(std::string& a_name, std::string a_text);
     void set_action(std::string& a_name, std::string a_action);
@@ -36,7 +36,6 @@ public:
 
 private:
     int m_num_of_players;
-    //std::mutex m_mutex;
     std::unordered_map<std::string, playerPointer> m_players;
 };
 

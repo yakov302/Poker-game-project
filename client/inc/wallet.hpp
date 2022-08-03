@@ -23,11 +23,9 @@ public:
 
     void push(int a_amount);  
     void push(std::vector<int> a_amounts);
-
     void pop(int a_amount);
-    //std::vector<int> pop_wallet();
 
-    void clear();
+    //void clear();
     void exchange(int a_amount);
     void print_amount(sf::RenderWindow& a_window);
 

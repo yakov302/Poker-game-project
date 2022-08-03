@@ -12,12 +12,11 @@ public:
     Sound();
 
     void play_card();
-    void play_chip_in();
-    void play_chip_out();
+    void play_chip();
     void play_win();
-    void play_lose();
     void play_button();
     void play_invalid();
+    void play_positive();
 
 private:
     std::vector<sf::Sound> m_sounds;

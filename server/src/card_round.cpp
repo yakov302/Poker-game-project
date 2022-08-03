@@ -186,21 +186,25 @@ void CardRound::close_card_round()
     }
 
     pay_to_winner(name);
-    m_action_out.table_clear_chips();
-    m_action_out.table_clear_hand();
-    m_action_out.clear_text();
-    turn_off_reveal_cards();
+    table_clear_hand();
     clear_hands();
     clear_actions();
-
-    m_players.increase(name, m_table.table_amount());
-    m_table.clear_chips();
-    m_table.clear_cards();
-    m_deck.re_fill_decks();
     chack_money();
+    turn_off_reveal_cards();
+    m_deck.re_fill_decks();
 
     m_stop = true;
     m_bet = false;
+}
+
+void CardRound::table_clear_hand()
+{
+    while(!m_table.is_hand_empty())
+    {
+        usleep(100000);
+        m_action_out.table_give_card();
+        m_table.give_card();
+    }
 }
 
 void CardRound::reveal_cards()
@@ -234,6 +238,7 @@ void CardRound::pay_to_winner(std::string& a_winner)
    {
         std::cout << "***" << a_winner << "***\n";
         int chip = m_table.pop_chip();
+        m_action_out.table_give_chip(chip);
         m_action_out.get_chips(a_winner, chip);
         m_players.increase(a_winner, chip);
         usleep(100000);
@@ -249,8 +254,12 @@ void CardRound::clear_hands()
     {
         if(!it->second.get()->m_fold)
         {
-            m_action_out.clear_hand(it->second.get()->m_name);
-            m_players.clear_hand(it->second.get()->m_name);
+            for(int i = 0; i < 2; ++i)
+            {
+                usleep(100000);
+                m_action_out.give_card(it->second.get()->m_name);
+                m_players.give_card(it->second.get()->m_name);
+            }
         }
 
         ++it;
@@ -303,6 +312,7 @@ void CardRound::clear_actions()
 
         ++it;
     }
+    m_action_out.clear_text();
 }
 
 }// poker namespace

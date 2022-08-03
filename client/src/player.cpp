@@ -58,9 +58,9 @@ void Player::get_card(std::string& a_suit, int a_number)
     m_hand.push(a_suit, a_number);
 }
 
-void Player::clear_hand()
+void Player::give_card()
 {
-    m_hand.clear();
+    m_hand.pop();
 }
 
 void Player::set_action(std::string a_action)

@@ -219,11 +219,11 @@ bool Table::check_go_button()
     if (m_buttons["go"].get()->is_in_range(position.x, position.y))
     {
         m_sound.play_button();
+        usleep(100000);
         if(m_self.is_flag_on("exchange"))
         {
             m_self.turn_off_flag("exchange");
             m_self.set_action("");
-            usleep(200000);
             if(m_self.is_flag_on("bet"))
                 m_action_out.start_bet(m_self.name());
 
@@ -234,7 +234,6 @@ bool Table::check_go_button()
         {
             set_text("text", "");
             m_action_out.finish_bet(m_self.name());
-            usleep(100000);
             return true;
         }
     }
@@ -251,6 +250,7 @@ bool Table::check_bet_button()
     if (m_buttons["bet"].get()->is_in_range(position.x, position.y) && !m_self.is_flag_on("exchange"))
     {
         m_sound.play_button();
+        usleep(100000);
         m_action_out.start_bet(m_self.name());
         return true;
     }
@@ -307,6 +307,7 @@ bool Table::check_exchange_button()
         m_sound.play_button();
         m_self.turn_on_flag("exchange");
         m_self.set_action("exchange");
+        usleep(100000);
         return true;
     }
 

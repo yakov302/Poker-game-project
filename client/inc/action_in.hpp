@@ -9,6 +9,8 @@
 #include "wallet.hpp"
 #include "table.hpp"
 #include "action_out.hpp"
+#include "sound.hpp"
+
 
 namespace poker
 {
@@ -38,15 +40,15 @@ private:
     void fold(char* a_buffer);
     void clear_fold(char* a_buffer);
     void get_card(char* a_buffer);
-    void get_chips(char* a_buffer);
-    void clear_hand(char* a_buffer);
+    void get_chip(char* a_buffer);
+    void give_card(char* a_buffer);
     void get_player(char* a_buffer);
     void delete_player(char* a_buffer);
     void reveal_cards(char* a_buffer);
     void table_get_card(char* a_buffer);
-    void table_get_chips(char* a_buffer);
-    void table_clear_hand();
-    void table_clear_chips();
+    void table_get_chip(char* a_buffer);
+    void table_give_card();
+    void table_give_chip(char* a_buffer);
     void wake_up_server();
     void clear_action(char* a_buffer);
     void round_winer(char* a_buffer);
@@ -61,6 +63,7 @@ private:
     PlayersContainer& m_players;
     Self& m_self;
     ActionOut& m_action_out;
+    Sound m_sound;
 };
 
 

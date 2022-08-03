@@ -31,6 +31,7 @@ private:
     void chack_money();
     void print_result();
     void clear_actions();
+    void table_clear_hand();
     void pay_to_winner(std::string& a_winner);
     bool one_player_left();
     std::string one_player();

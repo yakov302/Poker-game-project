@@ -111,7 +111,6 @@ void ActionOut::turn_on(std::string& a_name, std::string a_flag)
 
 void ActionOut::turn_off(std::string& a_name, std::string a_flag)
 {
-    std::cout << "turn of out : " << a_name << " - " << a_flag << "\n";
     flag(a_name, a_flag, TURN_OFF_FLAG);
 }
 
@@ -174,12 +173,12 @@ void ActionOut::get_chips(std::string& a_name, int a_chip)
     Args arg(1, 1);
     arg.m_strings.emplace_back(a_name);
     arg.m_ints.emplace_back(a_chip);
-    pack_and_send_all(arg, GET_CHIPS);
+    pack_and_send_all(arg, GET_CHIP);
 }
 
-void ActionOut::clear_hand(std::string& a_name)
+void ActionOut::give_card(std::string& a_name)
 {
-    name_and_message(a_name, CLEAR_HAND);
+    name_and_message(a_name, GIVE_CARD);
 }
 
 void ActionOut::get_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket)
@@ -214,21 +213,23 @@ void ActionOut::table_get_card(Card& a_card)
     pack_and_send_all(arg, TABLE_GET_CARD);
 }
 
-void ActionOut::table_get_chips(int a_amount)
+void ActionOut::table_get_chip(int a_amount)
 {
     Args arg(0, 1);
     arg.m_ints.emplace_back(a_amount);
     pack_and_send_all(arg, TABLE_GET_CHIP); 
 }
 
-void ActionOut::table_clear_hand()
+void ActionOut::table_give_card()
 {
-    just_message_to_all(TABLE_CLEAR_HAND);
+    just_message_to_all(TABLE_GIVE_CARD);
 }
 
-void ActionOut::table_clear_chips()
+void ActionOut::table_give_chip(int a_amount)
 {
-   just_message_to_all(TABLE_CLEAR_CHIPS);
+    Args arg(0, 1);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send_all(arg, TABLE_GIVE_CHIP); 
 }
 
 void ActionOut::wake_up_client(int a_client_socket)
