@@ -546,7 +546,7 @@ void Table::set_text(std::string a_type, std::string a_text, sf::Color a_color)
 
     if(a_type == "text")
     {
-        x = 1550 + (MAX_TEXTS_SIZE - a_text.size())/2;
+        x = 1510 + (MAX_TEXTS_SIZE - a_text.size())/2;
         y = 680;
     }
 

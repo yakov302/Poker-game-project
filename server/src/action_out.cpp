@@ -1,5 +1,4 @@
 #include "action_out.hpp"
-#include <iostream>
 
 namespace poker
 {
@@ -8,6 +7,14 @@ ActionOut::ActionOut(TcpServer& a_tcp)
 : m_tcp(a_tcp)
 {
 
+}
+
+void ActionOut::name_and_amount(std::string& a_name, int a_amount, Message_type a_message)
+{
+    Args arg(1, 1);
+    arg.m_strings.emplace_back(a_name);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send_all(arg, a_message);
 }
 
 void ActionOut::name_and_message(std::string& a_name, Message_type a_message)
@@ -19,17 +26,29 @@ void ActionOut::name_and_message(std::string& a_name, Message_type a_message)
     m_tcp.send_all_clients(buffer, size);
 }
 
+void ActionOut::just_amount_to_clienet(Message_type a_message, int a_amount, int a_client_socket)
+{
+    Args arg(0, 1);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send_to_client(arg, a_message, a_client_socket);
+}
+
+void ActionOut::just_amount_to_all(Message_type a_message, int a_amount)
+{
+    Args arg(0, 1);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send_all(arg, a_message); 
+}
+
 void ActionOut::just_message_to_clienet(Message_type a_message, int a_client_socket)
 {
-    Args arg(1, 0); // bag to solve
-    arg.m_strings.emplace_back("stam"); // bag to solve
+    Args arg(0, 0);
     pack_and_send_to_client(arg, a_message, a_client_socket);
 }
 
 void ActionOut::just_message_to_all(Message_type a_message)
 {
-    Args arg(1, 0); // bag to solve
-    arg.m_strings.emplace_back("stam"); // bag to solve
+    Args arg(0, 0);
     pack_and_send_all(arg, a_message);
 }
 
@@ -116,32 +135,22 @@ void ActionOut::turn_off(std::string& a_name, std::string a_flag)
 
 void ActionOut::start_bet(std::string& a_name, int a_amount)
 {
-    Args arg(1, 1);
-    arg.m_strings.emplace_back(a_name);
-    arg.m_ints.emplace_back(a_amount);
-    pack_and_send_all(arg, START_BET);
+    name_and_amount(a_name, a_amount, START_BET_UPDATE);
 }
 
 void ActionOut::bet(std::string& a_name, int a_amount)
 {
-    Args arg(1, 1);
-    arg.m_strings.emplace_back(a_name);
-    arg.m_ints.emplace_back(a_amount);
-    pack_and_send_all(arg, BET_UPDATE);
+    name_and_amount(a_name, a_amount, BET_UPDATE);
 }
 
 void ActionOut::invalid_bet_min(int a_amount, int a_client_socket)
 {
-    Args arg(0, 1);
-    arg.m_ints.emplace_back(a_amount);
-    pack_and_send_to_client(arg, INVALID_BET_MIN, a_client_socket);
+    just_amount_to_clienet(INVALID_BET_MIN, a_amount, a_client_socket);
 }
 
 void ActionOut::invalid_bet_max(int a_amount, int a_client_socket)
 {
-    Args arg(0, 1);
-    arg.m_ints.emplace_back(a_amount);
-    pack_and_send_to_client(arg, INVALID_BET_MAX, a_client_socket);
+    just_amount_to_clienet(INVALID_BET_MAX, a_amount, a_client_socket);
 }
 
 void ActionOut::check(std::string& a_name)
@@ -165,10 +174,7 @@ void ActionOut::get_card(std::string& a_name, Card& a_card)
 
 void ActionOut::get_chips(std::string& a_name, int a_chip)
 {
-    Args arg(1, 1);
-    arg.m_strings.emplace_back(a_name);
-    arg.m_ints.emplace_back(a_chip);
-    pack_and_send_all(arg, GET_CHIP);
+    name_and_amount(a_name, a_chip, GET_CHIP);
 }
 
 void ActionOut::give_card(std::string& a_name)
@@ -202,17 +208,12 @@ void ActionOut::reveal_cards(std::string& a_name)
 
 void ActionOut::table_get_card(Card& a_card)
 {
-    Args arg(1, 1);
-    arg.m_strings.emplace_back(a_card.m_suit);
-    arg.m_ints.emplace_back(a_card.m_number);
-    pack_and_send_all(arg, TABLE_GET_CARD);
+    name_and_amount(a_card.m_suit, a_card.m_number, TABLE_GET_CARD);
 }
 
 void ActionOut::table_get_chip(int a_amount)
 {
-    Args arg(0, 1);
-    arg.m_ints.emplace_back(a_amount);
-    pack_and_send_all(arg, TABLE_GET_CHIP); 
+    just_amount_to_all(TABLE_GET_CHIP, a_amount); 
 }
 
 void ActionOut::table_give_card()
@@ -222,9 +223,7 @@ void ActionOut::table_give_card()
 
 void ActionOut::table_give_chip(int a_amount)
 {
-    Args arg(0, 1);
-    arg.m_ints.emplace_back(a_amount);
-    pack_and_send_all(arg, TABLE_GIVE_CHIP); 
+    just_amount_to_all(TABLE_GIVE_CHIP, a_amount); 
 }
 
 void ActionOut::wake_up_client(int a_client_socket)
@@ -234,8 +233,7 @@ void ActionOut::wake_up_client(int a_client_socket)
 
 void ActionOut::wake_up_server()
 {
-    std::string server = "server";
-    name_and_message(server, WAKE_UP_SERVER);
+    just_message_to_all(WAKE_UP_SERVER);
 }
 
 void ActionOut::clear_action(std::string& a_name)
@@ -260,10 +258,7 @@ void ActionOut::clear_text()
 
 void ActionOut::print_result(std::string& a_name, int a_result)
 {
-    Args arg(1, 1);
-    arg.m_strings.emplace_back(a_name);
-    arg.m_ints.emplace_back(a_result);
-    pack_and_send_all(arg, RESULT); 
+    name_and_amount(a_name, a_result, RESULT);
 }
 
 

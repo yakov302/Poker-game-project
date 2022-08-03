@@ -45,43 +45,43 @@ std::string result(int a_result)
     switch (a_result)
     {
     case 1:
-        return "High card";
+        return "high card";
         break;
     
     case 2:
-        return "One pair";
+        return "one pair";
         break;
 
     case 3:
-        return "Two pair";
+        return "two pair";
         break;
 
     case 4:
-        return "Three";
+        return "three";
         break;
 
     case 5:
-        return " Straight";
+        return " straight";
         break;
 
     case 6:
-        return "Flush";
+        return "flush";
         break;
 
     case 7:
-        return "Full house";
+        return "full house";
         break;
 
     case 8:
-        return "Four";
+        return "four";
         break;
 
     case 9:
-        return "Straight flush";
+        return "straight flush";
         break;
 
     case 10:
-        return "Royal straight flush";
+        return "royal straight flush";
         break;
     
     default:
@@ -148,7 +148,7 @@ void ActionIn::get(char* a_buffer)
         turn_off(a_buffer);
         break;
 
-    case START_BET:
+    case START_BET_UPDATE:
         start_bet(a_buffer);
         break;
 

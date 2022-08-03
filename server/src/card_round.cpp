@@ -233,7 +233,6 @@ void CardRound::pay_to_winner(std::string& a_winner)
 {
    while(!m_table.is_wallet_empty())
    {
-        std::cout << "***" << a_winner << "***\n";
         int chip = m_table.pop_chip();
         m_action_out.table_give_chip(chip);
         m_action_out.get_chips(a_winner, chip);

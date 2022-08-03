@@ -2,30 +2,32 @@
 
 #include <string>
 #include <vector>
-#include <string.h>
+#include <cstring>
 
-//      ***buufer order*** 
+/*
+    ***buufer order*** 
 
-//      [toal message size]      (4 bytes)
-//      [message type]           (1 bytes)
+    [toal message size]      (4 bytes)
+    [message type]           (1 bytes)
 
-//      [number of strings]      (1 bytes)
+    [number of strings]      (1 bytes)
 
-//      [strings 1 size]         (1 bytes)
-//      [string 1]
-//          .
-//          .
-//          .
-//      [strings n size]         (1 bytes)
-//      [string n]
+    [strings 1 size]         (1 bytes)
+    [string 1]
+        .
+        .
+        .
+    [strings n size]         (1 bytes)
+    [string n]
 
-//      [number of ints]         (1 bytes)
+    [number of ints]         (1 bytes)
 
-//      [int 1]
-//          .
-//          .
-//          .
-//      [int n]
+    [int 1]
+        .
+        .
+        .
+    [int n]
+*/
 
 namespace poker
 {
@@ -44,37 +46,38 @@ typedef enum Message_type
     USER_NAME_ALREADY_LOG = 8,
     TURN_ON_FLAG = 9,
     TURN_OFF_FLAG = 10,
-    START_BET = 11,
+    START_BET_UPDATE = 11,
     BET_UPDATE = 12,
     INVALID_BET_MIN = 13,
     INVALID_BET_MAX = 14,
     CHECK_UPDATE = 15,
     FOLD_UPDATE = 16,
-    GET_CARD = 18,
-    GET_CHIP = 19,
-    GIVE_CARD = 20,
-    GET_PLAYER = 21,
-    DELETE_PLAYER = 22,
-    REVEAL_CARDS = 23,
-    TABLE_GET_CARD = 24,
-    TABLE_GET_CHIP = 25,
-    TABLE_GIVE_CARD = 26,
-    TABLE_GIVE_CHIP = 27,
-    WAKE_UP_CLIENT = 28,
-    CLEAR_ACTION = 29,
-    ROUND_WINER = 30,
-    GAME_WINER = 31,
-    CLEAR_TEXT = 32,
-    RESULT = 33,
+    GET_CARD = 17,
+    GET_CHIP = 18,
+    GIVE_CARD = 19,
+    GET_PLAYER = 20,
+    DELETE_PLAYER = 21,
+    REVEAL_CARDS = 22,
+    TABLE_GET_CARD = 23,
+    TABLE_GET_CHIP = 24,
+    TABLE_GIVE_CARD = 25,
+    TABLE_GIVE_CHIP = 26,
+    WAKE_UP_CLIENT = 27,
+    CLEAR_ACTION = 28,
+    ROUND_WINER = 29,
+    GAME_WINER = 30,
+    CLEAR_TEXT = 31,
+    RESULT = 32,
 
     //client to server
 
-    REGISTRATION_REQUES = 34,
-    LOG_IN_REQUEST = 35,
+    REGISTRATION_REQUES = 33,
+    LOG_IN_REQUEST = 34,
+    START_BET_ACTION = 35,
     BET_ACTION = 36,
     FINISH_BET = 37,
     CHECK_ACTION = 38,
-    FOLD_ACTION = 33,
+    FOLD_ACTION = 39,
     WAKE_UP_SERVER = 40
 
 }Message_type;
@@ -96,9 +99,6 @@ int pack(char* a_buffer, Args& a_arganmats, Message_type a_message);
 Message_type unpack(char* a_buffer, Args& a_arganmats);
 int message_size(char* a_buffer);
 Message_type message_type(char* a_buffer);
-int num_of_ints(char* a_buffer);
-
-
 
 }// poker namespace
 

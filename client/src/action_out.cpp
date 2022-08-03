@@ -53,7 +53,7 @@ void ActionOut::log_in_request(std::string a_name, std::string a_password, int a
 
 void ActionOut::start_bet(std::string a_name)
 {
-    name_and_message(a_name, START_BET);
+    name_and_message(a_name, START_BET_ACTION);
 }
 
 void ActionOut::bet_action(std::string a_name, int a_chip)

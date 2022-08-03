@@ -10,7 +10,7 @@
 #include "action_in.hpp"
 #include "players_container.hpp"
 
-#define BUFFER_SIZE 2048
+#define BUFFER_SIZE 512
 
 namespace poker
 {

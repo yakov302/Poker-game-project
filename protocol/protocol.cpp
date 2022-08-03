@@ -1,5 +1,4 @@
 #include "protocol.hpp"
-#include <iostream>
 
 namespace poker
 {
@@ -59,30 +58,30 @@ void unpack_ints(char* a_buffer, Args& a_arganmats, int& a_num_of_ints, int& a_b
     }
 }
 
-
 void encrypt(std::string a_key, char* a_buffer, int a_message_size)
 {
-	// int key_size = a_key.size();
-    // int j = 0;
+	int key_size = a_key.size();
+    int j = 0;
 
-	// for(int i = 0; i < a_message_size; i++)
-	// {
-	// 	*(a_buffer + i) += a_key[j];
-	// 	j = (j + 1)%key_size;
-	// }	
+	for(int i = 0; i < a_message_size; i++)
+	{
+		*(a_buffer + i) += a_key[j];
+		j = (j + 1)%key_size;
+	}	
 }
 
 static void decrypt(std::string a_key, char* a_buffer, int a_message_size)
 {
-	// int key_size = a_key.size();
-	// int j = 0;
+	int key_size = a_key.size();
+	int j = 0;
 
-	// for(int i = 0; i < a_message_size; i++)
-	// {
-	// 	*(a_buffer + i) -= a_key[j];
-	// 	j = (j + 1)%key_size;
-	// }	
+	for(int i = 0; i < a_message_size; i++)
+	{
+		*(a_buffer + i) -= a_key[j];
+		j = (j + 1)%key_size;
+	}	
 }
+
 
 }//namespace impl
 
@@ -91,7 +90,7 @@ int pack(char* a_buffer, Args& a_arganmats, Message_type a_message)
     if(a_buffer == nullptr)
     {return BUFFER_NOT_INITIALIZE;}
 
-    int bytes = sizeof(int);   // "total size" meta data place   
+    int bytes = sizeof(int);  // "total size" meta data place   
     *(a_buffer + bytes) = a_message;
     ++bytes;
 
@@ -110,7 +109,7 @@ Message_type unpack(char* a_buffer, Args& a_arganmats)
 
     impl::decrypt("poker", a_buffer, message_size(a_buffer));
 
-    int bytes = sizeof(int);   // "total size" meta data place   
+    int bytes = sizeof(int);  // "total size" meta data place   
     Message_type message = (Message_type)(*(a_buffer + bytes));
     ++bytes;
 
@@ -145,28 +144,5 @@ Message_type message_type(char* a_buffer)
     return type;
 }
 
-int num_of_ints(char* a_buffer)
-{
-    int size =  message_size(a_buffer);
-    impl::decrypt("poker", a_buffer, size);
-
-    int bytes = sizeof(int) + 1;              // "total size" meta data place  +   Message type
-    int num_of_strings = *(a_buffer + bytes);
-    ++bytes;
-
-    for(int i = 0; i < num_of_strings; ++i)
-    {
-        int str_size = *(a_buffer + bytes);
-        bytes += (str_size + 1);               // str size + str_size place
-    }
-
-    int num_of_ints = *(a_buffer + bytes);
-
-    impl::encrypt("poker", a_buffer, size);
-
-    return num_of_ints;
-}
 
 }// poker namespace
-
-
