@@ -78,7 +78,7 @@ void PlayersContainer::give_card(std::string& a_name)
         return;
 
     if(!m_players[a_name]->m_hand.empty())
-        m_players[a_name]->m_hand.pop_back();
+        m_players[a_name]->m_hand.clear();
 }
 
 void PlayersContainer::turn_on(std::string& a_name, std::string a_flag)

@@ -244,7 +244,7 @@ bool pairs(PlayersContainer& a_players, std::string& a_name, std::vector<Card>& 
         return true;
     }
 
-    if(num_of_pair == 2)
+    if(num_of_pair >= 2)
     {
         a_players.set_result(a_name, TWO_PAIR);
         return true;
