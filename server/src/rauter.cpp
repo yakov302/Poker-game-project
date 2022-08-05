@@ -39,7 +39,7 @@ void Rauter::run()
 {
 	while(!m_stop)
 	{		
-		m_activity = select(1024, &m_socket.copy_of_source_fd(), 0, 0, 0);
+		m_activity = select(MAX_SOCKET_NUM_TO_LISTEN, &m_socket.copy_of_source_fd(), 0, 0, 0);
 		if((m_activity < 0) && (errno != EINTR))
 			fatal_error("Select fail!\n");
 

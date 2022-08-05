@@ -25,15 +25,19 @@ void BetRound::run(playerIterator a_open_player)
 
     while(!m_stop)
     {
-        set_max_bet();
+        if(set_max_bet())
+        {close_bet_round(); break;}
+
         bet();
+
         if(one_player_left())
         {close_bet_round(); break;}
+        
         next();
     }
 }
 
-void BetRound::set_max_bet()
+bool BetRound::set_max_bet()
 {
     auto it = m_players.begin();
     auto end = m_players.end();
@@ -52,7 +56,12 @@ void BetRound::set_max_bet()
         }
         ++it;
     }
+
     m_max_bet = min;
+
+    if(m_max_bet == 0)
+        return true;
+    return false;
 }
 
 void BetRound::bet()

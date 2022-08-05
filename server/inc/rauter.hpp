@@ -8,6 +8,7 @@
 #include "players_container.hpp"
 
 #define BUFFER_SIZE 512
+#define MAX_SOCKET_NUM_TO_LISTEN 1024
 
 namespace poker
 {
