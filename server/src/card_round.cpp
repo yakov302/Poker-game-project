@@ -192,6 +192,7 @@ void CardRound::pay_to_winner(std::string& a_winner)
         m_action_out.get_chips(a_winner, chip);
         m_players.increase(a_winner, chip);
    } 
+   m_action_out.table_clear_wallet();
 }
 
 void CardRound::table_clear_hand()

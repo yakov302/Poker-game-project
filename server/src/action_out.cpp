@@ -221,6 +221,11 @@ void ActionOut::table_give_card()
     just_message_to_all(TABLE_GIVE_CARD);
 }
 
+void ActionOut::table_clear_wallet()
+{
+    just_message_to_all(TABLE_CLEAR_WALLET);
+}
+
 void ActionOut::table_give_chip(int a_amount)
 {
     just_amount_to_all(TABLE_GIVE_CHIP, a_amount); 

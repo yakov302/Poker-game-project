@@ -64,6 +64,16 @@ void Wallet::pop(int a_amount)
     }
 }
 
+void Wallet::clear()
+{
+    Lock lock(m_mutex);
+    m_sound.play_chip();
+
+    m_wallet.clear();
+    m_total_amount = 0;
+    impl::make_reserve(m_wallet);
+}
+
 void Wallet::draw(sf::RenderWindow& a_window, int a_x, int a_y, int a_gapDirection)const
 {
     Lock lock(m_mutex);

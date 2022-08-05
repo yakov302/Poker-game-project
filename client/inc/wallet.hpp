@@ -21,9 +21,10 @@ class Wallet
 public:
     Wallet(int a_x = 0, int a_y = 0, std::vector<int> a_amounts = {});
 
-    void push(int a_amount);  
     void push(std::vector<int> a_amounts);
+    void push(int a_amount);  
     void pop(int a_amount);
+    void clear();
 
     void exchange(int a_amount);
     void print_amount(sf::RenderWindow& a_window);

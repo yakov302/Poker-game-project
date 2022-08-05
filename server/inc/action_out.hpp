@@ -44,6 +44,7 @@ public:
     void get_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket);
     
     void table_give_card();
+    void table_clear_wallet();
     void table_get_card(Card& a_card);
     void table_get_chip(int a_amount);
     void table_give_chip(int a_amount);

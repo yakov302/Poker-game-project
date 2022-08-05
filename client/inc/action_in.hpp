@@ -48,6 +48,7 @@ private:
     void delete_player(char* a_buffer);
 
     void table_give_card();
+    void table_clear_wallet();
     void table_get_card(char* a_buffer);
     void table_get_chip(char* a_buffer);
     void table_give_chip(char* a_buffer);

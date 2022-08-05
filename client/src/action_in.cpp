@@ -212,6 +212,10 @@ void ActionIn::get(char* a_buffer)
         table_give_chip(a_buffer);
         break;
 
+    case TABLE_CLEAR_WALLET:
+        table_clear_wallet();
+        break;
+
     case WAKE_UP_SERVER:
         wake_up_server();
         break;
@@ -406,6 +410,11 @@ void ActionIn::table_give_card()
 {
     m_sound.play_card();
     m_cards.pop();
+}
+
+void ActionIn::table_clear_wallet()
+{
+    m_chips.clear();
 }
 
 void ActionIn::table_give_chip(char* a_buffer)
