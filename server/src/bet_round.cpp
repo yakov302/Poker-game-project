@@ -1,19 +1,16 @@
 #include "bet_round.hpp"
 
-#include <iostream>
-
 namespace poker
 {
 
 BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table)
-: m_min_bet(0)
-, m_stop(false)
-, m_mutex()
-, m_cond_var()
+: m_stop(false)
+, m_min_bet(0)
+, m_max_bet(100000)
 , m_wait()
-, m_players(a_players)
-, m_action_out(a_action_out)
 , m_table(a_table)
+, m_action_out(a_action_out)
+, m_players(a_players)
 , m_turn(a_players.begin())
 , m_open_player(a_players.begin())
 {
@@ -31,10 +28,7 @@ void BetRound::run(playerIterator a_open_player)
         set_max_bet();
         bet();
         if(one_player_left())
-        {
-            close_bet_round();
-            break;
-        }
+        {close_bet_round(); break;}
         next();
     }
 }
@@ -47,14 +41,14 @@ void BetRound::set_max_bet()
 
     while(it != end)
     {
-        if(!it->second.get()->m_fold 
-        && !it->second.get()->m_viewer
-        && it->second.get()->m_hand.size() > 0)
+        std::string name = it->second.get()->m_name;
+
+        if(!m_players.is_flag_on(name, "fold")
+        && !m_players.is_flag_on(name, "viewer")
+        && m_players.is_it_has_a_cards(name))
         {
-            std::cout << it->second.get()->m_name << " : " << it->second.get()->m_amount << 
-            " + " << it->second.get()->m_bet << "\n";
-            if(it->second.get()->m_amount + it->second.get()->m_bet < min)
-                min = it->second.get()->m_amount + it->second.get()->m_bet;
+            if(m_players.amount(name) + m_players.bet(name) < min)
+                min = m_players.amount(name) + m_players.bet(name);
         }
         ++it;
     }
@@ -150,9 +144,11 @@ bool BetRound::one_player_left()
 
     while(it != end)
     {
-        if(!it->second.get()->m_fold 
-        && !it->second.get()->m_viewer
-        && it->second.get()->m_hand.size() > 0)
+        std::string name = it->second.get()->m_name;
+
+        if(!m_players.is_flag_on(name, "fold")
+        && !m_players.is_flag_on(name, "viewer")
+        && m_players.is_it_has_a_cards(name))
             ++count;
 
         if(count > 1)
@@ -178,12 +174,15 @@ void BetRound::zero_bets_and_clear_actions()
 
     while(it != end)
     {
-        it->second.get()->m_bet = 0;
-        if(!it->second.get()->m_fold)
-            m_action_out.clear_action(it->second.get()->m_name);
+        std::string name = it->second.get()->m_name;
+
+        m_players.set_bet(name, 0);
+        if(!m_players.is_flag_on(name, "fold"))
+            m_action_out.clear_action(name);
         ++it;
     }
 }
 
 
 }// poker namespace
+

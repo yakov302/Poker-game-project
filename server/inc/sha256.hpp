@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <cstring>
+#include <fstream>
 
 class SHA256
 {
@@ -50,5 +52,3 @@ std::string sha256(std::string input);
            | ((uint32) *((str) + 1) << 16)    \
            | ((uint32) *((str) + 0) << 24);   \
 }
-
-

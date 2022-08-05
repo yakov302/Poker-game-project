@@ -32,11 +32,11 @@ void load_card(std::vector<cardPointer> &m_cards)
 
 }//namespace impl
 
-Deck::Deck(int a_numberOfdecks)
+Deck::Deck(int a_number_of_decks)
 : m_cards()
 {
-    m_cards.reserve(52*a_numberOfdecks);
-    for(int i = 0; i < a_numberOfdecks; ++i)
+    m_cards.reserve(52*a_number_of_decks);
+    for(int i = 0; i < a_number_of_decks; ++i)
     {
         impl::load_card(m_cards);
     }

@@ -1,13 +1,12 @@
 #include "subscribs.hpp"
-#include <iostream>
 
 namespace poker
 {
 
 
 Subscribs::Subscribs(ActionOut& a_action_out)
-: m_subscribs()
-, m_action_out(a_action_out)
+: m_action_out(a_action_out)
+, m_subscribs()
 {
     load_subscribs_from_file();
 }
@@ -99,7 +98,6 @@ void Subscribs::save_subscriber_to_file(Subscriber& a_subscriber)
     file << a_subscriber.m_password << std::endl;
     file << a_subscriber.m_gender << std::endl;
 }
-
 
 
 }// poker namespace

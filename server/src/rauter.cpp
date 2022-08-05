@@ -20,9 +20,9 @@ Rauter::Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action_in, 
 : m_stop(false)
 , m_buffer(new char[BUFFER_SIZE])
 , m_activity(0)
-, m_socket(a_socket)
 , m_tcp(a_tcp)
 , m_action_in(a_action_in)
+, m_socket(a_socket)
 , m_players(a_players)
 {
 	m_thread = new std::thread(impl::thread_function, this);
@@ -38,11 +38,8 @@ Rauter::~Rauter()
 void Rauter::run()
 {
 	while(!m_stop)
-	{	
-		
-		std::cout << "------entered select-------\n";
+	{		
 		m_activity = select(1024, &m_socket.copy_of_source_fd(), 0, 0, 0);
-		std::cout << "------exit select-------\n";
 		if((m_activity < 0) && (errno != EINTR))
 			fatal_error("Select fail!\n");
 
@@ -51,6 +48,7 @@ void Rauter::run()
 			accept_new_client();
 			m_activity--;
 		}
+
 		take_care_exists_clients();
 		delete_deleted();
 	}

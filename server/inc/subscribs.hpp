@@ -1,10 +1,10 @@
 # pragma once
 
-#include <unordered_map>
 #include <fstream>
+#include <unordered_map>
 
-#include "action_out.hpp"
 #include "sha256.hpp"
+#include "action_out.hpp"
 
 namespace poker
 {
@@ -33,8 +33,8 @@ private:
     void load_subscribs_from_file();
 
 private:
-    std::unordered_map<std::string, Subscriber> m_subscribs;
     ActionOut& m_action_out;
+    std::unordered_map<std::string, Subscriber> m_subscribs;
 };
 
 

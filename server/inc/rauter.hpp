@@ -1,13 +1,10 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
 #include <thread>
 
-#include "server_socket.hpp"
-#include "protocol.hpp"
 #include "tcp_server.hpp"
 #include "action_in.hpp"
+#include "server_socket.hpp"
 #include "players_container.hpp"
 
 #define BUFFER_SIZE 512
@@ -19,8 +16,6 @@ class Rauter
 {
 public: 
     Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action, PlayersContainer& a_players);
-    Rauter(Rauter const& a_source) = delete;
-    Rauter& operator=(Rauter const& a_source) = delete;
     ~Rauter();
 
     void run();
@@ -38,9 +33,9 @@ private:
     int m_activity;
     std::thread* m_thread;
 
-    ServerSocket& m_socket;
     TcpServer& m_tcp;
     ActionIn& m_action_in;
+    ServerSocket& m_socket;
     PlayersContainer& m_players;
 };
 

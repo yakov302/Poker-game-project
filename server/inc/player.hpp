@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <vector>
 
 #include "card.hpp"
@@ -28,13 +27,16 @@ public:
 
     std::string m_name;
     std::string m_gender;
+
     int m_amount;
     int m_socket;
     int m_result;
     int m_bet;
+
     bool m_fold;
     bool m_viewer;
     bool m_my_turn;
+    
     std::vector<Card> m_hand;
 };
 

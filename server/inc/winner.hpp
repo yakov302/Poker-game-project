@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-#include "players_container.hpp"
 #include "card.hpp"
+#include "players_container.hpp"
 
 namespace poker
 {

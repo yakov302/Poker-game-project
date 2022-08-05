@@ -1,35 +1,32 @@
 #include "card_round.hpp"
-#include <iostream>
 
 namespace poker
 {
 
 CardRound::CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_action_out, BetRound& a_bet_round)
-: m_stop(false)
-, m_bet(false)
+: m_bet(false)
+, m_stop(false)
 , m_deck(1)
-, m_players (a_players)
 , m_table(a_table)
-, m_action_out(a_action_out)
 , m_bet_round(a_bet_round)
+, m_action_out(a_action_out)
+, m_players (a_players)
 {
 
 }
 
 void CardRound::run(playerIterator a_open_player)
 {
+    std::string name;
     m_stop = false;
-    turn_off_folds();
     deal_cards();
 
     while(!m_stop)
     {
+        if(one_player_left(name))
+        {close_card_round(); break;}
+
         int num_of_cards = m_table.num_of_card();
-        if(one_player_left())
-        {
-            close_card_round();
-            break;
-        }
 
         switch (num_of_cards)
         {
@@ -67,36 +64,25 @@ void CardRound::run(playerIterator a_open_player)
     }
 }
 
-void CardRound::turn_off_folds()
-{
-    auto it = m_players.begin();
-    auto end = m_players.end();
-
-    while(it != end)
-    {
-        if(it->second.get()->m_fold)
-            m_players.turn_off(it->second.get()->m_name, "fold");
-
-        ++it;
-    }
-}
-
 void CardRound::deal_cards()
 {
     m_deck.shuffle();
+
     for(int i = 0; i < 2; ++i)
     {
         auto it = m_players.begin();
         auto end = m_players.end();
 
         while(it != end)
-        {   
-            if(!it->second.get()->m_viewer)
+        { 
+            std::string name =  it->second.get()->m_name;
+
+            if(!m_players.is_flag_on(name, "viewer"))
             {
                 usleep(500000);
                 Card card = m_deck.pop_card();
-                m_players.get_card(it->second.get()->m_name, card);
-                m_action_out.get_card(it->second.get()->m_name, card);
+                m_players.get_card(name, card);
+                m_action_out.get_card(name, card);
             }
             ++it;
         }
@@ -113,7 +99,6 @@ void CardRound::open_three_cards()
 {
     for(int i = 0; i < 3; ++i)
         open_card();
-
 }
 
 void CardRound::open_card()
@@ -125,7 +110,7 @@ void CardRound::open_card()
     m_bet = false;
 }
 
-bool CardRound::one_player_left()
+bool CardRound::one_player_left(std::string& a_name)
 {
     int count = 0;
     auto it = m_players.begin();
@@ -133,10 +118,15 @@ bool CardRound::one_player_left()
 
     while(it != end)
     {
-        if(!it->second.get()->m_fold 
-        && !it->second.get()->m_viewer
-        && it->second.get()->m_hand.size() > 0)
+        std::string name =  it->second.get()->m_name;
+
+        if(!m_players.is_flag_on(name, "fold")
+        && !m_players.is_flag_on(name, "viewer")
+        && m_players.is_it_has_a_cards(name))
+        {
+            a_name = name;
             ++count;
+        }
         
         if(count > 1)
             return false;
@@ -147,51 +137,61 @@ bool CardRound::one_player_left()
     return true; 
 }
 
-std::string CardRound::one_player()
+void CardRound::close_card_round()
+{
+    std::string name;
+    if(!one_player_left(name))
+    {
+        name = chack_winner(m_players, m_table.table_cards());
+        reveal_cards_and_print_result();
+        usleep(4000000);
+    }
+
+    m_action_out.round_winer(name);
+    usleep(1000000);
+
+    pay_to_winner(name);
+    table_clear_hand();
+    clear_hands();
+    reset_players_variables();
+
+    m_deck.re_fill_decks();
+
+    m_stop = true;
+    m_bet = false;
+}
+
+void CardRound::reveal_cards_and_print_result()
 {
     auto it = m_players.begin();
     auto end = m_players.end();
 
     while(it != end)
     {
-        if(!it->second.get()->m_fold 
-        && !it->second.get()->m_viewer
-        && it->second.get()->m_hand.size() > 0)
-            return it->second.get()->m_name;
-        
+        std::string name =  it->second.get()->m_name;
+
+        if(!m_players.is_flag_on(name, "fold")
+        && !m_players.is_flag_on(name, "viewer")
+        && m_players.is_it_has_a_cards(name))
+        {
+            m_action_out.reveal_cards(name);
+            m_action_out.print_result(name, m_players.result(name));
+        }
+
         ++it;
     }
-    return "";
 }
 
-void CardRound::close_card_round()
+void CardRound::pay_to_winner(std::string& a_winner)
 {
-    std::string name;
-    if(!one_player_left())
-    {
-        reveal_cards();
-        name = chack_winner(m_players, m_table.table_cards());
-        m_action_out.round_winer(name);
-        print_result();
-        usleep(5000000);
-    }
-    else
-    {
-        name = one_player();
-        m_action_out.round_winer(name);
-        usleep(1000000);
-    }
-
-    pay_to_winner(name);
-    table_clear_hand();
-    clear_hands();
-    clear_actions();
-    chack_money();
-    turn_off_reveal_cards();
-    m_deck.re_fill_decks();
-
-    m_stop = true;
-    m_bet = false;
+   while(!m_table.is_wallet_empty())
+   {
+        usleep(100000);
+        int chip = m_table.give_chip();
+        m_action_out.table_give_chip(chip);
+        m_action_out.get_chips(a_winner, chip);
+        m_players.increase(a_winner, chip);
+   } 
 }
 
 void CardRound::table_clear_hand()
@@ -204,43 +204,6 @@ void CardRound::table_clear_hand()
     }
 }
 
-void CardRound::reveal_cards()
-{
-    auto it = m_players.begin();
-    auto end = m_players.end();
-
-    while(it != end)
-    {
-        if(!it->second.get()->m_fold)
-            m_action_out.reveal_cards(it->second.get()->m_name);
-        ++it;
-    }
-}
-
-void CardRound::turn_off_reveal_cards()
-{
-    auto it = m_players.begin();
-    auto end = m_players.end();
-
-    while(it != end)
-    {
-        m_action_out.turn_off(it->second.get()->m_name, "reveal_cards");
-        ++it;
-    }
-}
-
-void CardRound::pay_to_winner(std::string& a_winner)
-{
-   while(!m_table.is_wallet_empty())
-   {
-        int chip = m_table.pop_chip();
-        m_action_out.table_give_chip(chip);
-        m_action_out.get_chips(a_winner, chip);
-        m_players.increase(a_winner, chip);
-        usleep(100000);
-   } 
-}
-
 void CardRound::clear_hands()
 {
     auto it = m_players.begin();
@@ -248,13 +211,15 @@ void CardRound::clear_hands()
 
     while(it != end)
     {
-        if(!it->second.get()->m_fold)
+        std::string name =  it->second.get()->m_name;
+
+        if(!m_players.is_flag_on(name, "fold"))
         {
             for(int i = 0; i < 2; ++i)
             {
                 usleep(100000);
-                m_action_out.give_card(it->second.get()->m_name);
-                m_players.give_card(it->second.get()->m_name);
+                m_action_out.give_card(name);
+                m_players.give_card(name);
             }
         }
 
@@ -262,52 +227,31 @@ void CardRound::clear_hands()
     }
 }
 
-void CardRound::chack_money()
+void CardRound::reset_players_variables()
 {
     auto it = m_players.begin();
     auto end = m_players.end();
 
     while(it != end)
     {
-        if(it->second.get()->m_amount == 0)
-            it->second.get()->m_viewer = true;
+        std::string name =  it->second.get()->m_name;
 
-        ++it;
-    }
-}
-
- void CardRound::print_result()
- {
-    auto it = m_players.begin();
-    auto end = m_players.end();
-
-    while(it != end)
-    {
-        if(!it->second.get()->m_fold 
-        && !it->second.get()->m_viewer
-        && it->second.get()->m_hand.size() > 0)
-            m_action_out.print_result(it->second.get()->m_name, it->second.get()->m_result);
-
-        ++it;
-    }
-}
-
-void CardRound::clear_actions()
-{
-    auto it = m_players.begin();
-    auto end = m_players.end();
-
-    while(it != end)
-    {
-        if(!it->second.get()->m_viewer)
+        if(!m_players.is_flag_on(name, "viewer"))
         {
-            m_action_out.clear_action(it->second.get()->m_name);
-            it->second.get()->m_result = 0;
+            m_action_out.turn_off(name, "reveal_cards");
+            m_action_out.clear_action(name);
+            m_players.turn_off(name, "fold");
+            m_players.set_result(name, 0);
+
+            if(m_players.amount(name) == 0)
+                m_players.turn_on(name, "viewer");
         }
 
         ++it;
     }
+    
     m_action_out.clear_text();
 }
+
 
 }// poker namespace

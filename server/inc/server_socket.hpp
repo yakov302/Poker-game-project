@@ -1,15 +1,9 @@
 #pragma once
 
-#include <sys/socket.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <string.h>
 #include <arpa/inet.h>
-#include <sys/select.h>
-#include <errno.h>
 #include <unistd.h>
+#include <cstring>
 #include <string>
-#include <vector>
 #include <list>
 
 namespace poker
@@ -43,10 +37,13 @@ public:
 private:
     int m_listen_socket;
     int m_num_of_clients;
+
     fd_set m_source_fd;
     fd_set m_active_fd;
+
     struct sockaddr_in m_server_sin;
     struct sockaddr_in m_client_sin;
+    
     std::list<int> m_connected_sockets;
     std::list<int> m_deleted_sockets;
 };

@@ -12,6 +12,7 @@ TcpServer::TcpServer(ServerSocket& a_socket)
 int TcpServer::accept_new_client()
 {
 	Lock loack(m_mutex);
+
 	socklen_t sin_len = sizeof(&m_socket.client_sin());
 	int client_socket = accept(m_socket.listen_socket(), (struct sockaddr*)&m_socket.client_sin(), &sin_len);
 	if(client_socket < 0)
@@ -23,17 +24,12 @@ int TcpServer::accept_new_client()
 bool TcpServer::receive_from_client(int a_client_socket, char* a_buffer)
 {
 	Lock loack(m_mutex);
-	std::cout <<  "\n\n" << "*************" << "\n\n";
-	std::cout << "server recive: " << "\n";
-	std::cout << "from socet: " << a_client_socket << "\n";
-
+	
 	int receive_bytes = recv(a_client_socket, a_buffer, sizeof(int), 0);
 	if(receive_bytes == 0)
 	{perror("Receive fail!\n"); return false;}
 
 	int message_len = message_size(a_buffer);
-	std::cout << "size: " << message_len << "\n";
-
 	while(receive_bytes < message_len)
 	{
 		int current_receive = recv(a_client_socket, (a_buffer + receive_bytes), message_len - receive_bytes, 0);
@@ -43,21 +39,12 @@ bool TcpServer::receive_from_client(int a_client_socket, char* a_buffer)
 		receive_bytes += current_receive;
 	}	
 
-	std::cout << "message type: " << message_type(a_buffer) << "\n";
-	std::cout << "receive bytes : " << receive_bytes << "\n";
-	std::cout <<  "\n\n" << "*************" << "\n\n";
-
 	return true;
 }
 
 bool TcpServer::send_to_client(int a_client_socket, char* a_buffer, int a_message_size)
 {
 	Lock loack(m_mutex);
-	std::cout <<  "\n\n" << "*************" << "\n\n";
-	std::cout << "server sent: " << "\n";
-	std::cout << "size: " << message_size(a_buffer) << "\n";
-	std::cout << "message_type: " << message_type(a_buffer) << "\n";
-	std::cout << "to socet: " << a_client_socket << "\n";
 
 	int sent_byte = 0;
 	while((sent_byte < a_message_size) && (errno != EPIPE))
@@ -71,9 +58,6 @@ bool TcpServer::send_to_client(int a_client_socket, char* a_buffer, int a_messag
 
 	if(errno == EPIPE)
 		return false;
-
-	std::cout << "sent byte: " << sent_byte << "\n";
-	std::cout <<  "\n\n" << "*************" << "\n\n";
 
 	return true;
 }
@@ -91,7 +75,6 @@ void TcpServer::send_all_clients(char* a_buffer, int a_message_size)
 		++it; 
 	} 
 }
-
 
 
 }//namespace home

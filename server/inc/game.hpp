@@ -2,11 +2,9 @@
 
 #include <thread>
 
-#include "players_container.hpp"
 #include "card_round.hpp"
 #include "action_out.hpp"
-
-
+#include "players_container.hpp"
 
 namespace poker
 {
@@ -15,20 +13,24 @@ class Game
 {
 public:
     Game(PlayersContainer& a_players, CardRound& a_card_round, ActionOut& a_action_out);
+    ~Game();
 
     void run();
+    void stop();
     
 private:
     void next();
-    void set_open_player();
     bool chack_winer();
+    void set_open_player();
 
 private:
     bool m_stop; 
     std::thread* m_thread;
-    PlayersContainer& m_players;
+
     CardRound& m_card_round;
     ActionOut& m_action_out;
+    PlayersContainer& m_players;
+
     playerIterator m_open_player;
 };
 

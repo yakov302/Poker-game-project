@@ -1,11 +1,11 @@
 #pragma once
 
-#include <unordered_map>
 #include <memory>
+#include <unordered_map>
+
+#include "wait.hpp"
 #include "player.hpp"
 #include "action_out.hpp"
-#include "wait.hpp"
-
 
 namespace poker
 {
@@ -19,20 +19,38 @@ public:
     PlayersContainer(ActionOut& a_action_out);
 
     void new_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket);
-    void delete_player(std::string& a_name);
     void delete_player(int a_client_socket);
+
     void decrease (std::string& a_name, int a_amount);
     void increase (std::string& a_name, int a_amount);
+
     void get_card(std::string& a_name, Card a_card);
     void give_card(std::string& a_name);
+
     void turn_on(std::string& a_name, std::string a_flag);
     void turn_off(std::string& a_name, std::string a_flag);
-    Wait& wait();
 
-    bool log_in_chack(std::string a_name, int a_client_socket)const;
-    playerIterator begin();
-    playerIterator end();
+    bool is_it_has_a_cards(std::string& a_name);
+    bool is_flag_on(std::string& a_name, std::string a_flag) ;
+
+    void set_bet(std::string& a_name, int a_amount);
+    void set_result(std::string& a_name, int a_result);
+
+    int bet (std::string& a_name);
+    int result(std::string& a_name);
+    int amount(std::string& a_name);
+    Card& first_card(std::string& a_name);
+    Card& second_card(std::string& a_name);
+
     int num_of_players()const;
+    bool log_in_chack(std::string a_name, int a_client_socket)const;
+
+    Wait& wait();
+    playerIterator end();
+    playerIterator begin();
+
+private:
+    void delete_player(std::string& a_name);
 
 private:
     Wait m_wait;

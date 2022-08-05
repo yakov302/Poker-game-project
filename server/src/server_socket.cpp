@@ -1,5 +1,4 @@
 #include "server_socket.hpp"
-#include <iostream>
 
 namespace poker
 {
@@ -72,7 +71,6 @@ ServerSocket::~ServerSocket()
 
 void ServerSocket::delete_client(std::list<int>::iterator& a_it)
 {
-	std::cout << "delete_client\n";
     int socket = *a_it;
 	close(socket);
     FD_CLR(socket, &m_source_fd);
