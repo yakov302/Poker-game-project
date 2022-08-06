@@ -32,7 +32,7 @@ void BetRound::run(playerIterator a_open_player)
 
         if(one_player_left())
         {close_bet_round(); break;}
-        
+
         next();
     }
 }
@@ -138,6 +138,8 @@ void BetRound::chack_in()
 
 void BetRound::fold_in()
 {
+    for(int i = 0; i < 2; ++i)
+        m_players.give_card(m_turn->second->m_name);
     m_players.turn_on(m_turn->second->m_name, "fold");
     m_action_out.fold(m_turn->second->m_name);
     m_action_out.turn_off(m_turn->second->m_name, "my_turn");

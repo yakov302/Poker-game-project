@@ -1,5 +1,5 @@
 #include "players_container.hpp"
-
+#include <iostream>
 namespace poker
 {
 
@@ -70,6 +70,8 @@ void PlayersContainer::get_card(std::string& a_name, Card a_card)
         return;
 
     m_players[a_name]->m_hand.emplace_back(a_card);
+    std::cout << a_name << ": " << a_card.m_number << "\n";
+    std::cout << "size: " << m_players[a_name]->m_hand.size() << "\n";
 }
 
 void PlayersContainer::give_card(std::string& a_name)
@@ -78,7 +80,7 @@ void PlayersContainer::give_card(std::string& a_name)
         return;
 
     if(!m_players[a_name]->m_hand.empty())
-        m_players[a_name]->m_hand.clear();
+        m_players[a_name]->m_hand.pop_back();
 }
 
 void PlayersContainer::turn_on(std::string& a_name, std::string a_flag)

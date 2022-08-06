@@ -23,7 +23,6 @@ public:
     , m_hand()
     {
         m_hand.reserve(2);
-        m_hand.clear();
     };
 
     std::string m_name;
