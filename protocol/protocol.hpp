@@ -97,10 +97,12 @@ public:
 };
 
 int pack(char* a_buffer, Args& a_arganmats, Message_type a_message);
+
 Message_type unpack(char* a_buffer, Args& a_arganmats);
+
 int message_size(char* a_buffer);
+
 Message_type message_type(char* a_buffer);
 
+
 }// poker namespace
-
-

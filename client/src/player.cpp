@@ -127,5 +127,5 @@ void Player::set_name(std::unordered_map<std::string, textPointer>& a_texts, std
     a_texts["name"] = textPointer(new Text("./resources/fonts/arial.ttf", a_name, sf::Color(139, 134, 134), 25, a_x + (MAX_NAME_SIZE - a_name.size())*6.5, a_y + 110));
 }
 
-}// poker namespace
 
+}// poker namespace

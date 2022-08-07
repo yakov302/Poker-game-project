@@ -25,4 +25,5 @@ typedef enum cards_combinations
 
 std::string chack_winner(PlayersContainer& a_players, std::vector<Card>& a_table_card);
 
+
 }//namespace poker
