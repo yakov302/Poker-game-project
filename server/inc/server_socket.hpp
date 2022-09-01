@@ -2,6 +2,7 @@
 
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <fstream>
 #include <cstring>
 #include <string>
 #include <list>
@@ -12,7 +13,7 @@ namespace poker
 class ServerSocket
 {
 public:
-    ServerSocket(std::string a_server_ip, int a_servr_port);
+    ServerSocket();
     ~ServerSocket();
 
     int& num_of_clients();

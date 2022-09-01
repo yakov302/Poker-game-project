@@ -18,7 +18,7 @@ namespace poker
 class ServerManager
 {
 public:
-    ServerManager(std::string a_server_ip, int a_servr_port);
+    ServerManager();
 
     void stop();
 

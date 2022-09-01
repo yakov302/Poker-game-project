@@ -2,6 +2,7 @@
 
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <fstream>
 #include <cstring>
 #include <string>
 
@@ -11,7 +12,7 @@ namespace poker
 class ClientSocket
 {
 public:
-    ClientSocket(std::string a_server_ip, int a_server_port);
+    ClientSocket();
     ~ClientSocket();
 
     int& socket();

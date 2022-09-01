@@ -6,12 +6,23 @@ namespace poker
 namespace impl
 {
 
-void sin_setting(std::string& a_server_ip, int& a_servr_port, struct sockaddr_in& a_sin)
+void load_frome_file(std::string& a_server_ip, int& a_server_port)
 {
+	std::ifstream file("./resources/server_ip_and_port.txt");
+	file >> a_server_ip;
+	file >> a_server_port;
+}
+
+void sin_setting(struct sockaddr_in& a_sin)
+{
+    int server_port;
+	std::string server_ip;
+	load_frome_file(server_ip, server_port);
+
 	memset (&a_sin, 0, sizeof(a_sin));	
 	a_sin.sin_family = AF_INET;
-	a_sin.sin_addr.s_addr =  inet_addr(a_server_ip.c_str());
-	a_sin.sin_port = htons(a_servr_port);
+	a_sin.sin_addr.s_addr =  inet_addr(server_ip.c_str());
+	a_sin.sin_port = htons(server_port);
 }
 
 void open_listen_socket(int& a_listen_socket, fd_set& a_set, ServerSocket& a_server_socket)
@@ -46,7 +57,7 @@ void set_bind(int& a_listen_socket, struct sockaddr_in& a_sin, ServerSocket& a_s
 
 } //namespace impl
 
-ServerSocket::ServerSocket(std::string a_server_ip, int a_servr_port)
+ServerSocket::ServerSocket()
 : m_listen_socket(0)
 , m_num_of_clients(0)
 , m_source_fd()
@@ -56,7 +67,7 @@ ServerSocket::ServerSocket(std::string a_server_ip, int a_servr_port)
 , m_connected_sockets()
 , m_deleted_sockets()
 {
-    impl::sin_setting(a_server_ip, a_servr_port, m_server_sin);
+    impl::sin_setting(m_server_sin);
 	impl::open_listen_socket(m_listen_socket, m_source_fd, *this);
 	impl::set_setsockopt(m_listen_socket, *this);
 	impl::set_bind(m_listen_socket, m_server_sin, *this);

@@ -15,7 +15,7 @@ namespace poker
 class ClientManager
 {
 public:
-    ClientManager(std::string a_server_ip, int a_server_port);
+    ClientManager();
 
 private:
     Hand m_cards; 

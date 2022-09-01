@@ -3,8 +3,8 @@
 namespace poker
 {
 
-ServerManager::ServerManager(std::string a_server_ip, int a_servr_port)
-: m_socket(a_server_ip, a_servr_port)
+ServerManager::ServerManager()
+: m_socket()
 , m_tcp(m_socket)
 , m_action_out(m_tcp)
 , m_players(m_action_out)

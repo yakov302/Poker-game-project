@@ -12,12 +12,23 @@ void fatal_error(std::string a_fail)
     throw;
 }
 
-void sin_setting(struct sockaddr_in& a_sin, std::string& a_server_ip, int& a_servr_port)
+void load_frome_file(std::string& a_server_ip, int& a_server_port)
 {
+	std::ifstream file("./resources/server_ip_and_port.txt");
+	file >> a_server_ip;
+	file >> a_server_port;
+}
+
+void sin_setting(struct sockaddr_in& a_sin)
+{
+	int server_port;
+	std::string server_ip;
+	load_frome_file(server_ip, server_port);
+
 	memset(&a_sin, 0, sizeof(a_sin)); 
 	a_sin.sin_family = AF_INET;
-	a_sin.sin_addr.s_addr =  inet_addr(a_server_ip.c_str());
-	a_sin.sin_port = htons(a_servr_port);
+	a_sin.sin_addr.s_addr =  inet_addr(server_ip.c_str());
+	a_sin.sin_port = htons(server_port);
 }
 
 void set_socket(int& a_socket, ClientSocket& a_this)
@@ -43,12 +54,12 @@ void connect_to_server(struct sockaddr_in& a_sin, int& a_socket, ClientSocket& a
 
 }//namespace impl
 
-ClientSocket::ClientSocket(std::string a_server_ip, int a_server_port)
+ClientSocket::ClientSocket()
 : m_fd()
 , m_socket(0)
 , m_sin()
 {
-	impl::sin_setting(m_sin, a_server_ip, a_server_port);
+	impl::sin_setting(m_sin);
 	impl::set_socket(m_socket, *this);
 	impl::set_sockopt(m_socket, *this);
 	impl::connect_to_server(m_sin, m_socket, *this);
