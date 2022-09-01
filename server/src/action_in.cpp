@@ -121,5 +121,10 @@ void ActionIn::wake_up_client(int a_client_socket)
     m_action_out.wake_up_client(a_client_socket);
 }
 
+void ActionIn::player_deleted(int a_client_socket)
+{
+    m_bet_round.player_deleted(a_client_socket);
+}
+
 
 }// poker namespace

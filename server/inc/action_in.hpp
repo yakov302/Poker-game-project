@@ -15,6 +15,7 @@ public:
     ActionIn(ActionOut& a_action_out, PlayersContainer& a_players, Subscribs& a_subscribs, BetRound& a_bet_round);
 
     void get(char* a_buffer, int a_client_socket);
+    void player_deleted(int a_client_socket);
 
 private:
     void registration_reques(char* a_buffer, int a_client_socket);

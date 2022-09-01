@@ -86,6 +86,13 @@ void BetRound::next()
         close_bet_round();
 }
 
+void BetRound::player_deleted(int a_client_socket)
+{
+    if(m_turn->second->m_socket == a_client_socket)
+        m_wait.exit_wait();
+        
+}
+
 void BetRound::start_bet()
 {
     m_action_out.start_bet(m_turn->second->m_name, m_turn->second->m_bet);

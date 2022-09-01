@@ -61,6 +61,7 @@ void Rauter::delete_deleted()
 
 	while(it != end && !m_socket.deleted_sockets().empty())
 	{
+		m_action_in.player_deleted(*it);
 		m_players.delete_player(*it);
 		m_socket.delete_from_deleted_sockets(it);
 

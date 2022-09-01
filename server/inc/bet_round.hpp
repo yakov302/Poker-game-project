@@ -13,6 +13,8 @@ public:
     BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table);
 
     void run(playerIterator a_open_player);
+    
+    void player_deleted(int a_client_socket);
     void bet_in(int a_amount);
     void finish_bet();
     void start_bet();
