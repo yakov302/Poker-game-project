@@ -88,9 +88,14 @@ void BetRound::next()
 
 void BetRound::player_deleted(int a_client_socket)
 {
+    if(m_players.num_of_players() < 2)
+    {
+        m_wait.exit_wait();
+        return;
+    }
+
     if(m_turn->second->m_socket == a_client_socket)
         m_wait.exit_wait();
-        
 }
 
 void BetRound::start_bet()

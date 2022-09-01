@@ -4,18 +4,29 @@ namespace poker
 {
 
 PlayersContainer::PlayersContainer()
-: m_num_of_players(0)
+: m_locations((bool*)calloc(5, sizeof(bool)))
+, m_num_of_players(0)
 , m_players()
 {
 
 } 
+
+PlayersContainer::~PlayersContainer()
+{
+    free(m_locations);
+}
 
 void PlayersContainer::get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_front, int a_gap_back)
 {
     if(m_players.find(a_name) != m_players.end())
         return;
 
-    a_x_self = (m_num_of_players-1)*PLAYER_SIZE + 230;
+    int i = 0;                      // external function
+    while(m_locations[i])
+        ++i;
+
+    m_locations[i] = true;
+    a_x_self = i*PLAYER_SIZE + 230;
     a_x_card = a_x_self + 140; 
     a_y_card = a_y_self + 40;
 
