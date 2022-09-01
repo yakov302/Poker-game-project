@@ -70,6 +70,7 @@ Table::Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_p
 Table::~Table()
 {
     m_thread->join();
+    delete m_thread;
 }
 
 void Table::stop()

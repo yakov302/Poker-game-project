@@ -63,7 +63,9 @@ void Rauter::delete_deleted()
 	{
 		m_players.delete_player(*it);
 		m_socket.delete_from_deleted_sockets(it);
-		++it;
+
+		if(!m_socket.deleted_sockets().empty())
+			++it;
 	}
 }
 
