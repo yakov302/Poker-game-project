@@ -78,7 +78,6 @@ void BetRound::bet()
 void BetRound::next()
 {
     ++m_turn;
-
     if(m_turn == m_players.end())
         m_turn = m_players.begin();
 

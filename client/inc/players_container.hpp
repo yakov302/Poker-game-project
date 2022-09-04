@@ -1,5 +1,7 @@
 #pragma once
 
+#include<vector>
+
 #include"player.hpp"
 #include"self.hpp"
 
@@ -14,7 +16,6 @@ class PlayersContainer
 {
 public:
     PlayersContainer();
-    ~PlayersContainer();
 
     void get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_x_self = 0 , int a_y_self = 50, int a_x_card = 0, int a_y_card = 0, float a_scale_card = 1, int a_gap_front = 25, int a_gap_back = 5);
     void get_player(std::string& a_name, Self& a_player);
@@ -31,10 +32,14 @@ public:
     void turn_on_flag(std::string& a_name, std::string a_flag);
     void turn_off_flag(std::string& a_name, std::string a_flag);
     void draw_Players(sf::RenderWindow& a_window);
+    
+private:
+    void find_empty_place(int& a_i, std::string& a_name);
+    void set_as_empty_place(std::string& a_name, int num_of_players);
 
 private:
-    bool* m_locations;
     int m_num_of_players;
+    std::vector<std::string> m_locations;
     std::unordered_map<std::string, playerPointer> m_players;
 };
 
