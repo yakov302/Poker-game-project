@@ -136,6 +136,7 @@ void ServerSocket::move_client_to_front(std::list<int>::iterator& a_it)
 void ServerSocket::delete_less_active_client()
 {
     m_connected_sockets.pop_back();
+    --m_num_of_clients;
 }
 
 std::list<int>& ServerSocket::connected_sockets()
