@@ -14,7 +14,7 @@ Requirements:
 
           go to file - Poker-game-project/server/src/resources/server_ip_and_port.txt 
           Write in first line - server ip.
-          Write in second line -server port.   
+          Write in second line - server port.   
     b. bild & run server:
 
           go to directory - Poker-game-project/server/src
