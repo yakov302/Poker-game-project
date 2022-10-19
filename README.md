@@ -4,6 +4,7 @@ Spectacular and interactive Texas Hold'em game that supports multiple tables, pl
 
 
 Requirements: 
+
   a. linux (ubuntu) virtualization (GUI) enable.
   b. Installing SFML - https://www.sfml-dev.org/tutorials/2.5/start-linux.php
 
