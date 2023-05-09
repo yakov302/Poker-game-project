@@ -1,9 +1,12 @@
 #pragma once
 
+#include <fstream>
 #include <SFML/Audio.hpp>
 
 namespace poker
 {
+
+#define NUM_OF_SOUNDS 5
 
 class Sound
 {

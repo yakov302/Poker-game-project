@@ -14,7 +14,7 @@ void fatal_error(std::string a_fail)
 
 void load_frome_file(std::string& a_server_ip, int& a_server_port)
 {
-	std::ifstream file("./resources/server_ip_and_port.txt");
+	std::ifstream file("./resources/txt/server_ip_and_port.txt");
 	file >> a_server_ip;
 	file >> a_server_port;
 }

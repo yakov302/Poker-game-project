@@ -1,0 +1,5 @@
+./resources/sounds/card.wav
+./resources/sounds/chip.wav
+./resources/sounds/button.wav
+./resources/sounds/invalid.wav
+./resources/sounds/positive.wav
