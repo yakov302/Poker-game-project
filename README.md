@@ -23,7 +23,7 @@ Requirements:
 2. Run the client:   
     a. set server ip & port: 
 
-          go to file - Poker-game-project/client/src/resources/server_ip_and_port.txt  
+          go to file - Poker-game-project/client/src/resources/txt/server_ip_and_port.txt  
           Write in first line - server ip.
           Write in second line - server port. 
 
