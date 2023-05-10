@@ -3,6 +3,9 @@
 #include "button.hpp"
 
 #define DELETE 8
+#define TYPING_SPEED 10
+#define LEGAL_UNICODE 128
+#define DEFAULT_UNICODE 255
 
 namespace poker
 {
@@ -26,6 +29,8 @@ private:
 private:
     std::string m_background_string;
     std::string m_string;
+    int m_lest_unicode_counter;
+    int m_lest_unicode;
     bool m_is_select;
     int m_limet;
 };

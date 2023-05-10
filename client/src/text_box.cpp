@@ -7,6 +7,8 @@ TextBox::TextBox(std::string a_image_path, int a_limet, int a_x , int a_y, float
 : Button(a_image_path, a_x, a_y, a_scale, a_text , a_x_gap, a_y_gap, a_text_size)
 , m_background_string(a_text)
 , m_string()
+, m_lest_unicode_counter(0)
+, m_lest_unicode(DEFAULT_UNICODE)
 , m_is_select(false)
 , m_limet(a_limet)
 {
@@ -19,8 +21,18 @@ void TextBox::get_char(sf::Event a_typing)
         return;
 
     int typing = a_typing.text.unicode;
-    if(typing > 128)
+    if(typing > LEGAL_UNICODE)
         return;
+
+    if(typing == m_lest_unicode)
+    {
+        ++m_lest_unicode_counter;
+        if(m_lest_unicode_counter < TYPING_SPEED)
+            return;
+    }
+
+    m_lest_unicode_counter = 0;
+    m_lest_unicode = typing;
 
     if(static_cast<int>(m_string.size()) < m_limet)
         input(typing);

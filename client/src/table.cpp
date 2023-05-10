@@ -104,7 +104,6 @@ void Table::check_events()
         m_text_boxs["name"].get()->get_char(m_event);
         m_text_boxs["password"].get()->get_char(m_event);
         m_text_boxs["gender"].get()->get_char(m_event);
-        usleep(70000);
         break;
     
     default:
