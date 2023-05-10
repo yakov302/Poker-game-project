@@ -8,6 +8,9 @@
 namespace poker
 {
 
+#define BACK_CARD_GAP 5
+#define BACK_CARD_IMAGE_PATH "./resources/images/cards/back.png"
+
 using Lock = std::unique_lock<std::mutex>;
 using cardPointer = std::shared_ptr<Card>;
 
@@ -26,7 +29,7 @@ public:
 private:
     int m_x;
     int m_y;
-    int m_gap_of_prints;
+    int m_gap_between_cards;
     mutable std::mutex m_mutex;
     std::vector<cardPointer> m_cards;
     std::vector<cardPointer> m_back; 

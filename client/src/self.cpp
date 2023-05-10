@@ -66,7 +66,7 @@ void Self::draw_player(sf::RenderWindow& a_window)
 {
     a_window.draw(m_shape);
     set_amount(std::to_string(m_wallet.amount()));
-    m_wallet.draw(a_window, 880, 750, -1);
+    m_wallet.draw(a_window, 880, 750);
     m_hand.draw_back(a_window);
 
     m_texts["name"].get()->draw(a_window);

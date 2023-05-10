@@ -1,4 +1,5 @@
 #include "wallet.hpp"
+#include <iostream>
 
 namespace poker
 {
@@ -8,32 +9,30 @@ namespace impl
 
 void make_reserve(std::unordered_map<int, std::vector<chipPointer>>& a_wallet)
 {
-    a_wallet[1].reserve(21);
-    a_wallet[5].reserve(21);
-    a_wallet[10].reserve(21);
-    a_wallet[25].reserve(21);
-    a_wallet[50].reserve(21);
-    a_wallet[100].reserve(21);
-    a_wallet[500].reserve(21);
-    a_wallet[1000].reserve(21);
-    a_wallet[5000].reserve(21);
-    a_wallet[10000].reserve(21);
+    a_wallet[1].reserve(MAX_CHIPS_IN_COLUMN);
+    a_wallet[5].reserve(MAX_CHIPS_IN_COLUMN);
+    a_wallet[10].reserve(MAX_CHIPS_IN_COLUMN);
+    a_wallet[25].reserve(MAX_CHIPS_IN_COLUMN);
+    a_wallet[50].reserve(MAX_CHIPS_IN_COLUMN);
+    a_wallet[100].reserve(MAX_CHIPS_IN_COLUMN);
+    a_wallet[500].reserve(MAX_CHIPS_IN_COLUMN);
+    a_wallet[1000].reserve(MAX_CHIPS_IN_COLUMN);
+    a_wallet[5000].reserve(MAX_CHIPS_IN_COLUMN);
+    a_wallet[10000].reserve(MAX_CHIPS_IN_COLUMN);
 }
 
 
 }//namespace impl
 
 Wallet::Wallet(int a_x, int a_y, std::vector<int> a_amounts)
-: m_amount("./resources/fonts/arial.ttf", "0", sf::Color(255, 228, 156), 25, a_x, a_y)
+: m_amount(TEXT_FONT, "0", TEXT_COLOR, TEXT_SIZE, a_x, a_y)
 , m_total_amount(0)
 , m_mutex()
 , m_wallet()
 {
     impl::make_reserve(m_wallet);
     for(auto& amount : a_amounts)
-    {
         push(amount);
-    }
 }
 
 void Wallet::push(int a_amount)
@@ -48,9 +47,7 @@ void Wallet::push(int a_amount)
 void Wallet::push(std::vector<int> a_amounts)
 {
     for(auto& amount : a_amounts)
-    {
         push(amount);
-    }
 }
 
 void Wallet::pop(int a_amount)
@@ -67,7 +64,6 @@ void Wallet::pop(int a_amount)
 void Wallet::clear()
 {
     Lock lock(m_mutex);
-    
     m_sound.play_chip();
     for(auto& pair : m_wallet)
         pair.second.clear();
@@ -75,7 +71,7 @@ void Wallet::clear()
     m_total_amount = 0;
 }
 
-void Wallet::draw(sf::RenderWindow& a_window, int a_x, int a_y, int a_gapDirection)const
+void Wallet::draw(sf::RenderWindow& a_window, int a_x, int a_y)const
 {
     Lock lock(m_mutex);
     for(auto& vec : m_wallet)
@@ -85,10 +81,10 @@ void Wallet::draw(sf::RenderWindow& a_window, int a_x, int a_y, int a_gapDirecti
             int y = a_y;
             for(auto& chip : vec.second)
             {
-                chip.get()->set_position(a_x, y -= 7);
+                chip.get()->set_position(a_x, y -= GAP_BETWEEN_CHIPS);
                 chip.get()->draw(a_window);
             }
-            a_x += a_gapDirection*CHIP_SIZE;
+            a_x += DIRECTION_OF_NEXT_CHIPS_COLUMNS*CHIP_SIZE;
         }
     }
 }
@@ -119,9 +115,7 @@ size_t Wallet::size() const
 {
     size_t size = 0;
     for(auto& vec : m_wallet)
-    {
         size += vec.second.size();
-    } 
     return size;
 }
 

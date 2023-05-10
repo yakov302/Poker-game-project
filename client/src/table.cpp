@@ -155,7 +155,7 @@ void Table::draw_all()
     m_players.draw_Players(m_window);
 
     m_cards.draw_front(m_window);
-    m_chips.draw(m_window, 700, 473, -1);
+    m_chips.draw(m_window, 700, 473);
     m_chips.print_amount(m_window);
 
     m_buttons["go"].get()->draw(m_window) ;

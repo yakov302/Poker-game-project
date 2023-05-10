@@ -12,6 +12,17 @@
 namespace poker
 {
 
+#define HEND_GAP_BETWEEN_FRONT_CARDS 150 
+#define HEND_GAP_BETWEEN_BACK_CARDS 0
+#define HEND_NUM_OF_CARD_FRONT 5
+#define HEND_NUM_OF_CARD_BACK 0
+#define HEND_IMAGE_SCALE 1.8
+#define HEND_X_POS 850
+#define HEND_Y_POS 350
+
+#define WALLET_X_POS 745
+#define WALLET_Y_POS 565
+
 class ClientManager
 {
 public:

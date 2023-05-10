@@ -3,7 +3,7 @@
 #include "button.hpp"
 
 #define DELETE 8
-#define TYPING_SPEED 10
+#define TYPING_SPEED 14
 #define LEGAL_UNICODE 128
 #define DEFAULT_UNICODE 255
 
