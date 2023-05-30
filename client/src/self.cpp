@@ -72,7 +72,6 @@ void Self::draw_player(sf::RenderWindow& a_window)
     m_texts["name"].get()->draw(a_window);
     m_texts["amount"].get()->draw(a_window);
     m_texts["action"].get()->draw(a_window);
-    m_texts["fold"].get()->draw(a_window);
 
     if(m_flags["my_turn"])
        m_texts["your_turn"].get()->draw(a_window);
@@ -119,8 +118,8 @@ bool Self::is_flag_on(std::string a_flag)
 
 void Self::set_name_and_gender(std::string a_name, std::string a_gender)
 {
-    set_shape(m_shape, m_texture, a_gender,m_x, m_y);
-    set_name(m_texts, a_name, m_x, m_y, m_total_amount);
+    set_shape(a_gender);
+    set_name(a_name);
     m_name = a_name;
 }
 
