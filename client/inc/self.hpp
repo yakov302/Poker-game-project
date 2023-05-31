@@ -3,13 +3,23 @@
 #include"player.hpp"
 #include"wallet.hpp"
 
+#define HAND_X_POS 1260
+#define HAND_Y_POS 630
+#define HAND_SCALE 1.8
+#define SELF_X_POS 1060
+#define SELF_Y_POS 650
+#define SELF_WALLET_X_POS 880
+#define SELF_WALLET_Y_POS 750
+#define GAP_BETWEEN_FRONT_CARDS 30 
+#define GAP_BETWEEN_BACK_CARDS 15
+
 namespace poker
 {
 
 class Self : public Player
 {
 public:
-    Self(std::string a_name, std::string a_gender, int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_front, int a_gap_back);
+    Self(std::string a_name, std::string a_gender, int a_amount);
     
     int bet(int a_x, int a_y);
     bool exchange(int a_x, int a_y);

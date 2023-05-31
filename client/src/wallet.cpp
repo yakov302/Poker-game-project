@@ -25,7 +25,9 @@ void make_reserve(std::unordered_map<int, std::vector<chipPointer>>& a_wallet)
 }//namespace impl
 
 Wallet::Wallet(int a_x, int a_y, std::vector<int> a_amounts)
-: m_amount(TEXT_FONT, "0", TEXT_COLOR, TEXT_SIZE, a_x, a_y)
+: m_x(a_x)
+, m_y(a_y)
+, m_amount(TEXT_FONT, "0", TEXT_COLOR, TEXT_SIZE, m_x + AMOUNT_X_GAP_POS, m_y + AMOUNT_Y_GAP_POS)
 , m_total_amount(0)
 , m_mutex()
 , m_wallet()
@@ -71,22 +73,27 @@ void Wallet::clear()
     m_total_amount = 0;
 }
 
-void Wallet::draw(sf::RenderWindow& a_window, int a_x, int a_y)const
+void Wallet::draw(sf::RenderWindow& a_window, bool a_print_amount)
 {
     Lock lock(m_mutex);
+
+    int x = m_x;
     for(auto& vec : m_wallet)
     {
         if(!vec.second.empty())
         {
-            int y = a_y;
+            int y = m_y;
             for(auto& chip : vec.second)
             {
-                chip.get()->set_position(a_x, y -= GAP_BETWEEN_CHIPS);
+                chip.get()->set_position(x, y -= GAP_BETWEEN_CHIPS);
                 chip.get()->draw(a_window);
             }
-            a_x += DIRECTION_OF_NEXT_CHIPS_COLUMNS*CHIP_SIZE;
+            x += DIRECTION_OF_NEXT_CHIPS_COLUMNS*CHIP_SIZE;
         }
     }
+
+    if(a_print_amount)
+        print_amount(a_window);
 }
 
 size_t Wallet::amount() const

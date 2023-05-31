@@ -14,6 +14,8 @@ namespace poker
 #define CHIP_SIZE 90
 #define TEXT_SIZE 25
 #define GAP_BETWEEN_CHIPS 7
+#define AMOUNT_X_GAP_POS 45
+#define AMOUNT_Y_GAP_POS 92
 #define MAX_CHIPS_IN_COLUMN 21
 #define DIRECTION_OF_NEXT_CHIPS_COLUMNS -1
 #define TEXT_COLOR sf::Color(255, 228, 156)
@@ -33,17 +35,19 @@ public:
     void clear();
 
     void exchange(int a_amount);
-    void print_amount(sf::RenderWindow& a_window);
 
     size_t size() const;
     size_t amount() const;
     int amount_by_position(int a_x, int a_y)const;
-    void draw(sf::RenderWindow& a_window, int a_x, int a_y)const;
+    void draw(sf::RenderWindow& a_window, bool a_print_amount);
 
 private:
     void auto_exchange(int a_amount);
-    
+    void print_amount(sf::RenderWindow& a_window);
+ 
 private:
+    int m_x;
+    int m_y;
     Text m_amount;
     Sound m_sound;
     size_t m_total_amount;

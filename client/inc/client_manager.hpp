@@ -20,8 +20,8 @@ namespace poker
 #define HEND_X_POS 850
 #define HEND_Y_POS 350
 
-#define WALLET_X_POS 745
-#define WALLET_Y_POS 565
+#define WALLET_X_POS 700
+#define WALLET_Y_POS 473
 
 class ClientManager
 {

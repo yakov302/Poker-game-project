@@ -18,25 +18,28 @@ void fill_wallet(Wallet& a_wallet)
 
 void set_self_flags(std::unordered_map<std::string, bool>& a_flags)
 {
+    a_flags["logged"]   = false;
     a_flags["exchange"] = false;
-    a_flags["logged"] = false;
 }
 
 
 }//impl namespace
 
-Self::Self(std::string a_name, std::string a_gender,  int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_front, int a_gap_back)
-: Player(a_name, a_gender, a_amount, a_x_self, a_y_self, a_x_card, a_y_card, a_scale_card,  a_gap_front, a_gap_back)
-, m_wallet(a_x_self + 50, a_y_self + 140)
+
+
+Self::Self(std::string a_name, std::string a_gender,  int a_amount)
+: Player(a_name, a_gender, a_amount, SELF_X_POS, SELF_Y_POS, HAND_X_POS, HAND_Y_POS, HAND_SCALE, GAP_BETWEEN_FRONT_CARDS, GAP_BETWEEN_BACK_CARDS)
+, m_wallet(SELF_WALLET_X_POS, SELF_WALLET_Y_POS)
 , m_name(a_name)
 {
     impl::fill_wallet(m_wallet);
     impl::set_self_flags(m_flags);
+    set_amount(std::to_string(m_wallet.amount()));
 }
 
 int Self::bet(int a_x, int a_y)
 {
-    return  m_wallet.amount_by_position(a_x, a_y);
+    return m_wallet.amount_by_position(a_x, a_y);
 }
 
 bool Self::exchange(int a_x, int a_y)
@@ -55,18 +58,19 @@ void Self::bet(int a_amount)
     m_current_bet += a_amount;
     m_wallet.pop(a_amount);
     set_action("bet " + std::to_string(m_current_bet));
+    set_amount(std::to_string(m_wallet.amount()));
 }
 
 void Self::get_chip(int a_chip)
 {
     m_wallet.push(a_chip);
+    set_amount(std::to_string(m_wallet.amount()));
 }
 
 void Self::draw_player(sf::RenderWindow& a_window)
 {
     a_window.draw(m_shape);
-    set_amount(std::to_string(m_wallet.amount()));
-    m_wallet.draw(a_window, 880, 750);
+    m_wallet.draw(a_window, false);
     m_hand.draw_back(a_window);
 
     m_texts["name"].get()->draw(a_window);
