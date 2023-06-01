@@ -40,6 +40,11 @@ Player::Player(std::string a_name, std::string a_gender, int a_amount, int a_x_s
     impl::set_flags(m_flags); 
 }
 
+Player::~Player()
+{
+
+};
+
 void Player::get_chip(int a_chip)
 {
     m_total_amount += a_chip;

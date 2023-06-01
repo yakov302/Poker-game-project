@@ -20,6 +20,8 @@ public:
         m_shape.setPosition(a_x, a_y);
     };
 
+    virtual ~Button(){};
+
     bool is_in_range(int a_x, int a_y)
     {
         if( a_x <= this->right()  &&

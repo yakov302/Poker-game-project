@@ -21,22 +21,20 @@ PlayersContainer::PlayersContainer()
 , m_locations()
 , m_players()
 {
-    impl::set_locations(m_locations, 5);
+    impl::set_locations(m_locations, MAX_NUM_OF_PAYERS_IN_TABLE);
 } 
 
-void PlayersContainer::get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_front, int a_gap_back)
+void PlayersContainer::get_player(std::string& a_name, std::string& a_gender, int a_amount)
 {
     if(m_players.find(a_name) != m_players.end())
         return;
 
     int i = 0;
     find_empty_place(i, a_name);
+    int player_x_pos = i*PLAYERS_X_POS;
+    int card_x_pos = player_x_pos + GAP_BETWEEN_CARDS_AND_PLAYER; 
 
-    a_x_self = i*PLAYER_SIZE + 230;
-    a_x_card = a_x_self + 140; 
-    a_y_card = a_y_self + 40;
-
-    m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, a_x_self,  a_y_self, a_x_card, a_y_card, a_scale_card, a_gap_front, a_gap_back));
+    m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, player_x_pos,  PLAYERS_Y_POS, card_x_pos, CARD_Y_POS, CARDS_SCLAE, GAP_BETWEEN_FRONT_CARDS_, GAP_BETWEEN_BACK_CARDS_));
     ++m_num_of_players;
 }
 

@@ -23,6 +23,10 @@ namespace poker
 #define WALLET_X_POS 700
 #define WALLET_Y_POS 473
 
+#define DEFAULT_SELF_GENDER "male"
+#define DEFAULT_SELF_NAME "player"
+#define DEFAULT_SELF_AMOUNT 0
+
 class ClientManager
 {
 public:

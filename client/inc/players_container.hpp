@@ -5,7 +5,15 @@
 #include"player.hpp"
 #include"self.hpp"
 
+#define CARD_Y_POS 90
+#define CARDS_SCLAE 1
 #define PLAYER_SIZE 300
+#define PLAYERS_Y_POS 50
+#define GAP_BETWEEN_BACK_CARDS_ 5
+#define GAP_BETWEEN_FRONT_CARDS_ 25 
+#define MAX_NUM_OF_PAYERS_IN_TABLE 5
+#define PLAYERS_X_POS PLAYER_SIZE + 230
+#define GAP_BETWEEN_CARDS_AND_PLAYER 140
 
 namespace poker
 {
@@ -17,7 +25,7 @@ class PlayersContainer
 public:
     PlayersContainer();
 
-    void get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_x_self = 0 , int a_y_self = 50, int a_x_card = 0, int a_y_card = 0, float a_scale_card = 1, int a_gap_front = 25, int a_gap_back = 5);
+    void get_player(std::string& a_name, std::string& a_gender, int a_amount);
     void get_player(std::string& a_name, Self& a_player);
     void delete_player(std::string& a_name);
 

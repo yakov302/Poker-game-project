@@ -8,6 +8,8 @@ namespace poker
 class Shape
 {
 public:
+    virtual ~Shape(){};
+    
     void set_position(int a_x, int a_y)
     {
         m_shape.setPosition(a_x, a_y);

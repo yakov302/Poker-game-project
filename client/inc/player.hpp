@@ -24,7 +24,8 @@ class Player : public Shape
 {
 public:
     Player(std::string a_name, std::string a_gender, int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_frontg, int a_gap_back);
-
+    virtual ~Player();
+    
     virtual void bet(int a_amount);
     virtual void get_chip(int a_chip);
     void update_current_bet(int a_amount);
