@@ -6,36 +6,36 @@ namespace poker
 namespace impl
 {
 
-void buttons_initialization(std::unordered_map<std::string, buttonPointer>& a_buttons)
+void buttons_initialization(std::unordered_map<std::string, buttonPointer>& a_buttons) 
 {
-    a_buttons["background"] = buttonPointer(new Button("./resources/images/background/background.jpg", 0, 0 , 3));
-    a_buttons["go"] = buttonPointer(new Button("./resources/images/buttons/button.png", 1700, 250, 0.5, "go"));
-    a_buttons["bet"] = buttonPointer(new Button("./resources/images/buttons/button.png", 1700, 310, 0.5, "bet"));
-    a_buttons["check"] = buttonPointer(new Button("./resources/images/buttons/button.png", 1700, 370, 0.5, "check"));
-    a_buttons["fold"] = buttonPointer(new Button("./resources/images/buttons/button.png", 1700, 430, 0.5, "fold"));
-    a_buttons["exchange"] = buttonPointer(new Button("./resources/images/buttons/button.png", 1700, 490, 0.5, "exchange"));
-    a_buttons["register"] = buttonPointer(new Button("./resources/images/buttons/button.png", 580, 370, 1, "register", 50, 22, 25));
-    a_buttons["log_in"] = buttonPointer(new Button("./resources/images/buttons/button.png", 1080, 370, 1, "log in", 20, 22, 25));
+    a_buttons["go"]         = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 0*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "go",       TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["bet"]        = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 1*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "bet",      TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["fold"]       = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 3*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "fold",     TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["check"]      = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 2*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "check",    TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["exchange"]   = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 4*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "exchange", TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["log_in"]     = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1080,         BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "log in",   20,                 OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
+    a_buttons["register"]   = buttonPointer(new Button(BUTTON_IMAGE_PATH,     580,          BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "register", 50,                 OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
+    a_buttons["background"] = buttonPointer(new Button(BACKGTOUND_IMAGE_PATH, ZERO_POS,     ZERO_POS,                          BACKGTOUND_IMAGE_SCALE,         "",         TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
 }
 
 void texts_initialization(std::unordered_map<std::string, textPointer>& a_texts)
 {
-    a_texts["log_in"] = textPointer(new Text("./resources/fonts/arial.ttf", "", sf::Color(255, 228, 156), 30, 750, 80));
-    a_texts["text"] = textPointer(new Text("./resources/fonts/arial.ttf", "", sf::Color(255, 228, 156), 30, 1570, 680));   
+    a_texts["text"]   = textPointer(new Text(ARIAL_FONT_PATH, "", TEXT_COLOR, TABLE_TEXT_SIZE, 1570, 680));   
+    a_texts["log_in"] = textPointer(new Text(ARIAL_FONT_PATH, "", TEXT_COLOR, TABLE_TEXT_SIZE, 750,  80 ));
 }
 
 void texts_box_initialization(std::unordered_map<std::string, textBoxPointer>& a_text_boxs)
 {
-    a_text_boxs["name"] = textBoxPointer(new TextBox("./resources/images/text_box/text_box.png", 9, 835, 290, 1.2,"      name   ", -3, 22, 25));
-    a_text_boxs["password"] = textBoxPointer(new TextBox("./resources/images/text_box/text_box.png", 9, 835, 370, 1.2, "   password  ", -3,  22, 25));
-    a_text_boxs["gender"] = textBoxPointer(new TextBox("./resources/images/text_box/text_box.png", 9, 835, 450, 1.2, "     gender ", -4, 22, 25));
+    a_text_boxs["name"]     = textBoxPointer(new TextBox(TEXT_BOX_IMAGE_PATH, TEXT_BOX_DIGITS_LIMET, TEXT_BOX_X_POS, TEXT_BOX_Y_POS + 0*TEXT_BOX_SIZE, TEXT_BOX_IMAGE_SCALE, "      name   ", -3, OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
+    a_text_boxs["gender"]   = textBoxPointer(new TextBox(TEXT_BOX_IMAGE_PATH, TEXT_BOX_DIGITS_LIMET, TEXT_BOX_X_POS, TEXT_BOX_Y_POS + 2*TEXT_BOX_SIZE, TEXT_BOX_IMAGE_SCALE, "     gender ",  -4, OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
+    a_text_boxs["password"] = textBoxPointer(new TextBox(TEXT_BOX_IMAGE_PATH, TEXT_BOX_DIGITS_LIMET, TEXT_BOX_X_POS, TEXT_BOX_Y_POS + 1*TEXT_BOX_SIZE, TEXT_BOX_IMAGE_SCALE, "   password  ", -3, OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
 }
 
 static void flags_initialization(std::unordered_map<std::string, bool>& a_flags)
 {
-    a_flags["log_in"] = false;
+    a_flags["stop"]     = false;
+    a_flags["log_in"]   = false;
     a_flags["register"] = false;
-    a_flags["stop"] = false;
 }
 
 static void* thread_function(void* a_arg)
@@ -83,11 +83,6 @@ void Table::stop()
 bool Table::is_runing()
 {
     return !m_flags["stop"];
-}
-
-sf::RenderWindow& Table::window()
-{
-    return m_window;
 }
 
 void Table::check_events()
@@ -298,7 +293,7 @@ bool Table::check_exchange_button()
     sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
     sf::Vector2f position = m_window.mapPixelToCoords(pixelPos);
 
-    if(m_buttons["exchange"].get()->is_in_range(position.x, position.y) /*&& !m_self.is_flag_on("bet")*/)
+    if(m_buttons["exchange"].get()->is_in_range(position.x, position.y))
     {
         m_sound.play_button();
         m_self.turn_on_flag("exchange");
@@ -379,7 +374,9 @@ bool Table::check_name_bar()
         return true;
     }
 
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && !m_text_boxs["name"].get()->is_in_range(position.x, position.y) && m_text_boxs["name"].get()->is_select())
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && 
+       !m_text_boxs["name"].get()->is_in_range(position.x, position.y) && 
+       m_text_boxs["name"].get()->is_select())
     {
         m_text_boxs["name"].get()->set_select(false);
         return true;
@@ -399,7 +396,9 @@ bool Table::check_password_bar()
         return true;
     }
 
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && !m_text_boxs["password"].get()->is_in_range(position.x, position.y) && m_text_boxs["password"].get()->is_select())
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && 
+      !m_text_boxs["password"].get()->is_in_range(position.x, position.y) && 
+      m_text_boxs["password"].get()->is_select())
     {
         m_text_boxs["password"].get()->set_select(false);
         return true;
@@ -418,7 +417,9 @@ bool Table::check_gender_bar()
         return true;
     }
 
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && !m_text_boxs["gender"].get()->is_in_range(position.x, position.y) && m_text_boxs["gender"].get()->is_select())
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && 
+       !m_text_boxs["gender"].get()->is_in_range(position.x, position.y) && 
+       m_text_boxs["gender"].get()->is_select())
     {
         m_text_boxs["gender"].get()->set_select(false);
         return true;
@@ -531,11 +532,10 @@ void Table::turn_off_flag(std::string a_flag)
     m_flags[a_flag] = false;
 }
 
-void Table::set_text(std::string a_type, std::string a_text, sf::Color a_color)
+void Table::set_text(std::string a_type, std::string a_text)
 {
     int x, y;
     m_texts[a_type].get()->set_text(a_text);
-    m_texts[a_type].get()->set_fill_color(a_color);
 
     if(a_type == "log_in")
     {

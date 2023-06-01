@@ -3,6 +3,8 @@
 #include <fstream>
 #include <SFML/Audio.hpp>
 
+#define SOUND_CONFIG_FILE "./resources/txt/sounds_config.txt"
+
 namespace poker
 {
 

@@ -13,8 +13,8 @@ namespace poker
 class Button : public Shape
 {
 public:
-    Button(std::string a_image_path, int a_x = 0, int a_y = 0, float a_scale = 1, std::string a_text = "", int a_x_gap = 5, int a_y_gap = 8, int a_text_size = 20)
-    : m_text(ARIAL_FONT_PATH, a_text, TEXT_COLOR, a_text_size, a_x + (MAX_TEXT_SIZE - a_text.size())*a_x_gap, a_y + a_y_gap)
+    Button(std::string a_image_path, int a_x, int a_y, float a_scale, std::string a_text, int a_text_x_gap, int a_text_y_gap, int a_text_size)
+    : m_text(ARIAL_FONT_PATH, a_text, TEXT_COLOR, a_text_size, a_x + (MAX_TEXT_SIZE - a_text.size())*a_text_x_gap, a_y + a_text_y_gap)
     {
         m_texture.loadFromFile(a_image_path);
         m_shape.setTexture(m_texture);

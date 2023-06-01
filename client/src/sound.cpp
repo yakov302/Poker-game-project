@@ -29,7 +29,7 @@ Sound::Sound()
 {
     m_sounds.reserve(NUM_OF_SOUNDS);
     m_sunds_buffers.reserve(NUM_OF_SOUNDS);
-    std::ifstream sound_config_file("./resources/txt/sounds_config.txt");
+    std::ifstream sound_config_file(SOUND_CONFIG_FILE);
     impl::sound_initialization(m_sounds, m_sunds_buffers, sound_config_file);
 }
 

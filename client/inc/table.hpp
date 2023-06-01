@@ -12,6 +12,32 @@
 #include "players_container.hpp"
 
 #define MAX_TEXTS_SIZE 27
+#define TABLE_TEXT_SIZE 30
+#define BACKGTOUND_IMAGE_SCALE 3
+
+#define ZERO_POS 0
+#define BUTTON_SIZE 60
+#define GAME_TEXT_SZIE 20
+#define BUTTON_X_POS 1700
+#define TEXT_BUTTON_X_GAP 5
+#define BUTTON_GAME_Y_POS 250
+#define GAME_TEXT_BUTTON_Y_GAP 5
+#define OPEN_SCREEN_TEXT_SZIE 25
+#define OPEN_SCREEN_TEXT_Y_GAP 22
+#define BUTTON_OPEN_SCREEN_Y_POS 370
+#define BUTTON_GAME_IMAGE_SCALE 0.5
+#define BUTTON_OPEN_SCREEN_IMAGE_SCALE 1
+
+#define TEXT_BOX_SIZE 80
+#define TEXT_BOX_X_POS 835
+#define TEXT_BOX_Y_POS 290
+#define TEXT_BOX_Y_POS 290
+#define TEXT_BOX_DIGITS_LIMET 9
+#define TEXT_BOX_IMAGE_SCALE 1.2
+
+#define BUTTON_IMAGE_PATH "./resources/images/buttons/button.png"
+#define TEXT_BOX_IMAGE_PATH "./resources/images/text_box/text_box.png"
+#define BACKGTOUND_IMAGE_PATH  "./resources/images/background/background.jpg"
 
 namespace poker
 {
@@ -30,11 +56,9 @@ public:
     void stop();
     bool is_runing();
 
-    sf::RenderWindow& window();
-
     void turn_on_flag(std::string a_flag);
     void turn_off_flag(std::string a_flag);
-    void set_text(std::string a_type, std::string a_text, sf::Color a_color = sf::Color(255, 228, 156));
+    void set_text(std::string a_type, std::string a_text);
 
 private:
     void run_log_in();
