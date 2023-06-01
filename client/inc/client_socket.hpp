@@ -6,6 +6,8 @@
 #include <cstring>
 #include <string>
 
+#define IP_AND_PORT_FILE_PATH "./resources/txt/server_ip_and_port.txt"
+
 namespace poker
 {
 

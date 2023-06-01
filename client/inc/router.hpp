@@ -8,7 +8,7 @@
 #include "client_socket.hpp"
 
 #define BUFFER_SIZE 256
-#define MAX_SOCKET_NUM_TO_LISTEN 1024
+#define MAX_NUM_OF_SOCKET_TO_LISTEN 1024
 
 namespace poker
 {

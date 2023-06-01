@@ -37,7 +37,7 @@ void Router::run()
 {
     while(m_table.is_runing())
     {
-        select(MAX_SOCKET_NUM_TO_LISTEN, &m_socket.fd(), 0, 0, 0);
+        select(MAX_NUM_OF_SOCKET_TO_LISTEN, &m_socket.fd(), 0, 0, 0);
 
         if(!m_tcp.receive_from_server(m_buffer))
             m_table.stop();
