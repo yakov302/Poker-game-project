@@ -6,7 +6,7 @@ namespace poker
 namespace impl
 {
 
-std::pair<std::string, std::string> name_and_flas(char* a_buffer)
+std::pair<std::string, std::string> name_and_flag(char* a_buffer)
 {
     Args arg(2, 0);
     std::pair<std::string, std::string> pair;
@@ -40,47 +40,47 @@ int get_amount(char* a_buffer)
     return arg.m_ints[0];
 }
 
-std::string result(int a_result)
+std::string result(hand_results a_result)
 {
     switch (a_result)
     {
-    case 1:
+    case HIGH_CARD:
         return "high card";
         break;
     
-    case 2:
+    case ONE_PAIR:
         return "one pair";
         break;
 
-    case 3:
+    case TWO_PAIR:
         return "two pair";
         break;
 
-    case 4:
+    case THREE_OF_A_KING:
         return "three";
         break;
 
-    case 5:
+    case STRAIGHT:
         return " straight";
         break;
 
-    case 6:
+    case FLUSH:
         return "flush";
         break;
 
-    case 7:
+    case FULL_HOUSE:
         return "full house";
         break;
 
-    case 8:
+    case FOR_OF_A_KING:
         return "four";
         break;
 
-    case 9:
+    case STRAIGHT_FLUSH:
         return "straight flush";
         break;
 
-    case 10:
+    case ROYAL_STRAIGHT_FLUSH:
         return "royal straight flush";
         break;
     
@@ -299,13 +299,13 @@ void ActionIn::user_name_alredy_log()
 
 void ActionIn::turn_on(char* a_buffer)
 {
-    std::pair<std::string, std::string> pair = impl::name_and_flas(a_buffer);
+    std::pair<std::string, std::string> pair = impl::name_and_flag(a_buffer);
     m_players.turn_on_flag(pair.first, pair.second);
 }
 
 void ActionIn::turn_off(char* a_buffer)
 {
-    std::pair<std::string, std::string> pair = impl::name_and_flas(a_buffer);
+    std::pair<std::string, std::string> pair = impl::name_and_flag(a_buffer);
     m_players.turn_off_flag(pair.first, pair.second);
 }
 
@@ -457,7 +457,7 @@ void ActionIn::clear_text()
 void ActionIn::print_result(char* a_buffer)
 {
     std::pair<std::string, int> pair = impl::name_and_amount(a_buffer);
-    m_players.set_action(pair.first, impl::result(pair.second));
+    m_players.set_action(pair.first, impl::result((hand_results)pair.second));
 }
 
 
