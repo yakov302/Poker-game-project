@@ -4,6 +4,7 @@
 #include <mutex>
 
 #include "card.hpp"
+#include "cards_container.hpp"
 
 namespace poker
 {

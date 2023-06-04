@@ -3,6 +3,8 @@
 namespace poker
 {
 
+CardsContainer cards_container;
+
 namespace impl
 {
 
@@ -42,15 +44,14 @@ Hand::Hand(int a_num_of_cards_front, int a_num_of_cards_back, int a_x, int a_y, 
 
 void Hand::push(std::string& a_suit, int a_number)
 {
-    std::string imagePath = "./resources/images/cards/" + a_suit + "-" + std::to_string(a_number) + ".png";
-    m_cards.emplace_back(cardPointer(new Card(a_suit, a_number, imagePath)));
+    m_cards.push_back(cards_container.give_card(a_suit, a_number));
     impl::set_position(m_cards, m_x, m_y, m_gap_between_cards);
 }
 
 void Hand::pop()
 {
     Lock lock(m_mutex);
-    if(!m_cards.empty())    
+    if(!m_cards.empty()) 
         m_cards.pop_back();
 }
 

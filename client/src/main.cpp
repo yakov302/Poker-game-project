@@ -2,7 +2,7 @@
 
 int main()
 {
-    poker:: ClientManager client;
+    poker::ClientManager client;
     return 0;
 }
 

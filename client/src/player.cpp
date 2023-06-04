@@ -34,7 +34,7 @@ Player::Player(std::string a_name, std::string a_gender, int a_amount, int a_x_s
 , m_flags()
 , m_texts() 
 , m_hand(NUM_OF_CARDS_PLAYER_HOLD, NUM_OF_CARDS_PLAYER_HOLD, a_x_card, a_y_card, a_scale_card, a_gap_front, a_gap_back)
-{
+{ 
     set_shape(a_gender);
     impl::set_texts(m_texts, a_name, a_x_self, a_y_self, m_total_amount);
     impl::set_flags(m_flags); 
@@ -130,7 +130,8 @@ void Player::set_shape(std::string& a_gender, float a_scale)
 void Player::set_name(std::string& a_name)
 {
     int x_pos =  m_x + (MAX_NAME_SIZE - a_name.size())*6.5;
-    m_texts["name"] = textPointer(new Text(ARIAL_FONT_PATH, a_name, NAME_COLOR, TEXT_SIZE, x_pos, m_y + 110));
+    m_texts["name"].get()->set_text(a_name);
+    m_texts["name"].get()->set_position(x_pos,  m_y + 110);
 }
 
 

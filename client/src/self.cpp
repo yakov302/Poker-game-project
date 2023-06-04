@@ -122,7 +122,8 @@ bool Self::is_flag_on(std::string a_flag)
 
 void Self::set_name_and_gender(std::string a_name, std::string a_gender)
 {
-    set_shape(a_gender);
+    if(a_gender == "female")
+        set_shape(a_gender);
     set_name(a_name);
     m_name = a_name;
 }
