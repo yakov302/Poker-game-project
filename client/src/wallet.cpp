@@ -1,8 +1,9 @@
 #include "wallet.hpp"
-#include <iostream>
 
 namespace poker
 {
+
+ChipsContainer chip_container;
 
 namespace impl
 {
@@ -40,10 +41,10 @@ Wallet::Wallet(int a_x, int a_y, std::vector<int> a_amounts)
 void Wallet::push(int a_amount)
 {
     m_sound.play_chip();
-    std::string imagePath = "./resources/images/chips/" + std::to_string(a_amount) + ".png";
-    m_wallet[a_amount].emplace_back(chipPointer(new Chip(a_amount, imagePath)));
+    m_wallet[a_amount].push_back(chip_container.give_chip(a_amount));
     m_total_amount += a_amount;
     auto_exchange(a_amount);
+    set_positions();
 }
 
 void Wallet::push(std::vector<int> a_amounts)
@@ -58,25 +59,24 @@ void Wallet::pop(int a_amount)
     m_sound.play_chip();
     if(!m_wallet[a_amount].empty())
     {
+        chip_container.release_chip(a_amount, m_wallet[a_amount].back().get()->index_id());
         m_wallet[a_amount].pop_back();
         m_total_amount -= a_amount;
     }
+    set_positions();
 }
 
 void Wallet::clear()
 {
-    Lock lock(m_mutex);
-    m_sound.play_chip();
-    for(auto& pair : m_wallet)
-        pair.second.clear();
-
-    m_total_amount = 0;
+    for(auto& vector : m_wallet)
+    {
+        while(!vector.second.empty())
+            pop(vector.first);
+    }
 }
 
-void Wallet::draw(sf::RenderWindow& a_window, bool a_print_amount)
+void Wallet::set_positions()
 {
-    Lock lock(m_mutex);
-
     int x = m_x;
     for(auto& vec : m_wallet)
     {
@@ -84,12 +84,21 @@ void Wallet::draw(sf::RenderWindow& a_window, bool a_print_amount)
         {
             int y = m_y;
             for(auto& chip : vec.second)
-            {
                 chip.get()->set_position(x, y -= GAP_BETWEEN_CHIPS);
-                chip.get()->draw(a_window);
-            }
+
             x += DIRECTION_OF_NEXT_CHIPS_COLUMNS*CHIP_SIZE;
         }
+    }
+}
+
+void Wallet::draw(sf::RenderWindow& a_window, bool a_print_amount)
+{
+    Lock lock(m_mutex);
+
+    for(auto& vec : m_wallet)
+    {
+        for(auto& chip : vec.second)
+            chip.get()->draw(a_window);
     }
 
     if(a_print_amount)
@@ -137,7 +146,7 @@ void Wallet::print_amount(sf::RenderWindow& a_window)
 
 void Wallet::auto_exchange(int a_amount)
 {
-    if(m_wallet[a_amount].size() >= 20)
+    if(m_wallet[a_amount].size() >= MAX_CHIPS_IN_COLUMN)
     {
         switch (a_amount)
         {

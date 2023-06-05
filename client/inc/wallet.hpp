@@ -7,6 +7,7 @@
 #include "chip.hpp"
 #include "text.hpp"
 #include "sound.hpp"
+#include "chips_container.hpp"
 
 namespace poker
 {
@@ -42,6 +43,7 @@ public:
     void draw(sf::RenderWindow& a_window, bool a_print_amount);
 
 private:
+    void set_positions();
     void auto_exchange(int a_amount);
     void print_amount(sf::RenderWindow& a_window);
  
