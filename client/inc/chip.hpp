@@ -17,9 +17,6 @@ public:
         m_shape.scale(a_scale, a_scale);
     };
 
-    void set_index_id(int a_index_id)
-    {m_index_id = a_index_id;}
-
     int index_id() const
     {return m_index_id;}
 

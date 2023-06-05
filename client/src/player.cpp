@@ -120,8 +120,8 @@ void Player::draw_player(sf::RenderWindow& a_window)
 
 void Player::set_shape(std::string& a_gender, float a_scale)
 {
-    std::string imagePath = "./resources/images/avatars/" + a_gender + ".png";
-    m_texture.loadFromFile(imagePath);
+    std::string image_path = "./resources/images/avatars/" + a_gender + ".png";
+    m_texture.loadFromFile(image_path);
     m_shape.setTexture(m_texture);
     m_shape.scale(a_scale, a_scale);
     m_shape.setPosition(m_x, m_y);

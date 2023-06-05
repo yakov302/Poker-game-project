@@ -31,7 +31,7 @@ void PlayersContainer::get_player(std::string& a_name, std::string& a_gender, in
 
     int i = 0;
     find_empty_place(i, a_name);
-    int player_x_pos = i*PLAYERS_X_POS;
+    int player_x_pos = i*PLAYER_SIZE + PLAYERS_X_POS;
     int card_x_pos = player_x_pos + GAP_BETWEEN_CARDS_AND_PLAYER; 
 
     m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, player_x_pos,  PLAYERS_Y_POS, card_x_pos, CARD_Y_POS, CARDS_SCLAE, GAP_BETWEEN_FRONT_CARDS_, GAP_BETWEEN_BACK_CARDS_));

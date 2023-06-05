@@ -20,7 +20,7 @@ namespace poker
 #define MAX_CHIPS_IN_COLUMN 21
 #define DIRECTION_OF_NEXT_CHIPS_COLUMNS -1
 #define TEXT_COLOR sf::Color(255, 228, 156)
-#define TEXT_FONT "./resources/fonts/arial.ttf"
+#define TEXT_FONT_PATH "./resources/fonts/arial.ttf"
 
 using Lock = std::unique_lock<std::mutex>;
 using chipPointer = std::shared_ptr<Chip>;
