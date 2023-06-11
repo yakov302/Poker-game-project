@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern Sound sound;
+
 namespace impl
 {
 
@@ -53,7 +55,6 @@ Table::Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_p
 , m_texts()
 , m_buttons()
 , m_text_boxs()
-, m_sound()
 , m_self(a_self)
 , m_cards(a_cards)
 , m_chips(a_chips)
@@ -208,7 +209,7 @@ bool Table::check_go_button()
 
     if (m_buttons["go"].get()->is_in_range(position.x, position.y))
     {
-        m_sound.play_button();
+        sound.play_button();
         usleep(100000);
 
         if(m_self.is_flag_on("exchange"))
@@ -239,7 +240,7 @@ bool Table::check_bet_button()
 
     if (m_buttons["bet"].get()->is_in_range(position.x, position.y) && !m_self.is_flag_on("exchange"))
     {
-        m_sound.play_button();
+        sound.play_button();
         m_action_out.start_bet(m_self.name());
         usleep(100000);
         return true;
@@ -263,7 +264,7 @@ bool Table::check_check_button()
 
     if (m_buttons["check"].get()->is_in_range(position.x, position.y))
     {
-        m_sound.play_button();
+        sound.play_button();
         m_action_out.check_action();
         usleep(100000);
         return true;
@@ -279,7 +280,7 @@ bool Table::check_fold_button()
 
     if (m_buttons["fold"].get()->is_in_range(position.x, position.y))
     {
-        m_sound.play_button();
+        sound.play_button();
         m_action_out.fold_action();
         usleep(100000);
         return true;
@@ -295,7 +296,7 @@ bool Table::check_exchange_button()
 
     if(m_buttons["exchange"].get()->is_in_range(position.x, position.y))
     {
-        m_sound.play_button();
+        sound.play_button();
         m_self.turn_on_flag("exchange");
         m_self.set_action("exchange");
         usleep(100000);
@@ -436,7 +437,7 @@ bool Table::check_log_in_button(bool a_is_on)
     {
         if(m_buttons["log_in"].get()->is_in_range(position.x, position.y))
         {
-            m_sound.play_button();
+            sound.play_button();
             m_flags["log_in"] = true;
             usleep(100000);
             return true;
@@ -446,7 +447,7 @@ bool Table::check_log_in_button(bool a_is_on)
     {
         if(m_buttons["log_in"].get()->is_in_range(position.x, position.y))
         {
-            m_sound.play_button();
+            sound.play_button();
             m_action_out.log_in_request(m_text_boxs["name"].get()->give_string(), m_text_boxs["password"].get()->give_string(), m_self.amount());
             m_text_boxs["name"].get()->clear();
             m_text_boxs["password"].get()->clear();
@@ -467,7 +468,7 @@ bool Table::check_register_button(bool a_is_on)
     {
         if(m_buttons["register"].get()->is_in_range(position.x, position.y))
         {
-            m_sound.play_button();
+            sound.play_button();
             m_flags["register"] = true;
             usleep(100000);
             return true;
@@ -477,7 +478,7 @@ bool Table::check_register_button(bool a_is_on)
     {
         if(m_buttons["register"].get()->is_in_range(position.x, position.y))
         {
-            m_sound.play_button();
+            sound.play_button();
             m_action_out.registration_request(m_text_boxs["name"].get()->give_string(), m_text_boxs["password"].get()->give_string(), m_text_boxs["gender"].get()->give_string());
             m_text_boxs["name"].get()->clear();
             m_text_boxs["password"].get()->clear();

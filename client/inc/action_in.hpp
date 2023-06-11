@@ -61,7 +61,6 @@ private:
     void print_result(char* a_buffer);
     
 private:
-    Sound m_sound;
     Self& m_self;
     Hand& m_cards; 
     Table& m_table;

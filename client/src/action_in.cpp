@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern Sound sound;
+
 namespace impl
 {
 
@@ -95,8 +97,7 @@ std::string result(hand_results a_result)
 }//namespace impl
 
 ActionIn::ActionIn(Hand& a_cards, Wallet& a_chips, PlayersContainer& a_players, Table& a_table, Self& a_self, ActionOut& a_action_out)
-: m_sound()
-, m_self(a_self)
+: m_self(a_self)
 , m_cards(a_cards)
 , m_table(a_table)
 , m_chips(a_chips)
@@ -247,7 +248,7 @@ void ActionIn::get(char* a_buffer)
 
 void ActionIn::registration_success()
 {
-    m_sound.play_positive();
+    sound.play_positive();
     m_table.set_text("log_in", "Registration was successful");
     m_table.turn_off_flag("register");
     m_table.turn_on_flag("log_in");
@@ -255,19 +256,19 @@ void ActionIn::registration_success()
 
 void ActionIn::registration_duplicare_name()
 {
-    m_sound.play_invalid();
+    sound.play_invalid();
     m_table.set_text("log_in", "That name is already taken");
 }
 
 void ActionIn::registration_wrong_gender()
 {
-    m_sound.play_invalid();
+    sound.play_invalid();
     m_table.set_text("log_in", "Wrong gender");
 }
 
 void ActionIn::log_in_success(char* a_buffer)
 {
-    m_sound.play_positive();
+    sound.play_positive();
     Args arg (2, 0);
     unpack(a_buffer, arg);
     std::string name = arg.m_strings[0];
@@ -281,19 +282,19 @@ void ActionIn::log_in_success(char* a_buffer)
 
 void ActionIn::log_in_wrong_name()
 {
-    m_sound.play_invalid();
+    sound.play_invalid();
     m_table.set_text("log_in", "Wrong name");
 }
 
 void ActionIn::log_in_wrong_password()
 {
-    m_sound.play_invalid();
+    sound.play_invalid();
     m_table.set_text("log_in", "Wrong password");
 }
 
 void ActionIn::user_name_alredy_log()
 {
-    m_sound.play_invalid();
+    sound.play_invalid();
     m_table.set_text("log_in", "User already logged in");
 }
 
@@ -325,13 +326,13 @@ void ActionIn::bet(char* a_buffer)
 
 void ActionIn::invalid_bet_min(char* a_buffer)
 {
-    m_sound.play_invalid(); 
+    sound.play_invalid(); 
     m_table.set_text("text", "Invalid bet \nMin bet: " + std::to_string(impl::get_amount(a_buffer)));
 }
 
 void ActionIn::invalid_bet_max(char* a_buffer)
 { 
-    m_sound.play_invalid();
+    sound.play_invalid();
     m_table.set_text("text", "Invalid bet \nMax bet: " + std::to_string(impl::get_amount(a_buffer)));
 }
 
@@ -349,7 +350,7 @@ void ActionIn::fold(char* a_buffer)
     for(int i = 0; i < 2; ++i)
     {
         usleep(100000);
-        m_sound.play_card();
+        sound.play_card();
         m_players.give_card(name);
     }
 }
@@ -358,7 +359,7 @@ void ActionIn::get_card(char* a_buffer)
 {
     Args arg(2, 1);
     unpack(a_buffer, arg);
-    m_sound.play_card();
+    sound.play_card();
     m_players.get_card(arg.m_strings[0], arg.m_strings[1], arg.m_ints[0]);
 }
 
@@ -371,7 +372,7 @@ void ActionIn::get_chip(char* a_buffer)
 void ActionIn::give_card(char* a_buffer)
 {
     std::string name = impl::get_name(a_buffer);
-    m_sound.play_card();
+    sound.play_card();
     m_players.give_card(name);
 }
 
@@ -397,7 +398,7 @@ void ActionIn::reveal_cards(char* a_buffer)
 void ActionIn::table_get_card(char* a_buffer)
 {
     std::pair<std::string, int> pair = impl::name_and_amount(a_buffer);
-    m_sound.play_card();
+    sound.play_card();
     m_cards.push(pair.first, pair.second);
 }
 
@@ -408,7 +409,7 @@ void ActionIn::table_get_chip(char* a_buffer)
 
 void ActionIn::table_give_card()
 {
-    m_sound.play_card();
+    sound.play_card();
     m_cards.pop();
 }
 
@@ -435,7 +436,7 @@ void ActionIn::ActionIn::clear_action(char* a_buffer)
 
 void ActionIn::round_winer(char* a_buffer)
 {
-    m_sound.play_positive();
+    sound.play_positive();
     std::string name = impl::get_name(a_buffer);
     m_table.set_text("text", name + " won!");
 }
@@ -444,7 +445,7 @@ void ActionIn::game_winer(char* a_buffer)
 {
     std::string name = impl::get_name(a_buffer);
     if(name == m_self.name())
-        m_sound.play_positive();
+        sound.play_positive();
 
     m_table.set_text("text", name + " won the game!");
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "self.hpp"
+#include "sound.hpp"
 #include "table.hpp"
 #include "router.hpp"
 #include "action_in.hpp"

@@ -51,7 +51,6 @@ private:
     int m_x;
     int m_y;
     Text m_amount;
-    Sound m_sound;
     size_t m_total_amount;
     mutable std::mutex m_mutex;
     std::unordered_map<int, std::vector<chipPointer>> m_wallet;

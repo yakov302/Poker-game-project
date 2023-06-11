@@ -3,6 +3,7 @@
 namespace poker
 {
 
+extern Sound sound;
 ChipsContainer chip_container;
 
 namespace impl
@@ -40,7 +41,7 @@ Wallet::Wallet(int a_x, int a_y, std::vector<int> a_amounts)
 
 void Wallet::push(int a_amount)
 {
-    m_sound.play_chip();
+    sound.play_chip();
     m_wallet[a_amount].push_back(chip_container.give_chip(a_amount));
     m_total_amount += a_amount;
     auto_exchange(a_amount);
@@ -56,7 +57,7 @@ void Wallet::push(std::vector<int> a_amounts)
 void Wallet::pop(int a_amount)
 {
     Lock lock(m_mutex);
-    m_sound.play_chip();
+    sound.play_chip();
     if(!m_wallet[a_amount].empty())
     {
         chip_container.release_chip(a_amount, m_wallet[a_amount].back().get()->index_id());

@@ -97,7 +97,6 @@ private:
     std::unordered_map<std::string, buttonPointer> m_buttons;
     std::unordered_map<std::string, textBoxPointer> m_text_boxs;
     
-    Sound m_sound;
     Self& m_self;
     Hand& m_cards; 
     Wallet& m_chips;
