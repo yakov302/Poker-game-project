@@ -4,6 +4,7 @@ namespace poker
 {
 
 extern Sound sound;
+extern std::string empty;
 
 namespace impl
 {
@@ -93,6 +94,20 @@ std::string result(hand_results a_result)
     return "";
 }
 
+int log_in_text_x_pos(std::string& a_txt)
+{
+    return 740 + ((MAX_TEXTS_SIZE - a_txt.size())/2)*12;
+}
+
+int game_text_x_pos(std::string& a_txt)
+{
+    return 1510 + (MAX_TEXTS_SIZE - a_txt.size())/2;
+}
+
+int win_text_x_pos(std::string& a_txt)
+{
+    return 760 + ((MAX_WIN_TEXT_LEN - a_txt.size())/2)*16;
+}
 
 }//namespace impl
 
@@ -249,7 +264,8 @@ void ActionIn::get(char* a_buffer)
 void ActionIn::registration_success()
 {
     sound.play_positive();
-    m_table.set_text("log_in", "Registration was successful");
+    std::string txt = "Registration was successful";
+    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
     m_table.turn_off_flag("register");
     m_table.turn_on_flag("log_in");
 }
@@ -257,13 +273,15 @@ void ActionIn::registration_success()
 void ActionIn::registration_duplicare_name()
 {
     sound.play_invalid();
-    m_table.set_text("log_in", "That name is already taken");
+    std::string txt = "That name is already taken";
+    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::registration_wrong_gender()
 {
     sound.play_invalid();
-    m_table.set_text("log_in", "Wrong gender");
+    std::string txt = "Wrong gender";
+    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::log_in_success(char* a_buffer)
@@ -278,24 +296,28 @@ void ActionIn::log_in_success(char* a_buffer)
     m_table.turn_off_flag("register");
     m_table.turn_off_flag("log_in");
     m_self.turn_on_flag("logged");
+    clear_text();
 }
 
 void ActionIn::log_in_wrong_name()
 {
     sound.play_invalid();
-    m_table.set_text("log_in", "Wrong name");
+    std::string txt = "Wrong name";
+    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::log_in_wrong_password()
 {
     sound.play_invalid();
-    m_table.set_text("log_in", "Wrong password");
+    std::string txt = "Wrong password";
+    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::user_name_alredy_log()
 {
     sound.play_invalid();
-    m_table.set_text("log_in", "User already logged in");
+    std::string txt = "User already logged in";
+    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::turn_on(char* a_buffer)
@@ -327,13 +349,15 @@ void ActionIn::bet(char* a_buffer)
 void ActionIn::invalid_bet_min(char* a_buffer)
 {
     sound.play_invalid(); 
-    m_table.set_text("text", "Invalid bet \nMin bet: " + std::to_string(impl::get_amount(a_buffer)));
+    std::string txt = "Invalid bet \nMin bet: " + std::to_string(impl::get_amount(a_buffer));
+    m_table.set_text(txt, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
 }
 
 void ActionIn::invalid_bet_max(char* a_buffer)
 { 
     sound.play_invalid();
-    m_table.set_text("text", "Invalid bet \nMax bet: " + std::to_string(impl::get_amount(a_buffer)));
+    std::string txt = "Invalid bet \nMax bet: " + std::to_string(impl::get_amount(a_buffer));
+    m_table.set_text(txt, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
 }
 
 void ActionIn::check(char* a_buffer)
@@ -437,8 +461,8 @@ void ActionIn::ActionIn::clear_action(char* a_buffer)
 void ActionIn::round_winer(char* a_buffer)
 {
     sound.play_positive();
-    std::string name = impl::get_name(a_buffer);
-    m_table.set_text("text", name + " won!");
+    std::string txt = impl::get_name(a_buffer) + " won!";
+    m_table.set_text(txt, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
 }
 
 void ActionIn::game_winer(char* a_buffer)
@@ -447,12 +471,13 @@ void ActionIn::game_winer(char* a_buffer)
     if(name == m_self.name())
         sound.play_positive();
 
-    m_table.set_text("text", name + " won the game!");
+    std::string txt = impl::get_name(a_buffer) + " won the game!";
+    m_table.set_text(txt, impl::win_text_x_pos(txt), WIN_TEXT_Y_POS);
 }
 
 void ActionIn::clear_text()
 {
-    m_table.set_text("text", "");
+    m_table.set_text(empty, 0, 0);
 }
 
 void ActionIn::print_result(char* a_buffer)

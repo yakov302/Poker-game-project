@@ -13,6 +13,7 @@
 
 #define MAX_TEXTS_SIZE 27
 #define TABLE_TEXT_SIZE 30
+#define LOG_IN_TEXT_Y_POS 80
 #define BACKGTOUND_IMAGE_SCALE 3
 
 #define ZERO_POS 0
@@ -58,7 +59,7 @@ public:
 
     void turn_on_flag(std::string a_flag);
     void turn_off_flag(std::string a_flag);
-    void set_text(std::string a_type, std::string a_text);
+    void set_text(std::string& a_text, int x_pos, int y_pos);
 
 private:
     void run_log_in();
@@ -91,9 +92,9 @@ private:
     sf::Event m_event;
     sf::RenderWindow m_window;
 
+    textPointer m_text;
     std::thread* m_thread;
     std::unordered_map<std::string, bool> m_flags;
-    std::unordered_map<std::string, textPointer> m_texts;
     std::unordered_map<std::string, buttonPointer> m_buttons;
     std::unordered_map<std::string, textBoxPointer> m_text_boxs;
     

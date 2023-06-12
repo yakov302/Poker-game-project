@@ -8,6 +8,11 @@
 #include "action_out.hpp"
 #include "players_container.hpp"
 
+#define MAX_WIN_TEXT_LEN 23
+#define WIN_TEXT_Y_POS 390
+#define GAME_TEXT_Y_POS 680
+#define LOG_IN_TEXT_Y_POS 80
+
 namespace poker
 {
 

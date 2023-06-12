@@ -17,6 +17,7 @@ CardRound::CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_a
 
 void CardRound::run(playerIterator a_open_player)
 {
+    m_action_out.clear_text();
     std::string name;
     m_stop = false;
     deal_cards();

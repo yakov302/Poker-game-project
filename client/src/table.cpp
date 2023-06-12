@@ -4,9 +4,13 @@ namespace poker
 {
 
 extern Sound sound;
+std::string empty = "";
+std::string request_sent = "Request sent";
 
 namespace impl
 {
+
+extern int log_in_text_x_pos(std::string& txt);
 
 void buttons_initialization(std::unordered_map<std::string, buttonPointer>& a_buttons) 
 {
@@ -18,12 +22,6 @@ void buttons_initialization(std::unordered_map<std::string, buttonPointer>& a_bu
     a_buttons["log_in"]     = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1080,         BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "log in",   20,                 OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
     a_buttons["register"]   = buttonPointer(new Button(BUTTON_IMAGE_PATH,     580,          BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "register", 50,                 OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
     a_buttons["background"] = buttonPointer(new Button(BACKGTOUND_IMAGE_PATH, ZERO_POS,     ZERO_POS,                          BACKGTOUND_IMAGE_SCALE,         "",         TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-}
-
-void texts_initialization(std::unordered_map<std::string, textPointer>& a_texts)
-{
-    a_texts["text"]   = textPointer(new Text(ARIAL_FONT_PATH, "", TEXT_COLOR, TABLE_TEXT_SIZE, 1570, 680));   
-    a_texts["log_in"] = textPointer(new Text(ARIAL_FONT_PATH, "", TEXT_COLOR, TABLE_TEXT_SIZE, 750,  80 ));
 }
 
 void texts_box_initialization(std::unordered_map<std::string, textBoxPointer>& a_text_boxs)
@@ -52,7 +50,7 @@ static void* thread_function(void* a_arg)
 
 Table::Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_players, ActionOut& a_action_out)
 : m_window(sf::VideoMode::getDesktopMode(), "My Texas Hold'em")
-, m_texts()
+, m_text(new Text(ARIAL_FONT_PATH, "", TEXT_COLOR, TABLE_TEXT_SIZE, 0, 0))
 , m_buttons()
 , m_text_boxs()
 , m_self(a_self)
@@ -62,7 +60,6 @@ Table::Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_p
 , m_players(a_players)
 {
     impl::buttons_initialization(m_buttons);
-    impl::texts_initialization(m_texts);
     impl::texts_box_initialization(m_text_boxs);
     impl::flags_initialization(m_flags);
     m_thread = new std::thread(impl::thread_function, this);
@@ -110,7 +107,7 @@ void Table::check_events()
 void Table::draw_login_screen()
 {
     m_buttons["background"].get()->draw(m_window);
-    m_texts["log_in"].get()->draw(m_window);
+    m_text.get()->draw(m_window);
 
     if(m_flags["log_in"])
     {
@@ -146,7 +143,7 @@ void Table::draw_register()
 void Table::draw_all()
 {
     m_buttons["background"].get()->draw(m_window);
-    m_texts["text"].get()->draw(m_window);
+    m_text.get()->draw(m_window);
 
     m_players.draw_Players(m_window);
 
@@ -224,7 +221,7 @@ bool Table::check_go_button()
 
         if(m_self.is_flag_on("bet"))
         {
-            set_text("text", "");
+            set_text(empty, 0, 0);
             m_action_out.finish_bet(m_self.name());
             return true;
         }
@@ -451,7 +448,7 @@ bool Table::check_log_in_button(bool a_is_on)
             m_action_out.log_in_request(m_text_boxs["name"].get()->give_string(), m_text_boxs["password"].get()->give_string(), m_self.amount());
             m_text_boxs["name"].get()->clear();
             m_text_boxs["password"].get()->clear();
-            m_texts["log_in"].get()->set_text("         Request sent");
+            set_text(request_sent, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
             usleep(100000);
             return true;
         }
@@ -483,7 +480,7 @@ bool Table::check_register_button(bool a_is_on)
             m_text_boxs["name"].get()->clear();
             m_text_boxs["password"].get()->clear();
             m_text_boxs["gender"].get()->clear();
-            m_texts["log_in"].get()->set_text("         Request sent");
+            set_text(request_sent, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
             usleep(100000);
             return true;
         }
@@ -533,24 +530,10 @@ void Table::turn_off_flag(std::string a_flag)
     m_flags[a_flag] = false;
 }
 
-void Table::set_text(std::string a_type, std::string a_text)
+void Table::set_text(std::string& a_text, int x_pos, int y_pos)
 {
-    int x, y;
-    m_texts[a_type].get()->set_text(a_text);
-
-    if(a_type == "log_in")
-    {
-        x = 740 + ((MAX_TEXTS_SIZE - a_text.size())/2)*12;
-        y = 80;
-    }
-
-    if(a_type == "text")
-    {
-        x = 1510 + (MAX_TEXTS_SIZE - a_text.size())/2;
-        y = 680;
-    }
-
-    m_texts[a_type].get()->set_position(x, y);
+    m_text.get()->set_text(a_text);
+    m_text.get()->set_position(x_pos, y_pos);
 }
 
 
