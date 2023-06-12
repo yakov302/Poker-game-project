@@ -361,6 +361,12 @@ void Table::check_mouse_not_looged()
     }
 }
 
+void Table::turn_off_all_bars()
+{
+    for(auto& bar : m_text_boxs)
+        bar.second.get()->set_select(false);
+}
+
 bool Table::check_name_bar()
 {
     sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
@@ -368,6 +374,7 @@ bool Table::check_name_bar()
 
     if(m_text_boxs["name"].get()->is_in_range(position.x, position.y))
     {
+        turn_off_all_bars();
         m_text_boxs["name"].get()->set_select(true);
         return true;
     }
@@ -390,6 +397,7 @@ bool Table::check_password_bar()
 
     if(m_text_boxs["password"].get()->is_in_range(position.x, position.y))
     {
+        turn_off_all_bars();
         m_text_boxs["password"].get()->set_select(true);
         return true;
     }
@@ -411,6 +419,7 @@ bool Table::check_gender_bar()
 
     if(m_text_boxs["gender"].get()->is_in_range(position.x, position.y))
     {
+        turn_off_all_bars();
         m_text_boxs["gender"].get()->set_select(true);
         return true;
     }

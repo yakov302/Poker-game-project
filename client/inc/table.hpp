@@ -70,6 +70,7 @@ private:
     void check_mouse_not_looged();
     bool check_register_button(bool a_is_on);
     bool check_log_in_button(bool a_is_on);
+    void turn_off_all_bars();
     bool check_password_bar();
     bool check_gender_bar();
     bool check_name_bar();
