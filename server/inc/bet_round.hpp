@@ -3,6 +3,7 @@
 #include "players_container.hpp"
 #include "action_out.hpp"
 #include "table.hpp"
+#include "deck.hpp"
 
 namespace poker
 {

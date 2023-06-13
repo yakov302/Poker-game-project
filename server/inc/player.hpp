@@ -7,6 +7,8 @@
 namespace poker
 {
 
+using cardPointer = std::shared_ptr<Card>;
+
 class Player
 {
 public:
@@ -37,7 +39,7 @@ public:
     bool m_viewer;
     bool m_my_turn;
     
-    std::vector<Card> m_hand;
+    std::vector<cardPointer> m_hand;
 };
 
 

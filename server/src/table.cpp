@@ -11,7 +11,7 @@ Table::Table()
     m_chips.reserve(200);
 }
 
-void Table::get_card(Card a_card)
+void Table::get_card(cardPointer a_card)
 {
     m_cards.emplace_back(a_card);
 }
@@ -32,10 +32,14 @@ int Table::give_chip()
     return 0;
 }
 
-void Table::give_card()
+cardPointer Table::give_card()
 {
-    if(!m_cards.empty())
-        m_cards.pop_back();
+    if(m_cards.empty())
+        return nullptr;
+
+    cardPointer card = m_cards[m_cards.size()-1];
+    m_cards.pop_back();
+    return card;
 }
 
 int Table::num_of_card()const
@@ -62,7 +66,7 @@ bool Table::is_hand_empty()
     return m_cards.empty();
 }
 
-std::vector<Card>& Table::table_cards()
+std::vector<cardPointer>& Table::table_cards()
 {
     return m_cards;
 }

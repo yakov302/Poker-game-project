@@ -163,12 +163,12 @@ void ActionOut::fold(std::string& a_name)
     name_and_message(a_name, FOLD_UPDATE);
 }
 
-void ActionOut::get_card(std::string& a_name, Card& a_card)
+void ActionOut::get_card(std::string& a_name, cardPointer a_card)
 {
     Args arg(2, 1);
     arg.m_strings.emplace_back(a_name);
-    arg.m_strings.emplace_back(a_card.m_suit);
-    arg.m_ints.emplace_back(a_card.m_number);
+    arg.m_strings.emplace_back(a_card.get()->m_suit);
+    arg.m_ints.emplace_back(a_card.get()->m_number);
     pack_and_send_all(arg, GET_CARD);
 }
 
@@ -206,9 +206,9 @@ void ActionOut::reveal_cards(std::string& a_name)
     name_and_message(a_name, REVEAL_CARDS);
 }
 
-void ActionOut::table_get_card(Card& a_card)
+void ActionOut::table_get_card(cardPointer a_card)
 {
-    name_and_amount(a_card.m_suit, a_card.m_number, TABLE_GET_CARD);
+    name_and_amount(a_card.get()->m_suit, a_card.get()->m_number, TABLE_GET_CARD);
 }
 
 void ActionOut::table_get_chip(int a_amount)

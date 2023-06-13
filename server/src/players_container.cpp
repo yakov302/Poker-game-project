@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern Deck deck;
+
 PlayersContainer::PlayersContainer(ActionOut& a_action_out)
 : m_wait()
 , m_action_out(a_action_out)
@@ -15,6 +17,8 @@ void PlayersContainer::new_player(std::string a_name, std::string a_gender, int 
 {
     if(m_players.find(a_name) != m_players.end())
         return;
+
+    //IF TABLE FULL - 6 PLYERS ???
 
     m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, a_client_socket));
     m_action_out.log_in_success(a_name, a_gender, a_client_socket);
@@ -33,6 +37,8 @@ void PlayersContainer::delete_player(std::string& a_name)
         return;
 
     m_action_out.delete_player(a_name);
+    for(int i = 0; i < 2; ++i)
+        deck.push_card(give_card(a_name));
     m_players.erase(a_name);
 }
 
@@ -64,7 +70,7 @@ void PlayersContainer::increase (std::string& a_name, int a_amount)
     m_players[a_name]->m_amount += a_amount;
 }
 
-void PlayersContainer::get_card(std::string& a_name, Card a_card)
+void PlayersContainer::get_card(std::string& a_name, cardPointer a_card)
 {
     if(m_players.find(a_name) == m_players.end())
         return;
@@ -72,13 +78,16 @@ void PlayersContainer::get_card(std::string& a_name, Card a_card)
     m_players[a_name]->m_hand.emplace_back(a_card);
 }
 
-void PlayersContainer::give_card(std::string& a_name)
+cardPointer PlayersContainer::give_card(std::string& a_name)
 {
-    if(m_players.find(a_name) == m_players.end())
-        return;
+    if(m_players.find(a_name) == m_players.end() ||
+       m_players[a_name]->m_hand.empty())
+        return nullptr;
 
-    if(!m_players[a_name]->m_hand.empty())
-        m_players[a_name]->m_hand.pop_back();
+    int index = m_players[a_name]->m_hand.size()-1;
+    cardPointer card = m_players[a_name]->m_hand[index];
+    m_players[a_name]->m_hand.pop_back();
+    return card;
 }
 
 void PlayersContainer::turn_on(std::string& a_name, std::string a_flag)
@@ -127,8 +136,7 @@ bool PlayersContainer::is_flag_on(std::string& a_name, std::string a_flag)
 
 bool PlayersContainer::is_it_has_a_cards(std::string& a_name)
 {
-    return !m_players[a_name]->m_hand.empty();
-}
+
 
 void PlayersContainer::set_bet(std::string& a_name, int a_amount)
 {
@@ -161,12 +169,12 @@ int PlayersContainer::amount(std::string& a_name)
     return m_players[a_name]->m_amount;
 }
 
-Card& PlayersContainer::first_card(std::string& a_name)
+cardPointer PlayersContainer::first_card(std::string& a_name)
 {
     return m_players[a_name]->m_hand[0];
 }
 
-Card& PlayersContainer::second_card(std::string& a_name)
+cardPointer PlayersContainer::second_card(std::string& a_name)
 {
       return m_players[a_name]->m_hand[1];
 }

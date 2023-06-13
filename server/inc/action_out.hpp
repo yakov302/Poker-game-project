@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "tcp_server.hpp"
 #include "protocol.hpp"
 #include "card.hpp"
@@ -8,6 +10,8 @@
 
 namespace poker
 {
+
+using cardPointer = std::shared_ptr<Card>;
 
 class ActionOut
 {
@@ -37,7 +41,7 @@ public:
     void give_card(std::string& a_name);
     void reveal_cards(std::string& a_name);
     void get_chips(std::string& a_name, int a_chip);
-    void get_card(std::string& a_name, Card& a_card);
+    void get_card(std::string& a_name, cardPointer a_card);
 
     void delete_player(std::string a_name);
     void get_player(std::string a_name, std::string a_gender, int a_amount);
@@ -45,7 +49,7 @@ public:
     
     void table_give_card();
     void table_clear_wallet();
-    void table_get_card(Card& a_card);
+    void table_get_card(cardPointer a_card);
     void table_get_chip(int a_amount);
     void table_give_chip(int a_amount);
 

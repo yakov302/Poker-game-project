@@ -39,6 +39,7 @@ void Game::run()
         if(m_players.num_of_players()< 2 || chack_winer())
         {
             m_players.wait().enter_wait();
+            m_action_out.clear_text();
             set_open_player();
         }
 
@@ -55,8 +56,7 @@ void Game::stop()
 void Game::set_open_player()
 {
     m_open_player = m_players.begin();
-    while(m_open_player->second.get()->m_viewer)
-        ++m_open_player;
+    skip_viewers();
 }
 
 bool Game::chack_winer()
@@ -84,20 +84,25 @@ bool Game::chack_winer()
     return true; 
 }
 
+void Game::next_it()
+{
+    ++m_open_player;
+    if(m_open_player == m_players.end())
+        m_open_player = m_players.begin();
+}
+
+void Game::skip_viewers()
+{
+    while(m_open_player->second.get()->m_viewer)
+        next_it();
+}
+
 void Game::next()
 {
     if(m_players.num_of_players() > 1)
     {
-        ++m_open_player;
-        if(m_open_player == m_players.end())
-            m_open_player = m_players.begin();
-
-        while(m_open_player->second.get()->m_viewer)
-        {
-            ++m_open_player;
-            if(m_open_player == m_players.end())
-                m_open_player = m_players.begin();
-        }
+        next_it();
+        skip_viewers();
     }
 }
 

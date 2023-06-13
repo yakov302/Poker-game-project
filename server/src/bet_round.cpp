@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern Deck deck;
+
 BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table)
 : m_stop(false)
 , m_min_bet(0)
@@ -78,7 +80,7 @@ void BetRound::bet()
 void BetRound::next()
 {
     ++m_turn;
-    if(m_turn == m_players.end())
+    if(m_turn == m_players.end())   
         m_turn = m_players.begin();
 
     if(m_turn == m_open_player)
@@ -150,7 +152,7 @@ void BetRound::chack_in()
 void BetRound::fold_in()
 {
     for(int i = 0; i < 2; ++i)
-        m_players.give_card(m_turn->second->m_name);
+        deck.push_card(m_players.give_card(m_turn->second->m_name));
     m_players.turn_on(m_turn->second->m_name, "fold");
     m_action_out.fold(m_turn->second->m_name);
     m_action_out.turn_off(m_turn->second->m_name, "my_turn");

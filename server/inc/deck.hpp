@@ -6,6 +6,9 @@
 
 #include "card.hpp"
 
+#define NUM_OF_CARDS_IN_DECK 52
+#define DECK_CONFIG_FILE_PATH "./resources/deck.txt"
+
 namespace poker
 {
 
@@ -17,14 +20,13 @@ public:
     Deck(int a_number_of_decks);
 
     void shuffle();
-    void re_fill_decks();
-    Card pop_card();
+    cardPointer pop_card();
+    void push_card(cardPointer card);
 
     bool empty()const;
 
 private:
     std::vector<cardPointer> m_cards;
-    std::vector<cardPointer> m_removed_cards;
 };
 
 

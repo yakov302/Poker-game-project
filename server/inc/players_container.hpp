@@ -3,6 +3,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "deck.hpp"
 #include "wait.hpp"
 #include "player.hpp"
 #include "action_out.hpp"
@@ -10,6 +11,7 @@
 namespace poker
 {
 
+using cardPointer = std::shared_ptr<Card>;
 using playerPointer = std::shared_ptr<Player>;
 using playerIterator = std::unordered_map<std::string, poker::playerPointer>::iterator;
 
@@ -24,8 +26,8 @@ public:
     void decrease (std::string& a_name, int a_amount);
     void increase (std::string& a_name, int a_amount);
 
-    void get_card(std::string& a_name, Card a_card);
-    void give_card(std::string& a_name);
+    void get_card(std::string& a_name, cardPointer a_card);
+    cardPointer give_card(std::string& a_name);
 
     void turn_on(std::string& a_name, std::string a_flag);
     void turn_off(std::string& a_name, std::string a_flag);
@@ -39,8 +41,8 @@ public:
     int bet (std::string& a_name);
     int result(std::string& a_name);
     int amount(std::string& a_name);
-    Card& first_card(std::string& a_name);
-    Card& second_card(std::string& a_name);
+    cardPointer first_card(std::string& a_name);
+    cardPointer second_card(std::string& a_name);
 
     int num_of_players()const;
     bool log_in_chack(std::string a_name, int a_client_socket)const;

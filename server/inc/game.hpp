@@ -20,6 +20,8 @@ public:
     
 private:
     void next();
+    void next_it();
+    void skip_viewers();
     bool chack_winer();
     void set_open_player();
 

@@ -21,12 +21,10 @@ void make_card(std::vector<cardPointer>& a_cards, std::string& a_line)
 
 void load_card(std::vector<cardPointer> &m_cards)
 {
-    std::ifstream loadFile("./resources/deck.txt");
     std::string line;
-    while (std::getline(loadFile, line))
-    {
+    std::ifstream load_file(DECK_CONFIG_FILE_PATH);
+    while (std::getline(load_file, line))
         make_card(m_cards, line);
-    }
 }
 
 
@@ -35,51 +33,40 @@ void load_card(std::vector<cardPointer> &m_cards)
 Deck::Deck(int a_number_of_decks)
 : m_cards()
 {
-    m_cards.reserve(52*a_number_of_decks);
+    m_cards.reserve(NUM_OF_CARDS_IN_DECK*a_number_of_decks);
     for(int i = 0; i < a_number_of_decks; ++i)
-    {
         impl::load_card(m_cards);
-    }
 }
 
 void Deck::shuffle()
 {
-    if(!m_cards.empty())
+    time_t t;
+    srand((unsigned) time(&t));
+    const int size = m_cards.size();
+    for(int i = 0; i < size; ++i)
     {
-        time_t t;
-        srand((unsigned) time(&t));
-        const int size = m_cards.size();
-        for(int i = 0; i < size; ++i)
-        {
-            int index1 = rand()%size;
-            int index2 = rand()%size;
-            std::swap(m_cards[index1], m_cards[index2]);
-        }
+        int index1 = rand()%size;
+        int index2 = rand()%size;
+        std::swap(m_cards[index1], m_cards[index2]);
     }
 }
 
-Card Deck::pop_card()
+cardPointer Deck::pop_card()
 {
-    if(!m_cards.empty())
-    {
-        cardPointer card = m_cards[m_cards.size()-1];
-        m_cards.pop_back();
-        m_removed_cards.emplace_back(card);
-        return *card;
-    }
-    return Card("", 0);
+    if(m_cards.empty())
+        return nullptr;
+
+    cardPointer card = m_cards[m_cards.size()-1];
+    m_cards.pop_back();
+    return card;
 }
 
-void Deck::re_fill_decks()
+void Deck::push_card(cardPointer card)
 {
-    if(!m_removed_cards.empty())
-    {
-        for (auto& e : m_removed_cards)
-        {
-            m_cards.emplace_back(e);
-        }
-        m_removed_cards.clear();
-    }
+    if(card == nullptr)
+        return;
+        
+    m_cards.push_back(card);
 }
 
 bool Deck::empty()const

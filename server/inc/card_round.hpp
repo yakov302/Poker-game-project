@@ -10,6 +10,8 @@
 namespace poker
 {
 
+using cardPointer = std::shared_ptr<Card>;
+
 class CardRound
 {
 public:
@@ -37,7 +39,6 @@ private:
     bool m_bet;
     bool m_stop;
 
-    Deck m_deck;
     Table& m_table;
     BetRound& m_bet_round;
     ActionOut& m_action_out;

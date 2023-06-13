@@ -8,7 +8,9 @@
 namespace poker
 {
 
-std::string chack_winner(PlayersContainer& a_players, std::vector<Card>& a_table_card);
+using cardPointer = std::shared_ptr<Card>;
+
+std::string chack_winner(PlayersContainer& a_players, std::vector<cardPointer>& a_table_card);
 
 
 }//namespace poker
