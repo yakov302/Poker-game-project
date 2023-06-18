@@ -4,6 +4,10 @@ namespace poker
 {
 
 Deck deck(1);
+extern std::string fold;
+extern std::string amount;
+extern std::string result;
+extern std::string viewer;
 
 CardRound::CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_action_out, BetRound& a_bet_round)
 : m_bet(false)
@@ -78,7 +82,7 @@ void CardRound::deal_cards()
         { 
             std::string name =  it->second.get()->m_name;
 
-            if(!m_players.is_flag_on(name, "viewer"))
+            if(!m_players.is_flag_on(name, viewer))
             {
                 usleep(500000);
                 cardPointer card = deck.pop_card();
@@ -121,8 +125,8 @@ bool CardRound::one_player_left(std::string& a_name)
     {
         std::string name =  it->second.get()->m_name;
 
-        if(!m_players.is_flag_on(name, "fold")
-        && !m_players.is_flag_on(name, "viewer")
+        if(!m_players.is_flag_on(name, fold)
+        && !m_players.is_flag_on(name, viewer)
         && m_players.is_it_has_a_cards(name))
         {
             a_name = name;
@@ -169,12 +173,12 @@ void CardRound::reveal_cards_and_print_result()
     {
         std::string name =  it->second.get()->m_name;
 
-        if(!m_players.is_flag_on(name, "fold")
-        && !m_players.is_flag_on(name, "viewer")
+        if(!m_players.is_flag_on(name, fold)
+        && !m_players.is_flag_on(name, viewer)
         && m_players.is_it_has_a_cards(name))
         {
             m_action_out.reveal_cards(name);
-            m_action_out.print_result(name, m_players.result(name));
+            m_action_out.print_result(name, m_players.get(name, result));
         }
 
         ++it;
@@ -189,7 +193,7 @@ void CardRound::pay_to_winner(std::string& a_winner)
         int chip = m_table.give_chip();
         m_action_out.table_give_chip(chip);
         m_action_out.get_chips(a_winner, chip);
-        m_players.increase(a_winner, chip);
+        m_players.take_chip(a_winner, chip);
    } 
    m_action_out.table_clear_wallet();
 }
@@ -213,7 +217,7 @@ void CardRound::clear_hands()
     {
         std::string name =  it->second.get()->m_name;
 
-        if(!m_players.is_flag_on(name, "fold")
+        if(!m_players.is_flag_on(name, fold)
         &&  m_players.is_it_has_a_cards(name))
         {
             for(int i = 0; i < 2; ++i)
@@ -237,15 +241,15 @@ void CardRound::reset_players_variables()
     {
         std::string name =  it->second.get()->m_name;
 
-        if(!m_players.is_flag_on(name, "viewer"))
+        if(!m_players.is_flag_on(name, viewer))
         {
             m_action_out.turn_off(name, "reveal_cards");
             m_action_out.clear_action(name);
-            m_players.turn_off(name, "fold");
-            m_players.set_result(name, 0);
+            m_players.turn_off(name, fold);
+            m_players.set(name, result, 0);
 
-            if(m_players.amount(name) == 0)
-                m_players.turn_on(name, "viewer");
+            if(m_players.get(name, amount) == 0)
+                m_players.turn_on(name, viewer);
         }
 
         ++it;

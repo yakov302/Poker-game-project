@@ -1,12 +1,14 @@
 #pragma once
 
+#include <stdio.h>
 #include <memory>
-#include <unordered_map>
 
 #include "deck.hpp"
 #include "wait.hpp"
 #include "player.hpp"
 #include "action_out.hpp"
+
+#define MAX_NUM_OF_PLAYERS 6
 
 namespace poker
 {
@@ -20,34 +22,25 @@ class PlayersContainer
 public:
     PlayersContainer(ActionOut& a_action_out);
 
-    void new_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket);
-    void delete_player(int a_client_socket);
-
-    void decrease (std::string& a_name, int a_amount);
-    void increase (std::string& a_name, int a_amount);
-
-    void get_card(std::string& a_name, cardPointer a_card);
-    cardPointer give_card(std::string& a_name);
-
-    void turn_on(std::string& a_name, std::string a_flag);
-    void turn_off(std::string& a_name, std::string a_flag);
-
-    bool is_it_has_a_cards(std::string& a_name);
-    bool is_flag_on(std::string& a_name, std::string a_flag) ;
-
-    void set_bet(std::string& a_name, int a_amount);
-    void set_result(std::string& a_name, int a_result);
-
-    int bet (std::string& a_name);
-    int result(std::string& a_name);
-    int amount(std::string& a_name);
-    cardPointer first_card(std::string& a_name);
-    cardPointer second_card(std::string& a_name);
-
-    int num_of_players()const;
+    void new_player(std::string a_name, std::string& a_gender, int a_amount, int a_client_socket);
     bool log_in_chack(std::string a_name, int a_client_socket)const;
+    void delete_player(int a_client_socket);
+    int num_of_players()const;
 
-    Wait& wait();
+    void take_chip (std::string& a_name, int a_chip);
+    int get (std::string& a_name, std::string& a_var);
+    void set (std::string& a_name, std::string& a_var, int a_value);
+
+    cardPointer give_card(std::string& a_name);
+    bool is_it_has_a_cards(std::string& a_name);
+    void get_card(std::string& a_name, cardPointer a_card);
+    std::pair<cardPointer,cardPointer> give_cards(std::string& a_name);
+
+    void turn_on(std::string& a_name, std::string& a_flag);
+    void turn_off(std::string& a_name, std::string& a_flag);
+    bool is_flag_on(std::string& a_name, std::string& a_flag) ;
+
+    Wait& wait(); //global ?
     playerIterator end();
     playerIterator begin();
 
@@ -55,7 +48,7 @@ private:
     void delete_player(std::string& a_name);
 
 private:
-    Wait m_wait;
+    Wait m_wait; //global ?
     ActionOut& m_action_out;
     std::unordered_map<std::string, playerPointer> m_players;
 };

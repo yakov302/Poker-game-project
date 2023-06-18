@@ -23,8 +23,8 @@ public:
     void fold_in();
 
 private:
-    void bet();
     void next();
+    void wait_for_bet();
     bool set_max_bet();
     void close_bet_round();
     bool one_player_left();

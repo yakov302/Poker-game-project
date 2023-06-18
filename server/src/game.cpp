@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern std::string viewer;
+
 namespace impl
 {
 
@@ -68,7 +70,7 @@ bool Game::chack_winer()
 
     while(it != end)
     {
-        if(!it->second.get()->m_viewer)
+        if(!it->second.get()->m_vars[viewer])
         {
             name = it->second.get()->m_name;
             ++count;
@@ -93,7 +95,7 @@ void Game::next_it()
 
 void Game::skip_viewers()
 {
-    while(m_open_player->second.get()->m_viewer)
+    while(m_open_player->second.get()->m_vars[viewer])
         next_it();
 }
 

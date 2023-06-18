@@ -79,8 +79,8 @@ bool Subscribs::is_gender_valid(std::string& a_gender, int a_client_socket)
 
 void Subscribs::load_subscribs_from_file()
 {
-    std::ifstream file("./resources/subscribs.txt");
     Subscriber subscriber;
+    std::ifstream file(SUBSCRIBERS_FILE_PATH);
 
     while(!file.eof())
     {
@@ -93,10 +93,10 @@ void Subscribs::load_subscribs_from_file()
 
 void Subscribs::save_subscriber_to_file(Subscriber& a_subscriber)
 {
-    std::ofstream file("./resources/subscribs.txt", std::ofstream::app);
-    file << a_subscriber.m_name << std::endl;
+    std::ofstream file(SUBSCRIBERS_FILE_PATH, std::ofstream::app);
+    file << a_subscriber.m_name     << std::endl;
     file << a_subscriber.m_password << std::endl;
-    file << a_subscriber.m_gender << std::endl;
+    file << a_subscriber.m_gender   << std::endl;
 }
 
 

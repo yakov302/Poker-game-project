@@ -3,16 +3,24 @@
 namespace poker
 {
 
+extern std::string fold;
+extern std::string result;
+extern std::string viewer;
+
 namespace impl
 {
+
+
+bool compare(cardPointer a, cardPointer b) {return a.get()->m_number < b.get()->m_number;};
 
 void fill_vector(PlayersContainer& a_players, std::string& a_name, std::vector<cardPointer>& a_table_card, std::vector<cardPointer>& a_card)
 {
     a_card.reserve(7);
     a_card = a_table_card;
-    a_card.emplace_back(a_players.first_card(a_name));
-    a_card.emplace_back(a_players.second_card(a_name));
-    std::sort(a_card.begin(), a_card.end());
+    std::pair<cardPointer, cardPointer> cards = a_players.give_cards(a_name);
+    a_card.emplace_back(cards.first);
+    a_card.emplace_back(cards.second);
+    std::sort(a_card.begin(), a_card.end(), compare);
 }
 
 bool royal_straight_flush(PlayersContainer& a_players, std::string& a_name, std::vector<cardPointer>& a_card)
@@ -35,7 +43,7 @@ bool royal_straight_flush(PlayersContainer& a_players, std::string& a_name, std:
 
         if(count == 5)
         {
-            a_players.set_result(a_name, ROYAL_STRAIGHT_FLUSH);
+            a_players.set(a_name, result, ROYAL_STRAIGHT_FLUSH);
             return true;
         }
     }
@@ -63,7 +71,7 @@ bool straight_flush(PlayersContainer& a_players, std::string& a_name, std::vecto
 
         if(count == 5)
         {
-            a_players.set_result(a_name, STRAIGHT_FLUSH);
+            a_players.set(a_name, result, STRAIGHT_FLUSH);
             return true;
         }
     }
@@ -90,7 +98,7 @@ bool four_of_a_kind(PlayersContainer& a_players, std::string& a_name, std::vecto
 
         if(count == 4)
         {
-            a_players.set_result(a_name, FOR_OF_A_KING);
+            a_players.set(a_name, result, FOR_OF_A_KING);
             return true;
         }
     }
@@ -130,7 +138,7 @@ bool full_house(PlayersContainer& a_players, std::string& a_name, std::vector<ca
     
     if(three && pair)
     {
-        a_players.set_result(a_name, FULL_HOUSE);
+        a_players.set(a_name, result, FULL_HOUSE);
         return true;
     }
 
@@ -157,7 +165,7 @@ bool flush(PlayersContainer& a_players, std::string& a_name, std::vector<cardPoi
 
         if(count == 5)
         {
-            a_players.set_result(a_name, FLUSH);
+            a_players.set(a_name, result, FLUSH);
             return true;
         }
     }
@@ -185,7 +193,7 @@ bool straight(PlayersContainer& a_players, std::string& a_name, std::vector<card
 
         if(count == 5)
         {
-            a_players.set_result(a_name, STRAIGHT);
+            a_players.set(a_name, result, STRAIGHT);
             return true;
         }
     }
@@ -212,7 +220,7 @@ bool three_of_a_kind(PlayersContainer& a_players, std::string& a_name, std::vect
 
         if(count == 3)
         {
-            a_players.set_result(a_name, THREE_OF_A_KING);
+            a_players.set(a_name, result, THREE_OF_A_KING);
             return true;
         }   
     }
@@ -240,13 +248,13 @@ bool pairs(PlayersContainer& a_players, std::string& a_name, std::vector<cardPoi
 
     if(num_of_pair == 1)
     {
-        a_players.set_result(a_name, ONE_PAIR);
+        a_players.set(a_name, result, ONE_PAIR);
         return true;
     }
 
     if(num_of_pair >= 2)
     {
-        a_players.set_result(a_name, TWO_PAIR);
+        a_players.set(a_name, result, TWO_PAIR);
         return true;
     }
 
@@ -279,13 +287,14 @@ void set_combination(PlayersContainer& a_players, std::string& a_name, std::vect
     if(pairs(a_players, a_name, a_card))
         return;
 
-    a_players.set_result(a_name, HIGH_CARD);
+    a_players.set(a_name, result, HIGH_CARD);
 }
 
 std::string compare_high_card(PlayersContainer& a_players)
 {
     int max = 1;
     std::string winner = "";
+    std::pair<cardPointer, cardPointer> cards;
 
     auto it = a_players.begin();
     auto end = a_players.end();
@@ -294,18 +303,19 @@ std::string compare_high_card(PlayersContainer& a_players)
     {
         std::string name = it->second.get()->m_name;
 
-        if(!a_players.is_flag_on(name, "fold")
-        && !a_players.is_flag_on(name, "viewer")
+        if(!a_players.is_flag_on(name, fold)
+        && !a_players.is_flag_on(name, viewer)
         && a_players.is_it_has_a_cards(name))
         {
-            if(a_players.first_card(name).get()->m_number > max)
+            cards = a_players.give_cards(name);
+            if(cards.first->m_number > max)
             {
-                max = a_players.first_card(name).get()->m_number;
+                max = cards.first->m_number;
                 winner = name;
             }
-            if(a_players.second_card(name).get()->m_number > max)
+            if(cards.second->m_number > max)
             {
-                max = a_players.second_card(name).get()->m_number;
+                max = cards.second->m_number;
                 winner = name;
             }
         }
@@ -326,21 +336,21 @@ bool the_same(PlayersContainer& a_players)
     {
         std::string name = it->second.get()->m_name;
 
-        if(!a_players.is_flag_on(name, "fold")
-        && !a_players.is_flag_on(name, "viewer")
+        if(!a_players.is_flag_on(name, fold)
+        && !a_players.is_flag_on(name, viewer)
         && a_players.is_it_has_a_cards(name))
         {
             if(first)
             {
-               prev = a_players.result(name);
+               prev = a_players.get(name, result);
                first = false;
             }
             else
             {
-                if(a_players.result(name) != prev)
+                if(a_players.get(name, result) != prev)
                     return false;
                 else
-                    prev = a_players.result(name); 
+                    prev = a_players.get(name, result); 
             }    
         }
         ++it;
@@ -364,13 +374,13 @@ std::string find_winner(PlayersContainer& a_players)
     {
         std::string name = it->second.get()->m_name;
 
-        if(!a_players.is_flag_on(name, "fold")
-        && !a_players.is_flag_on(name, "viewer")
+        if(!a_players.is_flag_on(name, fold)
+        && !a_players.is_flag_on(name, viewer)
         && a_players.is_it_has_a_cards(name))
         {
-            if(a_players.result(name) > max)
+            if(a_players.get(name, result) > max)
             {
-                max = a_players.result(name);
+                max = a_players.get(name, result);
                 winner = name;
             }
         }
@@ -392,8 +402,8 @@ std::string chack_winner(PlayersContainer& a_players, std::vector<cardPointer>& 
     {
         std::string name = it->second.get()->m_name;
 
-        if(!a_players.is_flag_on(name, "fold")
-        && !a_players.is_flag_on(name, "viewer")
+        if(!a_players.is_flag_on(name, fold)
+        && !a_players.is_flag_on(name, viewer)
         && a_players.is_it_has_a_cards(name))
         {
             std::vector<cardPointer> card;

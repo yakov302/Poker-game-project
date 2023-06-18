@@ -4,6 +4,11 @@ namespace poker
 {
 
 extern Deck deck;
+extern std::string bet;
+extern std::string fold;
+extern std::string amount;
+extern std::string viewer;
+extern std::string socket;
 
 BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table)
 : m_stop(false)
@@ -30,7 +35,7 @@ void BetRound::run(playerIterator a_open_player)
         if(set_max_bet())
         {close_bet_round(); break;}
 
-        bet();
+        wait_for_bet();
 
         if(one_player_left())
         {close_bet_round(); break;}
@@ -49,12 +54,12 @@ bool BetRound::set_max_bet()
     {
         std::string name = it->second.get()->m_name;
 
-        if(!m_players.is_flag_on(name, "fold")
-        && !m_players.is_flag_on(name, "viewer")
+        if(!m_players.is_flag_on(name, fold)
+        && !m_players.is_flag_on(name, viewer)
         && m_players.is_it_has_a_cards(name))
         {
-            if(m_players.amount(name) + m_players.bet(name) < min)
-                min = m_players.amount(name) + m_players.bet(name);
+            if(m_players.get(name, amount) + m_players.get(name, bet) < min)
+                min = m_players.get(name, amount) + m_players.get(name, bet);
         }
         ++it;
     }
@@ -66,10 +71,10 @@ bool BetRound::set_max_bet()
     return false;
 }
 
-void BetRound::bet()
+void BetRound::wait_for_bet()
 {
-    if(m_turn->second.get()->m_fold 
-    || m_turn->second.get()->m_viewer
+    if(m_turn->second.get()->m_vars[fold] 
+    || m_turn->second.get()->m_vars[viewer]
     || m_turn->second.get()->m_hand.size() == 0)
         return;
         
@@ -95,24 +100,24 @@ void BetRound::player_deleted(int a_client_socket)
         return;
     }
 
-    if(m_turn->second->m_socket == a_client_socket)
+    if(m_turn->second->m_vars[socket] == a_client_socket)
         m_wait.exit_wait();
 }
 
 void BetRound::start_bet()
 {
-    m_action_out.start_bet(m_turn->second->m_name, m_turn->second->m_bet);
+    m_action_out.start_bet(m_turn->second->m_name, m_turn->second->m_vars[bet]);
 }
 
 void BetRound::bet_in(int a_amount)
 {
-    if(m_turn->second->m_bet + a_amount > m_max_bet)
-        m_action_out.invalid_bet_max(m_max_bet , m_turn->second->m_socket);
+    if(m_turn->second->m_vars[bet] + a_amount > m_max_bet)
+        m_action_out.invalid_bet_max(m_max_bet , m_turn->second->m_vars[socket]);
 
     else
     {
-        m_turn->second->m_bet += a_amount;
-        m_turn->second->m_amount -= a_amount;
+        m_turn->second->m_vars[bet] += a_amount;
+        m_turn->second->m_vars[amount]-= a_amount;
         m_table.get_chip(a_amount);
         m_action_out.bet(m_turn->second->m_name, a_amount);
         m_action_out.table_get_chip(a_amount);
@@ -121,15 +126,15 @@ void BetRound::bet_in(int a_amount)
 
 void BetRound::finish_bet()
 {
-    if(m_turn->second->m_bet < m_min_bet)
-        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_socket);
+    if(m_turn->second->m_vars[bet] < m_min_bet)
+        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_vars[socket]);
  
     else
     {
-        if(m_turn->second->m_bet > m_min_bet)
+        if(m_turn->second->m_vars[bet] > m_min_bet)
             m_open_player = m_turn;
 
-        m_min_bet = m_turn->second->m_bet;
+        m_min_bet = m_turn->second->m_vars[bet];
         m_action_out.turn_off(m_turn->second.get()->m_name, "my_turn");
         m_action_out.turn_off(m_turn->second.get()->m_name, "bet");
         m_wait.exit_wait();
@@ -139,7 +144,7 @@ void BetRound::finish_bet()
 void BetRound::chack_in()
 {
     if(m_min_bet > 0)
-        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_socket);
+        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_vars[socket]);
     
     else
     {
@@ -153,7 +158,7 @@ void BetRound::fold_in()
 {
     for(int i = 0; i < 2; ++i)
         deck.push_card(m_players.give_card(m_turn->second->m_name));
-    m_players.turn_on(m_turn->second->m_name, "fold");
+    m_players.turn_on(m_turn->second->m_name, fold);
     m_action_out.fold(m_turn->second->m_name);
     m_action_out.turn_off(m_turn->second->m_name, "my_turn");
     usleep(1000000);
@@ -170,8 +175,8 @@ bool BetRound::one_player_left()
     {
         std::string name = it->second.get()->m_name;
 
-        if(!m_players.is_flag_on(name, "fold")
-        && !m_players.is_flag_on(name, "viewer")
+        if(!m_players.is_flag_on(name, fold)
+        && !m_players.is_flag_on(name, viewer)
         && m_players.is_it_has_a_cards(name))
             ++count;
 
@@ -200,8 +205,8 @@ void BetRound::zero_bets_and_clear_actions()
     {
         std::string name = it->second.get()->m_name;
 
-        m_players.set_bet(name, 0);
-        if(!m_players.is_flag_on(name, "fold"))
+        m_players.set(name, bet, 0);
+        if(!m_players.is_flag_on(name, fold))
             m_action_out.clear_action(name);
         ++it;
     }

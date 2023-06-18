@@ -6,6 +6,8 @@
 #include "sha256.hpp"
 #include "action_out.hpp"
 
+#define SUBSCRIBERS_FILE_PATH "./resources/subscribs.txt"
+
 namespace poker
 {
 
@@ -23,7 +25,7 @@ public:
 
     Subscriber& operator[](std::string a_name);
     void new_subscriber(Subscriber& a_subscriber, int a_client_socket);
-    bool log_in_chack(std::string& a_name, std::string&  a_password, int a_client_socket);
+    bool log_in_chack(std::string& a_name, std::string& a_password, int a_client_socket);
 
 private:
     bool is_valid(Subscriber& a_subscriber, int a_client_socket);

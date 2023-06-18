@@ -1,8 +1,8 @@
 #pragma once
 
 #include <memory>
-#include <fstream>
 #include <vector>
+#include <fstream>
 
 #include "card.hpp"
 
