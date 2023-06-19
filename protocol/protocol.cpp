@@ -87,7 +87,7 @@ static void decrypt(std::string a_key, char* a_buffer, int a_message_size)
 
 int pack(char* a_buffer, Args& a_arganmats, Message_type a_message)
 {
-    if(a_buffer == nullptr)
+    if(a_buffer == nullptr)[[unlikely]]
     {return BUFFER_NOT_INITIALIZE;}
 
     int bytes = sizeof(int);  // "total size" meta data place   
@@ -104,7 +104,7 @@ int pack(char* a_buffer, Args& a_arganmats, Message_type a_message)
 
 Message_type unpack(char* a_buffer, Args& a_arganmats)
 {
-    if(a_buffer == nullptr)
+    if(a_buffer == nullptr)[[unlikely]]
     {return BUFFER_NOT_INITIALIZE;}
 
     impl::decrypt("poker", a_buffer, message_size(a_buffer));

@@ -53,7 +53,7 @@ void Deck::shuffle()
 
 cardPointer Deck::pop_card()
 {
-    if(m_cards.empty())
+    if(m_cards.empty())[[unlikely]]
         return nullptr;
 
     cardPointer card = m_cards[m_cards.size()-1];
@@ -63,7 +63,7 @@ cardPointer Deck::pop_card()
 
 void Deck::push_card(cardPointer card)
 {
-    if(card == nullptr)
+    if(card == nullptr)[[unlikely]]
         return;
         
     m_cards.push_back(card);

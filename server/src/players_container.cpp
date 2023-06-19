@@ -22,7 +22,7 @@ PlayersContainer::PlayersContainer(ActionOut& a_action_out)
 
 void PlayersContainer::new_player(std::string a_name, std::string& a_gender, int a_amount, int a_client_socket)
 {
-    if(m_players.find(a_name) != m_players.end() || num_of_players() == MAX_NUM_OF_PLAYERS)
+    if(m_players.find(a_name) != m_players.end())[[unlikely]]
         return;
 
     m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, a_client_socket));
@@ -43,6 +43,13 @@ bool PlayersContainer::log_in_chack(std::string a_name,  int a_client_socket)con
         m_action_out.user_name_alredy_log(a_client_socket);
         return false;
     }
+
+    if(num_of_players() == MAX_NUM_OF_PLAYERS)[[unlikely]]
+    {
+        //implement message ?
+        return false;
+    }
+
     return true;
 }
 

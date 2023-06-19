@@ -15,7 +15,7 @@ int TcpServer::accept_new_client()
 
 	socklen_t sin_len = sizeof(&m_socket.client_sin());
 	int client_socket = accept(m_socket.listen_socket(), (struct sockaddr*)&m_socket.client_sin(), &sin_len);
-	if(client_socket < 0)
+	if(client_socket < 0)[[unlikely]]
 		return -1;
 
 	return client_socket;
@@ -50,13 +50,13 @@ bool TcpServer::send_to_client(int a_client_socket, char* a_buffer, int a_messag
 	while((sent_byte < a_message_size) && (errno != EPIPE))
 	{
     	int current_byte = send(a_client_socket, (a_buffer + sent_byte), (a_message_size - sent_byte), 0);
-		if(current_byte < 0)
+		if(current_byte < 0)[[unlikely]]
 			perror("Send fail!\n");
 
 		sent_byte += current_byte;
 	}
 
-	if(errno == EPIPE)
+	if(errno == EPIPE)[[unlikely]]
 		return false;
 
 	return true;

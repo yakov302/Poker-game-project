@@ -525,7 +525,7 @@ void Table::run_log_in()
 
 void Table::turn_on_flag(std::string a_flag)
 {
-    if(m_flags.find(a_flag) == m_flags.end())
+    if(m_flags.find(a_flag) == m_flags.end())[[unlikely]]
         return;
 
     m_flags[a_flag] = true;
@@ -533,7 +533,7 @@ void Table::turn_on_flag(std::string a_flag)
 
 void Table::turn_off_flag(std::string a_flag)
 {
-    if(m_flags.find(a_flag) == m_flags.end())
+    if(m_flags.find(a_flag) == m_flags.end())[[unlikely]]
         return;
 
     m_flags[a_flag] = false;

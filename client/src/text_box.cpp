@@ -21,7 +21,7 @@ void TextBox::get_char(sf::Event a_typing)
         return;
 
     int typing = a_typing.text.unicode;
-    if(typing > LEGAL_UNICODE)
+    if(typing > LEGAL_UNICODE)[[unlikely]]
         return;
 
     if(typing == m_lest_unicode)

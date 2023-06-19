@@ -40,7 +40,7 @@ void Rauter::run()
 	while(!m_stop)
 	{		
 		m_activity = select(MAX_SOCKET_NUM_TO_LISTEN, &m_socket.copy_of_source_fd(), 0, 0, 0);
-		if((m_activity < 0) && (errno != EINTR))
+		if((m_activity < 0) && (errno != EINTR))[[unlikely]]
 			fatal_error("Select fail!\n");
 
 		if(m_socket.is_in_active_fd(m_socket.listen_socket()))
@@ -76,7 +76,7 @@ void Rauter::accept_new_client()
 		m_socket.delete_less_active_client();
 
 	int client_socket = m_tcp.accept_new_client();
-	if(client_socket == -1)
+	if(client_socket == -1)[[unlikely]]
 		fatal_error("Accept fail!\n");
 
 	m_socket.insert_client(client_socket);

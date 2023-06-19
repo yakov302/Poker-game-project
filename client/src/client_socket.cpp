@@ -34,20 +34,20 @@ void sin_setting(struct sockaddr_in& a_sin)
 void set_socket(int& a_socket, ClientSocket& a_this)
 {
 	a_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if(a_socket < 0)
+	if(a_socket < 0)[[unlikely]]
 		fatal_error("Set socket fail!\n");
 }
 
 void set_sockopt(int& a_socket, ClientSocket& a_this)
 {
 	int optval = 1;	
-	if(setsockopt(a_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) < 0)
+	if(setsockopt(a_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) < 0)[[unlikely]]
 		fatal_error("Setsockopt fail!\n");
 }
 
 void connect_to_server(struct sockaddr_in& a_sin, int& a_socket, ClientSocket& a_this)
 {
-	if(connect(a_socket, (struct sockaddr*)&a_sin, sizeof(*&a_sin)) < 0)
+	if(connect(a_socket, (struct sockaddr*)&a_sin, sizeof(*&a_sin)) < 0)[[unlikely]]
 		fatal_error("Connect to server fail!\n");
 }
 

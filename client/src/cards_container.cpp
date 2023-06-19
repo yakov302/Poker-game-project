@@ -48,7 +48,7 @@ CardsContainer::CardsContainer()
 
 cardPointer CardsContainer::give_card(std::string& a_suit, int a_number)
 {
-    if(m_cards[a_suit].find(a_number) == m_cards[a_suit].end())
+    if(m_cards[a_suit].find(a_number) == m_cards[a_suit].end()) [[unlikely]]
         return m_null;
 
    return m_cards[a_suit][a_number];

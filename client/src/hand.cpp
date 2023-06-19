@@ -51,8 +51,9 @@ void Hand::push(std::string& a_suit, int a_number)
 void Hand::pop()
 {
     Lock lock(m_mutex);
-    if(!m_cards.empty()) 
-        m_cards.pop_back();
+    if(m_cards.empty())[[unlikely]]
+        return; 
+    m_cards.pop_back();
 }
 
 void Hand::draw_front(sf::RenderWindow& a_window)const

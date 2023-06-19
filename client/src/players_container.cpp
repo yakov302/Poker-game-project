@@ -26,7 +26,7 @@ PlayersContainer::PlayersContainer()
 
 void PlayersContainer::get_player(std::string& a_name, std::string& a_gender, int a_amount)
 {
-    if(m_players.find(a_name) != m_players.end())
+    if(m_players.find(a_name) != m_players.end())[[unlikely]]
         return;
 
     int i = 0;
@@ -48,7 +48,7 @@ void PlayersContainer::find_empty_place(int& a_i, std::string& a_name)
 
 void PlayersContainer::get_player(std::string& a_name, Self& a_player)
 {
-    if(m_players.find(a_name) != m_players.end())
+    if(m_players.find(a_name) != m_players.end())[[unlikely]]
         return;
         
     m_players[a_name] = playerPointer(&a_player);
@@ -57,7 +57,7 @@ void PlayersContainer::get_player(std::string& a_name, Self& a_player)
 
 void PlayersContainer::delete_player(std::string& a_name)
 {
-    if(m_players.find(a_name) == m_players.end())
+    if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
 
     m_players.erase(a_name);
@@ -79,7 +79,7 @@ void PlayersContainer::set_as_empty_place(std::string& a_name, int num_of_player
 
 void PlayersContainer::get_chip(std::string& a_name, int a_chip)
 {
-    if(m_players.find(a_name) == m_players.end())
+    if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
 
     m_players[a_name].get()->get_chip(a_chip);
@@ -87,7 +87,7 @@ void PlayersContainer::get_chip(std::string& a_name, int a_chip)
 
 void PlayersContainer::bet(std::string& a_name, int a_amount)
 {
-    if(m_players.find(a_name) == m_players.end())
+    if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
 
     m_players[a_name].get()->bet(a_amount);
@@ -95,7 +95,7 @@ void PlayersContainer::bet(std::string& a_name, int a_amount)
 
 void PlayersContainer::get_card(std::string& a_name, std::string& a_suit, int a_number)
 {
-    if(m_players.find(a_name) == m_players.end())
+    if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
 
     m_players[a_name].get()->get_card(a_suit, a_number);
@@ -103,7 +103,7 @@ void PlayersContainer::get_card(std::string& a_name, std::string& a_suit, int a_
 
 void PlayersContainer::give_card(std::string& a_name)
 {
-    if(m_players.find(a_name) == m_players.end())
+    if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
 
     m_players[a_name].get()->give_card();
@@ -111,7 +111,7 @@ void PlayersContainer::give_card(std::string& a_name)
 
 void PlayersContainer::set_action(std::string& a_name, std::string a_action)
 {
-    if(m_players.find(a_name) == m_players.end())
+    if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
 
     m_players[a_name].get()->set_action(a_action);
@@ -119,7 +119,7 @@ void PlayersContainer::set_action(std::string& a_name, std::string a_action)
 
 void PlayersContainer::update_current_bet(std::string& a_name, int a_amount)
 {
-    if(m_players.find(a_name) == m_players.end())
+    if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
     
     m_players[a_name].get()->update_current_bet(a_amount);
@@ -127,7 +127,7 @@ void PlayersContainer::update_current_bet(std::string& a_name, int a_amount)
 
 void PlayersContainer::turn_on_flag(std::string& a_name, std::string a_flag)
 {
-    if(m_players.find(a_name) == m_players.end())
+    if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
 
     m_players[a_name].get()->turn_on_flag(a_flag);
@@ -135,7 +135,7 @@ void PlayersContainer::turn_on_flag(std::string& a_name, std::string a_flag)
 
 void PlayersContainer::turn_off_flag(std::string& a_name, std::string a_flag)
 {
-    if(m_players.find(a_name) == m_players.end())
+    if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
 
     m_players[a_name].get()->turn_off_flag(a_flag);

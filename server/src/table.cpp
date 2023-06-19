@@ -23,18 +23,17 @@ void Table::get_chip(int a_chip)
 
 int Table::give_chip()
 {
-    if(!m_chips.empty())
-    {
-        int chip = m_chips[m_chips.size()-1];
-        m_chips.pop_back();
-        return chip;
-    }
-    return 0;
+    if(m_chips.empty())[[unlikely]]
+        return 0;
+
+    int chip = m_chips[m_chips.size()-1];
+    m_chips.pop_back();
+    return chip;
 }
 
 cardPointer Table::give_card()
 {
-    if(m_cards.empty())
+    if(m_cards.empty())[[unlikely]]
         return nullptr;
 
     cardPointer card = m_cards[m_cards.size()-1];

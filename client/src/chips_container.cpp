@@ -51,7 +51,7 @@ ChipsContainer::ChipsContainer()
 
 chipPointer ChipsContainer::give_chip(int a_number)
 {
-    if(m_availables_stack[a_number].empty())
+    if(m_availables_stack[a_number].empty()) [[unlikely]]
     {
         impl::make_chips(m_chips, a_number, m_availables_stack, 1);
         std::cout << "ERROR: ChipsContainer generates a chip at runtime. check ChipsContainer settings!";

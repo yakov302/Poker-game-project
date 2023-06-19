@@ -28,7 +28,7 @@ void sin_setting(struct sockaddr_in& a_sin)
 void open_listen_socket(int& a_listen_socket, fd_set& a_set, ServerSocket& a_server_socket)
 {
 	a_listen_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if(a_listen_socket < 0)
+	if(a_listen_socket < 0)[[unlikely]]
 		a_server_socket.fatal_error("Open listen socket fail!\n");
 
 	FD_ZERO(&a_set);
@@ -37,20 +37,20 @@ void open_listen_socket(int& a_listen_socket, fd_set& a_set, ServerSocket& a_ser
 
 void set_listen_socket(int& a_listen_socket, ServerSocket& a_server_socket)
 {
-	if(listen(a_listen_socket, 1000) < 0)
+	if(listen(a_listen_socket, 1000) < 0)[[unlikely]]
 		a_server_socket.fatal_error("Set listen socket fail!\n");
 }
 
 void set_setsockopt(int& a_listen_socket,ServerSocket& a_server_socket)
 {
     int optval = 1;		
-	if(setsockopt(a_listen_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) < 0)
+	if(setsockopt(a_listen_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) < 0)[[unlikely]]
 		a_server_socket.fatal_error("Set setsockopt fail!\n");
 }
 
 void set_bind(int& a_listen_socket, struct sockaddr_in& a_sin, ServerSocket& a_server_socket)
 {
-	if(bind(a_listen_socket, (struct sockaddr*) &a_sin, sizeof(a_sin)) < 0)
+	if(bind(a_listen_socket, (struct sockaddr*) &a_sin, sizeof(a_sin)) < 0)[[unlikely]]
 		a_server_socket.fatal_error("Bind fail!\n");
 }
 

@@ -114,7 +114,7 @@ void Self::draw_hand_front(sf::RenderWindow& a_window)const
 
 bool Self::is_flag_on(std::string a_flag)
 {
-    if(m_flags.find(a_flag) == m_flags.end())
+    if(m_flags.find(a_flag) == m_flags.end())[[unlikely]]
         return false;
 
     return m_flags[a_flag];

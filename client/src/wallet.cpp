@@ -57,13 +57,13 @@ void Wallet::push(std::vector<int> a_amounts)
 void Wallet::pop(int a_amount)
 {
     Lock lock(m_mutex);
+    if(m_wallet[a_amount].empty())[[unlikely]]
+        return;
+
     sound.play_chip();
-    if(!m_wallet[a_amount].empty())
-    {
-        chip_container.release_chip(a_amount, m_wallet[a_amount].back().get()->index_id());
-        m_wallet[a_amount].pop_back();
-        m_total_amount -= a_amount;
-    }
+    chip_container.release_chip(a_amount, m_wallet[a_amount].back().get()->index_id());
+    m_wallet[a_amount].pop_back();
+    m_total_amount -= a_amount;
     set_positions();
 }
 
@@ -138,7 +138,7 @@ size_t Wallet::size() const
 
 void Wallet::print_amount(sf::RenderWindow& a_window) 
 {
-    if(m_total_amount > 0)
+    if(m_total_amount > 0)[[likely]]
     {
         m_amount.set_text(std::to_string(m_total_amount));
         m_amount.draw(a_window);
@@ -214,69 +214,69 @@ void Wallet::auto_exchange(int a_amount)
 
 void Wallet::exchange(int a_amount)
 {
-    if(!m_wallet[a_amount].empty())
-    {
-        switch (a_amount)
-        {    
-        case 5:
-            for(int i = 0; i < 5; ++i)
-                push(1);    
-            pop(5);
-            break;
-        
-        case 10:
-            for(int i = 0; i < 2; ++i)
-                push(5);   
-            pop(10);
-            break;
+    if(m_wallet[a_amount].empty())[[unlikely]]
+        return;
 
-        case 25:
-            for(int i = 0; i < 2; ++i)
-                push(10);
-            push(5); 
-            pop(25);
-            break;
+    switch (a_amount)
+    {    
+    case 5:
+        for(int i = 0; i < 5; ++i)
+            push(1);    
+        pop(5);
+        break;
+    
+    case 10:
+        for(int i = 0; i < 2; ++i)
+            push(5);   
+        pop(10);
+        break;
 
-        case 50:
-            for(int i = 0; i < 2; ++i)
-                push(25);   
-            pop(50);
-            break;
+    case 25:
+        for(int i = 0; i < 2; ++i)
+            push(10);
+        push(5); 
+        pop(25);
+        break;
 
-        case 100:
-            for(int i = 0; i < 2; ++i)
-                push(50);   
-            pop(100);
-            break;
+    case 50:
+        for(int i = 0; i < 2; ++i)
+            push(25);   
+        pop(50);
+        break;
 
-        case 500:
-            for(int i = 0; i < 5; ++i)
-                push(100);   
-            pop(500);
-            break;
+    case 100:
+        for(int i = 0; i < 2; ++i)
+            push(50);   
+        pop(100);
+        break;
 
-        case 1000:
-            for(int i = 0; i < 2; ++i)
-                push(500);   
-            pop(1000);
-            break;
+    case 500:
+        for(int i = 0; i < 5; ++i)
+            push(100);   
+        pop(500);
+        break;
 
-        case 5000:
-            for(int i = 0; i < 5; ++i)
-                push(1000);   
-            pop(5000);
-            break;
+    case 1000:
+        for(int i = 0; i < 2; ++i)
+            push(500);   
+        pop(1000);
+        break;
 
-        case 10000:
-            for(int i = 0; i < 2; ++i)
-                push(5000);   
-            pop(10000);
-            break;
-        
-        default:
-            break;
-        } 
-    }
+    case 5000:
+        for(int i = 0; i < 5; ++i)
+            push(1000);   
+        pop(5000);
+        break;
+
+    case 10000:
+        for(int i = 0; i < 2; ++i)
+            push(5000);   
+        pop(10000);
+        break;
+    
+    default:
+        break;
+    } 
 }
 
 

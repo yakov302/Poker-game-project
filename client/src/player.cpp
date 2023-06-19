@@ -88,7 +88,7 @@ void Player::set_amount(std::string a_amount)
 
 void Player::turn_on_flag(std::string a_flag)
 {
-    if(m_flags.find(a_flag) == m_flags.end())
+    if(m_flags.find(a_flag) == m_flags.end())[[unlikely]]
         return;
     
     m_flags[a_flag] = true;
@@ -96,7 +96,7 @@ void Player::turn_on_flag(std::string a_flag)
 
 void Player::turn_off_flag(std::string a_flag)
 {
-    if(m_flags.find(a_flag) == m_flags.end())
+    if(m_flags.find(a_flag) == m_flags.end())[[unlikely]]
         return;
     
     m_flags[a_flag] = false;
