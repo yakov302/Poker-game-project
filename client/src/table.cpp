@@ -4,8 +4,15 @@ namespace poker
 {
 
 extern Sound sound;
-std::string empty = "";
+extern std::string logged;
+extern std::string my_turn;
+extern std::string bet_flag;
+extern std::string exchange;
+
 std::string request_sent = "Request sent";
+std::string register_flag = "register";
+std::string log_in = "log_in";
+std::string empty = "";
 
 namespace impl
 {
@@ -153,7 +160,7 @@ void Table::draw_all()
     m_buttons["go"].get()->draw(m_window) ;
     m_buttons["exchange"].get()->draw(m_window);
 
-    if(m_self.is_flag_on("my_turn"))
+    if(m_self.is_flag_on(my_turn))
         draw_your_turn();
 }
 
@@ -177,7 +184,7 @@ void Table::check_mouse_looged()
         if(check_exchange_button())
             return;
 
-        if(m_self.is_flag_on("my_turn"))
+        if(m_self.is_flag_on(my_turn))
         {
             if(check_your_turn())
                 return;
@@ -209,17 +216,17 @@ bool Table::check_go_button()
         sound.play_button();
         usleep(100000);
 
-        if(m_self.is_flag_on("exchange"))
+        if(m_self.is_flag_on(exchange))
         {
-            m_self.turn_off_flag("exchange");
-            m_self.set_action("");
-            if(m_self.is_flag_on("bet"))
+            m_self.turn_off_flag(exchange);
+            m_self.set_action(empty);
+            if(m_self.is_flag_on(bet_flag))
                 m_action_out.start_bet(m_self.name());
 
             return true;
         }
 
-        if(m_self.is_flag_on("bet"))
+        if(m_self.is_flag_on(bet_flag))
         {
             set_text(empty, 0, 0);
             m_action_out.finish_bet(m_self.name());
@@ -235,7 +242,7 @@ bool Table::check_bet_button()
     sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
     sf::Vector2f position = m_window.mapPixelToCoords(pixelPos);
 
-    if (m_buttons["bet"].get()->is_in_range(position.x, position.y) && !m_self.is_flag_on("exchange"))
+    if (m_buttons["bet"].get()->is_in_range(position.x, position.y) && !m_self.is_flag_on(exchange))
     {
         sound.play_button();
         m_action_out.start_bet(m_self.name());
@@ -243,7 +250,7 @@ bool Table::check_bet_button()
         return true;
     }
 
-    if(m_self.is_in_wallet_range(position.x, position.y) && m_self.is_flag_on("bet"))
+    if(m_self.is_in_wallet_range(position.x, position.y) && m_self.is_flag_on(bet_flag))
     {
         int chip = m_self.bet(position.x, position.y);
         m_action_out.bet_action(m_self.name(), chip);
@@ -294,13 +301,13 @@ bool Table::check_exchange_button()
     if(m_buttons["exchange"].get()->is_in_range(position.x, position.y))
     {
         sound.play_button();
-        m_self.turn_on_flag("exchange");
-        m_self.set_action("exchange");
+        m_self.turn_on_flag(exchange);
+        m_self.set_action(exchange);
         usleep(100000);
         return true;
     }
 
-    if(m_self.is_flag_on("exchange") && m_self.is_in_wallet_range(position.x, position.y))
+    if(m_self.is_flag_on(exchange) && m_self.is_in_wallet_range(position.x, position.y))
     {
         m_self.exchange(position.x, position.y);
         usleep(100000);
@@ -513,7 +520,7 @@ void Table::run()
 
 void Table::run_log_in()
 {
-    while (m_window.isOpen() && !m_self.is_flag_on("logged") && is_runing())
+    while (m_window.isOpen() && !m_self.is_flag_on(logged) && is_runing())
     {
         m_window.clear();
         draw_login_screen();
@@ -523,7 +530,7 @@ void Table::run_log_in()
     }
 }
 
-void Table::turn_on_flag(std::string a_flag)
+void Table::turn_on_flag(std::string& a_flag)
 {
     if(m_flags.find(a_flag) == m_flags.end())[[unlikely]]
         return;
@@ -531,7 +538,7 @@ void Table::turn_on_flag(std::string a_flag)
     m_flags[a_flag] = true;
 }
 
-void Table::turn_off_flag(std::string a_flag)
+void Table::turn_off_flag(std::string& a_flag)
 {
     if(m_flags.find(a_flag) == m_flags.end())[[unlikely]]
         return;

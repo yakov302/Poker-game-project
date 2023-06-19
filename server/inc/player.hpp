@@ -12,13 +12,13 @@
 
 namespace poker
 {
-    
+
 using cardPointer = std::shared_ptr<Card>;
 
 class Player
 {
 public:
-    Player(std::string a_name, std::string a_gender, int a_amount, int a_socket);
+    Player(std::string& a_name, std::string& a_gender, int a_amount, int a_socket);
 
     std::string m_name;
     std::string m_gender;

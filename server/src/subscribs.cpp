@@ -3,7 +3,6 @@
 namespace poker
 {
 
-
 Subscribs::Subscribs(ActionOut& a_action_out)
 : m_action_out(a_action_out)
 , m_subscribs()
@@ -11,7 +10,7 @@ Subscribs::Subscribs(ActionOut& a_action_out)
     load_subscribs_from_file();
 }
 
-Subscriber& Subscribs::operator[](std::string a_name)
+Subscriber& Subscribs::operator[](std::string& a_name)
 {
     return m_subscribs[a_name];
 }

@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern std::string empty;
+
 namespace impl
 {
 
@@ -40,7 +42,7 @@ void reserve_maps(std::unordered_map<std::string, CardsMap>& a_cards)
 
 CardsContainer::CardsContainer()
 : m_cards()
-, m_null(new Card("none", 0, BACK_CARD_IMAGE_PATH))
+, m_null(new Card(empty, 0, BACK_CARD_IMAGE_PATH))
 {
     impl::reserve_maps(m_cards);
     impl::load_cards(m_cards);

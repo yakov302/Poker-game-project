@@ -19,7 +19,7 @@ public:
     void set_select(bool a_choice);
     void clear();
 
-    std::string give_string() const;
+    const std::string& give_string();
     bool is_select()const;
 
 private:

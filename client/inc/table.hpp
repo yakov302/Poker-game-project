@@ -57,8 +57,8 @@ public:
     void stop();
     bool is_runing();
 
-    void turn_on_flag(std::string a_flag);
-    void turn_off_flag(std::string a_flag);
+    void turn_on_flag(std::string& a_flag);
+    void turn_off_flag(std::string& a_flag);
     void set_text(std::string& a_text, int x_pos, int y_pos);
 
 private:

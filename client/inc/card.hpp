@@ -8,7 +8,7 @@ namespace poker
 class Card : public Shape
 {
 public:
-    Card(std::string a_suit, int a_number, std::string a_image_path, float a_scale = 0.7)
+    Card(std::string& a_suit, int a_number, std::string a_image_path, float a_scale = 0.7)
     : m_suit(a_suit)
     , m_number(a_number)
     {

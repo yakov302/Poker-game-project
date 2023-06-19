@@ -40,7 +40,7 @@ void TextBox::get_char(sf::Event a_typing)
         delete_char();    
 }
 
-std::string TextBox::give_string()const
+const std::string& TextBox::give_string()
 {
     return m_string;
 }

@@ -29,13 +29,13 @@ public:
     void draw_player(sf::RenderWindow& a_window) override;
 
     int amount()const;
-    std::string name()const;
+    const std::string& name();
     bool is_in_back_range(int a_x, int a_y)const;
     bool is_in_wallet_range(int a_x, int a_y)const;
     void draw_hand_front(sf::RenderWindow& a_window)const;
 
-    bool is_flag_on(std::string a_flag);
-    void set_name_and_gender(std::string a_name, std::string a_gender);
+    bool is_flag_on(std::string& a_flag);
+    void set_name_and_gender(std::string& a_name, std::string& a_gender);
 
 private:
     Wallet m_wallet;

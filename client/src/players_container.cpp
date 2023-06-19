@@ -125,7 +125,7 @@ void PlayersContainer::update_current_bet(std::string& a_name, int a_amount)
     m_players[a_name].get()->update_current_bet(a_amount);
 }
 
-void PlayersContainer::turn_on_flag(std::string& a_name, std::string a_flag)
+void PlayersContainer::turn_on_flag(std::string& a_name, std::string& a_flag)
 {
     if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
@@ -133,7 +133,7 @@ void PlayersContainer::turn_on_flag(std::string& a_name, std::string a_flag)
     m_players[a_name].get()->turn_on_flag(a_flag);
 }
 
-void PlayersContainer::turn_off_flag(std::string& a_name, std::string a_flag)
+void PlayersContainer::turn_off_flag(std::string& a_name, std::string& a_flag)
 {
     if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;

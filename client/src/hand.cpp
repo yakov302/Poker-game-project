@@ -3,6 +3,7 @@
 namespace poker
 {
 
+extern std::string empty;
 CardsContainer cards_container;
 
 namespace impl
@@ -13,7 +14,7 @@ void init_back(std::vector<cardPointer>& a_back, int& a_num_of_cards_back, int& 
     int x = a_x - a_gap_between_cards;
     for(int i = 0; i < a_num_of_cards_back; ++i)
     {
-        a_back.emplace_back(cardPointer(new Card("none", 0, BACK_CARD_IMAGE_PATH)));
+        a_back.emplace_back(cardPointer(new Card(empty, 0, BACK_CARD_IMAGE_PATH)));
         a_back[i].get()->set_scale(a_scale, a_scale);
         a_back[i].get()->set_position(x += a_gap_between_cards + BACK_CARD_GAP, a_y + BACK_CARD_GAP);
     }

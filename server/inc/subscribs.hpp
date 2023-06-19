@@ -23,7 +23,7 @@ class Subscribs
 public:
     Subscribs(ActionOut& a_action_out);
 
-    Subscriber& operator[](std::string a_name);
+    Subscriber& operator[](std::string& a_name);
     void new_subscriber(Subscriber& a_subscriber, int a_client_socket);
     bool log_in_chack(std::string& a_name, std::string& a_password, int a_client_socket);
 

@@ -8,6 +8,7 @@ extern std::string fold;
 extern std::string amount;
 extern std::string result;
 extern std::string viewer;
+std::string reveal_cards = "reveal_cards";
 
 CardRound::CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_action_out, BetRound& a_bet_round)
 : m_bet(false)
@@ -243,7 +244,7 @@ void CardRound::reset_players_variables()
 
         if(!m_players.is_flag_on(name, viewer))
         {
-            m_action_out.turn_off(name, "reveal_cards");
+            m_action_out.turn_off(name, reveal_cards);
             m_action_out.clear_action(name);
             m_players.turn_off(name, fold);
             m_players.set(name, result, 0);

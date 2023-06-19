@@ -23,7 +23,7 @@ using textPointer = std::shared_ptr<Text>;
 class Player : public Shape
 {
 public:
-    Player(std::string a_name, std::string a_gender, int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_frontg, int a_gap_back);
+    Player(std::string& a_name, std::string& a_gender, int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_frontg, int a_gap_back);
     virtual ~Player();
     
     virtual void bet(int a_amount);
@@ -34,8 +34,8 @@ public:
     void get_card(std::string& a_suit, int a_number);
 
     void set_action(std::string a_action);
-    virtual void turn_on_flag(std::string a_flag);
-    virtual void turn_off_flag(std::string a_flag);
+    virtual void turn_on_flag(std::string& a_flag);
+    virtual void turn_off_flag(std::string& a_flag);
     virtual void draw_player(sf::RenderWindow& a_window);
 
 protected:

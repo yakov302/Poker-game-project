@@ -8,7 +8,7 @@ extern std::string bet;
 extern std::string fold;
 extern std::string amount;
 extern std::string viewer;
-extern std::string socket;
+extern std::string my_turn;
 
 BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table)
 : m_stop(false)
@@ -78,7 +78,7 @@ void BetRound::wait_for_bet()
     || m_turn->second.get()->m_hand.size() == 0)
         return;
         
-    m_action_out.turn_on(m_turn->second.get()->m_name, "my_turn");
+    m_action_out.turn_on(m_turn->second.get()->m_name, my_turn);
     m_wait.enter_wait();
 }
 
@@ -100,7 +100,7 @@ void BetRound::player_deleted(int a_client_socket)
         return;
     }
 
-    if(m_turn->second->m_vars[socket] == a_client_socket)
+    if(m_turn->second->m_vars["socket"] == a_client_socket)
         m_wait.exit_wait();
 }
 
@@ -112,7 +112,7 @@ void BetRound::start_bet()
 void BetRound::bet_in(int a_amount)
 {
     if(m_turn->second->m_vars[bet] + a_amount > m_max_bet)
-        m_action_out.invalid_bet_max(m_max_bet , m_turn->second->m_vars[socket]);
+        m_action_out.invalid_bet_max(m_max_bet , m_turn->second->m_vars["socket"]);
 
     else
     {
@@ -127,7 +127,7 @@ void BetRound::bet_in(int a_amount)
 void BetRound::finish_bet()
 {
     if(m_turn->second->m_vars[bet] < m_min_bet)
-        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_vars[socket]);
+        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_vars["socket"]);
  
     else
     {
@@ -135,8 +135,8 @@ void BetRound::finish_bet()
             m_open_player = m_turn;
 
         m_min_bet = m_turn->second->m_vars[bet];
-        m_action_out.turn_off(m_turn->second.get()->m_name, "my_turn");
-        m_action_out.turn_off(m_turn->second.get()->m_name, "bet");
+        m_action_out.turn_off(m_turn->second.get()->m_name, my_turn);
+        m_action_out.turn_off(m_turn->second.get()->m_name, bet);
         m_wait.exit_wait();
     }
 }
@@ -144,11 +144,11 @@ void BetRound::finish_bet()
 void BetRound::chack_in()
 {
     if(m_min_bet > 0)
-        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_vars[socket]);
+        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_vars["socket"]);
     
     else
     {
-        m_action_out.turn_off(m_turn->second->m_name, "my_turn");
+        m_action_out.turn_off(m_turn->second->m_name, my_turn);
         m_action_out.check(m_turn->second->m_name);
         m_wait.exit_wait();
     }
@@ -160,7 +160,7 @@ void BetRound::fold_in()
         deck.push_card(m_players.give_card(m_turn->second->m_name));
     m_players.turn_on(m_turn->second->m_name, fold);
     m_action_out.fold(m_turn->second->m_name);
-    m_action_out.turn_off(m_turn->second->m_name, "my_turn");
+    m_action_out.turn_off(m_turn->second->m_name, my_turn);
     usleep(1000000);
     m_wait.exit_wait();
 }

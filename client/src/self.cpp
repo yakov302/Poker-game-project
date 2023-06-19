@@ -3,6 +3,9 @@
 namespace poker
 {
 
+std::string logged = "logged";
+std::string exchange = "exchange";
+
 namespace impl
 {
     
@@ -24,8 +27,6 @@ void set_self_flags(std::unordered_map<std::string, bool>& a_flags)
 
 
 }//impl namespace
-
-
 
 Self::Self(std::string a_name, std::string a_gender,  int a_amount)
 : Player(a_name, a_gender, a_amount, SELF_X_POS, SELF_Y_POS, HAND_X_POS, HAND_Y_POS, HAND_SCALE, GAP_BETWEEN_FRONT_CARDS, GAP_BETWEEN_BACK_CARDS)
@@ -89,7 +90,7 @@ int Self::amount()const
     return m_wallet.amount();
 }
 
-std::string Self::name() const
+const std::string& Self::name()
 {
     return m_name;
 }
@@ -112,7 +113,7 @@ void Self::draw_hand_front(sf::RenderWindow& a_window)const
     m_hand.draw_front(a_window);
 }
 
-bool Self::is_flag_on(std::string a_flag)
+bool Self::is_flag_on(std::string& a_flag)
 {
     if(m_flags.find(a_flag) == m_flags.end())[[unlikely]]
         return false;
@@ -120,7 +121,7 @@ bool Self::is_flag_on(std::string a_flag)
     return m_flags[a_flag];
 }
 
-void Self::set_name_and_gender(std::string a_name, std::string a_gender)
+void Self::set_name_and_gender(std::string& a_name, std::string& a_gender)
 {
     if(a_gender == "female")
         set_shape(a_gender);

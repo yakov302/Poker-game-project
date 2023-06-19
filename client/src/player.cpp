@@ -3,6 +3,10 @@
 namespace poker
 {
 
+std::string bet_flag =  "bet";
+std::string my_turn = "my_turn";
+std::string reveal_cards_flag = "reveal_cards";
+
 namespace impl
 {
 
@@ -26,7 +30,7 @@ void set_texts(std::unordered_map<std::string, textPointer>& a_texts, std::strin
 
 }//impl namespace
 
-Player::Player(std::string a_name, std::string a_gender, int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_front, int a_gap_back)
+Player::Player(std::string& a_name, std::string& a_gender, int a_amount, int a_x_self, int a_y_self, int a_x_card, int a_y_card, float a_scale_card, int a_gap_front, int a_gap_back)
 : m_x(a_x_self)
 , m_y(a_y_self)
 , m_current_bet(0)
@@ -86,7 +90,7 @@ void Player::set_amount(std::string a_amount)
     m_texts["amount"].get()->set_position(m_x + 40 + ((MAX_AMOUNT_DIGIT - a_amount.size())/2)*11, m_y + 140);
 }
 
-void Player::turn_on_flag(std::string a_flag)
+void Player::turn_on_flag(std::string& a_flag)
 {
     if(m_flags.find(a_flag) == m_flags.end())[[unlikely]]
         return;
@@ -94,7 +98,7 @@ void Player::turn_on_flag(std::string a_flag)
     m_flags[a_flag] = true;
 }
 
-void Player::turn_off_flag(std::string a_flag)
+void Player::turn_off_flag(std::string& a_flag)
 {
     if(m_flags.find(a_flag) == m_flags.end())[[unlikely]]
         return;

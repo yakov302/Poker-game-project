@@ -66,7 +66,7 @@ void ActionOut::pack_and_send_to_client(Args& a_arg, Message_type a_message, int
     m_tcp.send_to_client(a_client_socket, buffer, size);
 }
 
-void ActionOut::flag(std::string& a_name, std::string a_flag, Message_type a_message)
+void ActionOut::flag(std::string& a_name, std::string& a_flag, Message_type a_message)
 {
     char buffer[BUFFER_SIZE];
     Args arg(2, 0);
@@ -76,7 +76,7 @@ void ActionOut::flag(std::string& a_name, std::string a_flag, Message_type a_mes
     m_tcp.send_all_clients(buffer, size);
 }
 
-int ActionOut::pack_player(char* a_buffer, std::string& a_name, std::string a_gender, int a_amount)
+int ActionOut::pack_player(char* a_buffer, std::string& a_name, std::string& a_gender, int a_amount)
 {
     Args arg(2, 1);
     arg.m_strings.emplace_back(a_name);
@@ -123,12 +123,12 @@ void ActionOut::user_name_alredy_log(int a_client_socket)
     just_message_to_clienet(USER_NAME_ALREADY_LOG, a_client_socket);
 }
 
-void ActionOut::turn_on(std::string& a_name, std::string a_flag)
+void ActionOut::turn_on(std::string& a_name, std::string& a_flag)
 {
     flag(a_name, a_flag, TURN_ON_FLAG);
 }
 
-void ActionOut::turn_off(std::string& a_name, std::string a_flag)
+void ActionOut::turn_off(std::string& a_name, std::string& a_flag)
 {
     flag(a_name, a_flag, TURN_OFF_FLAG);
 }
@@ -182,21 +182,21 @@ void ActionOut::give_card(std::string& a_name)
     name_and_message(a_name, GIVE_CARD);
 }
 
-void ActionOut::get_player(std::string a_name, std::string a_gender, int a_amount, int a_client_socket)
+void ActionOut::get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_client_socket)
 {
     char buffer[BUFFER_SIZE];
     int size = pack_player(buffer, a_name, a_gender, a_amount);
     m_tcp.send_to_client(a_client_socket, buffer, size);
 }
 
-void ActionOut::get_player(std::string a_name, std::string a_gender, int a_amount)
+void ActionOut::get_player(std::string& a_name, std::string& a_gender, int a_amount)
 {
     char buffer[BUFFER_SIZE];
     int size = pack_player(buffer, a_name, a_gender, a_amount);
     m_tcp.send_all_clients(buffer, size);
 }
 
-void ActionOut::delete_player(std::string a_name)
+void ActionOut::delete_player(std::string& a_name)
 {
     name_and_message(a_name, DELETE_PLAYER);
 }

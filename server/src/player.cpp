@@ -26,7 +26,7 @@ void init_flags(std::unordered_map<std::string, bool>& a_flags)
 
 }//impl namespace
 
-Player::Player(std::string a_name, std::string a_gender, int a_amount, int a_socket)
+Player::Player(std::string& a_name, std::string& a_gender, int a_amount, int a_socket)
 : m_name(a_name)
 , m_gender(a_gender)
 , m_hand()

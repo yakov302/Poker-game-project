@@ -5,6 +5,11 @@ namespace poker
 
 extern Sound sound;
 extern std::string empty;
+extern std::string log_in;
+extern std::string logged;
+extern std::string bet_flag;
+extern std::string register_flag;
+extern std::string reveal_cards_flag;
 
 namespace impl
 {
@@ -266,8 +271,8 @@ void ActionIn::registration_success()
     sound.play_positive();
     std::string txt = "Registration was successful";
     m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
-    m_table.turn_off_flag("register");
-    m_table.turn_on_flag("log_in");
+    m_table.turn_off_flag(register_flag);
+    m_table.turn_on_flag(log_in);
 }
 
 void ActionIn::registration_duplicare_name()
@@ -293,9 +298,9 @@ void ActionIn::log_in_success(char* a_buffer)
     std::string gender =  arg.m_strings[1];
     m_self.set_name_and_gender(name, gender);
     m_players.get_player(name, m_self);
-    m_table.turn_off_flag("register");
-    m_table.turn_off_flag("log_in");
-    m_self.turn_on_flag("logged");
+    m_table.turn_off_flag(register_flag);
+    m_table.turn_off_flag(log_in);
+    m_self.turn_on_flag(logged);
     clear_text();
 }
 
@@ -335,7 +340,7 @@ void ActionIn::turn_off(char* a_buffer)
 void ActionIn::start_bet(char* a_buffer)
 {
     std::pair<std::string, int> pair = impl::name_and_amount(a_buffer);
-    m_players.turn_on_flag(pair.first , "bet");
+    m_players.turn_on_flag(pair.first , bet_flag);
     m_players.set_action(pair.first, "bet " + std::to_string(pair.second));
     m_players.update_current_bet(pair.first, pair.second);
 }
@@ -416,7 +421,7 @@ void ActionIn::delete_player(char* a_buffer)
 void ActionIn::reveal_cards(char* a_buffer)
 {
    std::string name = impl::get_name(a_buffer);
-    m_players.turn_on_flag(name, "reveal_cards");
+    m_players.turn_on_flag(name, reveal_cards_flag);
 }
 
 void ActionIn::table_get_card(char* a_buffer)

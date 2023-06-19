@@ -4,12 +4,11 @@ namespace poker
 {
 
 extern Deck deck;
-std::string amount  = "m_amount";
-std::string socket  = "m_socket";
-std::string result  = "m_result";
-std::string bet     = "m_bet";
-std::string fold    = "m_fold";
-std::string viewer  = "m_viewer";
+std::string bet = "m_bet";
+std::string fold = "m_fold";
+std::string viewer = "m_viewer";
+std::string amount = "m_amount";
+std::string result = "m_result";
 std::string my_turn = "m_my_turn";
 
 PlayersContainer::PlayersContainer(ActionOut& a_action_out)
@@ -20,7 +19,7 @@ PlayersContainer::PlayersContainer(ActionOut& a_action_out)
     m_players.reserve(MAX_NUM_OF_PLAYERS);
 }
 
-void PlayersContainer::new_player(std::string a_name, std::string& a_gender, int a_amount, int a_client_socket)
+void PlayersContainer::new_player(std::string& a_name, std::string& a_gender, int a_amount, int a_client_socket)
 {
     if(m_players.find(a_name) != m_players.end())[[unlikely]]
         return;
@@ -36,7 +35,7 @@ void PlayersContainer::new_player(std::string a_name, std::string& a_gender, int
         m_wait.exit_wait();
 }
 
-bool PlayersContainer::log_in_chack(std::string a_name,  int a_client_socket)const
+bool PlayersContainer::log_in_chack(std::string& a_name,  int a_client_socket)const
 {
     if(m_players.find(a_name) != m_players.end())
     {
