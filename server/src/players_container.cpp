@@ -128,7 +128,7 @@ bool PlayersContainer::is_it_has_a_cards(std::string& a_name)
     return !m_players[a_name]->m_hand.empty();
 }
 
-std::pair<cardPointer,cardPointer> PlayersContainer::give_cards(std::string& a_name)
+std::pair<cardPointer,cardPointer> PlayersContainer::show_cards(std::string& a_name)
 {
     if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return std::pair<cardPointer,cardPointer>(nullptr, nullptr);

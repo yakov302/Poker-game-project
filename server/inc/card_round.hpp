@@ -27,6 +27,7 @@ private:
     void open_card();
 
     void close_card_round();
+    void stop(std::string& name);
     void clear_hands();
     void table_clear_hand();
     void reset_players_variables();

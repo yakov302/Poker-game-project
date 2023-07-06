@@ -17,7 +17,7 @@ void fill_vector(PlayersContainer& a_players, std::string& a_name, std::vector<c
 {
     a_card.reserve(7);
     a_card = a_table_card;
-    std::pair<cardPointer, cardPointer> cards = a_players.give_cards(a_name);
+    std::pair<cardPointer, cardPointer> cards = a_players.show_cards(a_name);
     a_card.emplace_back(cards.first);
     a_card.emplace_back(cards.second);
     std::sort(a_card.begin(), a_card.end(), compare);
@@ -307,7 +307,7 @@ std::string compare_high_card(PlayersContainer& a_players)
         && !a_players.is_flag_on(name, viewer)
         && a_players.is_it_has_a_cards(name))
         {
-            cards = a_players.give_cards(name);
+            cards = a_players.show_cards(name);
             if(cards.first->m_number > max)
             {
                 max = cards.first->m_number;

@@ -7,8 +7,8 @@ Table::Table()
 : m_chips()
 , m_cards()
 {
-    m_cards.reserve(5);
-    m_chips.reserve(200);
+    m_cards.reserve(NUM_OF_TABLE_CARDS);
+    m_chips.reserve(NUM_OF_TABLE_CHIPS);
 }
 
 void Table::get_card(cardPointer a_card)
@@ -44,15 +44,6 @@ cardPointer Table::give_card()
 int Table::num_of_card()const
 {
     return m_cards.size();
-}
-
-int Table::table_amount()const
-{
-    int amount = 0;
-    for(auto chip : m_chips)
-        amount += chip;
-
-    return amount;
 }
 
 bool Table::is_wallet_empty()

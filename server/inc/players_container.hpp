@@ -34,13 +34,13 @@ public:
     cardPointer give_card(std::string& a_name);
     bool is_it_has_a_cards(std::string& a_name);
     void get_card(std::string& a_name, cardPointer a_card);
-    std::pair<cardPointer,cardPointer> give_cards(std::string& a_name);
+    std::pair<cardPointer,cardPointer> show_cards(std::string& a_name);
 
     void turn_on(std::string& a_name, std::string& a_flag);
     void turn_off(std::string& a_name, std::string& a_flag);
     bool is_flag_on(std::string& a_name, std::string& a_flag) ;
 
-    Wait& wait(); //global ?
+    Wait& wait(); 
     playerIterator end();
     playerIterator begin();
 
@@ -48,7 +48,7 @@ private:
     void delete_player(std::string& a_name);
 
 private:
-    Wait m_wait; //global ?
+    Wait m_wait; 
     ActionOut& m_action_out;
     std::unordered_map<std::string, playerPointer> m_players;
 };

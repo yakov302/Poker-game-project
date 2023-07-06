@@ -5,6 +5,9 @@
 
 #include "card.hpp"
 
+#define NUM_OF_TABLE_CARDS 5
+#define NUM_OF_TABLE_CHIPS 200
+
 namespace poker
 {
 
@@ -24,7 +27,6 @@ public:
     bool is_wallet_empty();
 
     int num_of_card()const;
-    int table_amount()const;
 
     std::vector<cardPointer>& table_cards();
 

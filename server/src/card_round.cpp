@@ -29,8 +29,7 @@ void CardRound::run(playerIterator a_open_player)
 
     while(!m_stop)
     {
-        if(one_player_left(name))
-        {close_card_round(); break;}
+        if(one_player_left(name)){stop(name); break;}
 
         int num_of_cards = m_table.num_of_card();
 
@@ -143,16 +142,8 @@ bool CardRound::one_player_left(std::string& a_name)
     return true; 
 }
 
-void CardRound::close_card_round()
+void CardRound::stop(std::string& name)
 {
-    std::string name;
-    if(!one_player_left(name))
-    {
-        name = chack_winner(m_players, m_table.table_cards());
-        reveal_cards_and_print_result();
-        usleep(4000000);
-    }
-
     m_action_out.round_winer(name);
     usleep(1000000);
 
@@ -163,6 +154,19 @@ void CardRound::close_card_round()
 
     m_stop = true;
     m_bet = false;
+}
+
+void CardRound::close_card_round()
+{
+    std::string name;
+    if(!one_player_left(name))
+    {
+        name = chack_winner(m_players, m_table.table_cards());
+        reveal_cards_and_print_result();
+        usleep(4000000);
+    }
+
+    stop(name);
 }
 
 void CardRound::reveal_cards_and_print_result()
@@ -196,7 +200,7 @@ void CardRound::pay_to_winner(std::string& a_winner)
         m_action_out.get_chips(a_winner, chip);
         m_players.take_chip(a_winner, chip);
    } 
-   m_action_out.table_clear_wallet();
+   m_action_out.table_clear_wallet(); //Unnecessary?
 }
 
 void CardRound::table_clear_hand()
