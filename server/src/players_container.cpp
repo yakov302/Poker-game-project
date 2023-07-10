@@ -4,12 +4,13 @@ namespace poker
 {
 
 extern Deck deck;
-std::string bet = "m_bet";
-std::string fold = "m_fold";
-std::string viewer = "m_viewer";
-std::string amount = "m_amount";
-std::string result = "m_result";
-std::string my_turn = "m_my_turn";
+std::string bet = "bet";
+std::string fold = "fold";
+std::string viewer = "viewer";
+std::string socket = "socket";
+std::string amount = "amount";
+std::string result = "result";
+std::string my_turn = "my_turn";
 
 PlayersContainer::PlayersContainer(ActionOut& a_action_out)
 : m_wait()
@@ -29,7 +30,7 @@ void PlayersContainer::new_player(std::string& a_name, std::string& a_gender, in
     m_action_out.get_player(a_name, a_gender, a_amount);
 
     for(auto player: m_players)
-        m_action_out.get_player(player.second->m_name, player.second->m_gender, player.second->m_vars["m_amount"], a_client_socket);
+        m_action_out.get_player(player.second->m_name, player.second->m_gender, player.second->m_vars[amount], a_client_socket);
 
     if(num_of_players() > 1)
         m_wait.exit_wait();
@@ -67,7 +68,7 @@ void PlayersContainer::delete_player(int a_client_socket)
 {
     for(auto player : m_players)
     {
-        if(player.second.get()->m_vars["m_socket"] == a_client_socket)
+        if(player.second.get()->m_vars[socket] == a_client_socket)
         {
             delete_player(player.second.get()->m_name);
             break;

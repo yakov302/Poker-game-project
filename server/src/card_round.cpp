@@ -10,6 +10,19 @@ extern std::string result;
 extern std::string viewer;
 std::string reveal_cards = "reveal_cards";
 
+namespace impl
+{
+
+bool active_player_with_card(PlayersContainer& a_players, std::string& name)
+{
+    return !a_players.is_flag_on(name, fold)
+        && !a_players.is_flag_on(name, viewer)
+        && a_players.is_it_has_a_cards(name);
+}
+
+
+}//impl namespace
+
 CardRound::CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_action_out, BetRound& a_bet_round)
 : m_bet(false)
 , m_stop(false)
@@ -125,9 +138,7 @@ bool CardRound::one_player_left(std::string& a_name)
     {
         std::string name =  it->second.get()->m_name;
 
-        if(!m_players.is_flag_on(name, fold)
-        && !m_players.is_flag_on(name, viewer)
-        && m_players.is_it_has_a_cards(name))
+        if(impl::active_player_with_card(m_players, name))
         {
             a_name = name;
             ++count;
@@ -178,9 +189,7 @@ void CardRound::reveal_cards_and_print_result()
     {
         std::string name =  it->second.get()->m_name;
 
-        if(!m_players.is_flag_on(name, fold)
-        && !m_players.is_flag_on(name, viewer)
-        && m_players.is_it_has_a_cards(name))
+        if(impl::active_player_with_card(m_players, name))
         {
             m_action_out.reveal_cards(name);
             m_action_out.print_result(name, m_players.get(name, result));

@@ -8,8 +8,16 @@ extern std::string bet;
 extern std::string fold;
 extern std::string amount;
 extern std::string viewer;
-std::string bet_flag = "bet";
-std::string my_turn_flag = "my_turn";
+extern std::string socket;
+extern std::string my_turn;
+
+namespace impl
+{
+
+extern bool active_player_with_card(PlayersContainer& a_players, std::string& name);
+
+
+}//impl namespace
 
 BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table)
 : m_stop(false)
@@ -49,15 +57,13 @@ bool BetRound::set_max_bet()
 {
     auto it = m_players.begin();
     auto end = m_players.end();
-    int min = 100000;
+    int min = HUGE_NUMBER;
 
     while(it != end)
     {
         std::string name = it->second.get()->m_name;
 
-        if(!m_players.is_flag_on(name, fold)
-        && !m_players.is_flag_on(name, viewer)
-        && m_players.is_it_has_a_cards(name))
+        if(impl::active_player_with_card(m_players, name))
         {
             if(m_players.get(name, amount) + m_players.get(name, bet) < min)
                 min = m_players.get(name, amount) + m_players.get(name, bet);
@@ -74,12 +80,10 @@ bool BetRound::set_max_bet()
 
 void BetRound::wait_for_bet()
 {
-    if(m_turn->second.get()->m_vars[fold] 
-    || m_turn->second.get()->m_vars[viewer]
-    || m_turn->second.get()->m_hand.size() == 0)
+    if(!impl::active_player_with_card(m_players, m_turn->second.get()->m_name))
         return;
         
-    m_action_out.turn_on(m_turn->second.get()->m_name, my_turn_flag);
+    m_action_out.turn_on(m_turn->second.get()->m_name, my_turn);
     m_wait.enter_wait();
 }
 
@@ -101,7 +105,7 @@ void BetRound::player_deleted(int a_client_socket)
         return;
     }
 
-    if(m_turn->second->m_vars["m_socket"] == a_client_socket)
+    if(m_turn->second->m_vars[socket] == a_client_socket)
         m_wait.exit_wait();
 }
 
@@ -113,7 +117,7 @@ void BetRound::start_bet()
 void BetRound::bet_in(int a_amount)
 {
     if(m_turn->second->m_vars[bet] + a_amount > m_max_bet)
-        m_action_out.invalid_bet_max(m_max_bet , m_turn->second->m_vars["m_socket"]);
+        m_action_out.invalid_bet_max(m_max_bet , m_turn->second->m_vars[socket]);
 
     else
     {
@@ -128,7 +132,7 @@ void BetRound::bet_in(int a_amount)
 void BetRound::finish_bet()
 {
     if(m_turn->second->m_vars[bet] < m_min_bet)
-        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_vars["m_socket"]);
+        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_vars[socket]);
  
     else
     {
@@ -136,8 +140,8 @@ void BetRound::finish_bet()
             m_open_player = m_turn;
 
         m_min_bet = m_turn->second->m_vars[bet];
-        m_action_out.turn_off(m_turn->second.get()->m_name, my_turn_flag);
-        m_action_out.turn_off(m_turn->second.get()->m_name, bet_flag);
+        m_action_out.turn_off(m_turn->second.get()->m_name, my_turn);
+        m_action_out.turn_off(m_turn->second.get()->m_name, bet);
         m_wait.exit_wait();
     }
 }
@@ -145,11 +149,11 @@ void BetRound::finish_bet()
 void BetRound::chack_in()
 {
     if(m_min_bet > 0)
-        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_vars["m_socket"]);
+        m_action_out.invalid_bet_min(m_min_bet , m_turn->second->m_vars[socket]);
     
     else
     {
-        m_action_out.turn_off(m_turn->second->m_name, my_turn_flag);
+        m_action_out.turn_off(m_turn->second->m_name, my_turn);
         m_action_out.check(m_turn->second->m_name);
         m_wait.exit_wait();
     }
@@ -161,7 +165,7 @@ void BetRound::fold_in()
         deck.push_card(m_players.give_card(m_turn->second->m_name));
     m_players.turn_on(m_turn->second->m_name, fold);
     m_action_out.fold(m_turn->second->m_name);
-    m_action_out.turn_off(m_turn->second->m_name, my_turn_flag);
+    m_action_out.turn_off(m_turn->second->m_name, my_turn);
     usleep(1000000);
     m_wait.exit_wait();
 }
@@ -176,9 +180,7 @@ bool BetRound::one_player_left()
     {
         std::string name = it->second.get()->m_name;
 
-        if(!m_players.is_flag_on(name, fold)
-        && !m_players.is_flag_on(name, viewer)
-        && m_players.is_it_has_a_cards(name))
+        if(impl::active_player_with_card(m_players, name))
             ++count;
 
         if(count > 1)
