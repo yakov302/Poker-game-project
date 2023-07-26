@@ -5,7 +5,7 @@
 #include "table.hpp"
 #include "deck.hpp"
 
-#define HUGE_NUMBER 9999999999
+#define HUGE_NUMBER 999999999
 
 namespace poker
 {

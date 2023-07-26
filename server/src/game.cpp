@@ -70,7 +70,7 @@ bool Game::chack_winer()
 
     while(it != end)
     {
-        if(!it->second.get()->m_vars[viewer])
+        if(!it->second.get()->m_flags[viewer])
         {
             name = it->second.get()->m_name;
             ++count;

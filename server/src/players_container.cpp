@@ -86,7 +86,7 @@ void PlayersContainer::take_chip (std::string& a_name, int a_chip)
     if(m_players.find(a_name) == m_players.end())[[unlikely]]
         return;
 
-    m_players[a_name]->m_vars["a_amount"] += a_chip;
+    m_players[a_name]->m_vars[amount] += a_chip;
 }
 
 int PlayersContainer::get (std::string& a_name, std::string& a_var)
