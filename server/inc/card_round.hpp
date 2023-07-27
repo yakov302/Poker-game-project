@@ -15,7 +15,7 @@ using cardPointer = std::shared_ptr<Card>;
 class CardRound
 {
 public:
-    CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_action_out, BetRound& a_bet_round);
+    CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_action_out, BetRound& a_bet_round, Deck& a_deck);
 
     void run(playerIterator a_open_player);
 
@@ -40,6 +40,7 @@ private:
     bool m_bet;
     bool m_stop;
 
+    Deck& m_deck;
     Table& m_table;
     BetRound& m_bet_round;
     ActionOut& m_action_out;

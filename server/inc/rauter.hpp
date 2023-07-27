@@ -5,7 +5,7 @@
 #include "tcp_server.hpp"
 #include "action_in.hpp"
 #include "server_socket.hpp"
-#include "players_container.hpp"
+#include "tables_container.hpp"
 
 #define BUFFER_SIZE 512
 #define MAX_SOCKET_NUM_TO_LISTEN 1024
@@ -16,7 +16,7 @@ namespace poker
 class Rauter
 {
 public: 
-    Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action, PlayersContainer& a_players);
+    Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action, TablesContainer& a_tables_container);
     ~Rauter();
 
     void run();
@@ -37,7 +37,7 @@ private:
     TcpServer& m_tcp;
     ActionIn& m_action_in;
     ServerSocket& m_socket;
-    PlayersContainer& m_players;
+    TablesContainer& m_tables_container;
 };
 
 

@@ -62,10 +62,10 @@ bool TcpServer::send_to_client(int a_client_socket, char* a_buffer, int a_messag
 	return true;
 }
 
-void TcpServer::send_all_clients(char* a_buffer, int a_message_size)
+void TcpServer::send_all_clients(char* a_buffer, int a_message_size, std::list<int>& a_sockts)
 {
-	auto it = m_socket.connected_sockets().begin();
-    auto end = m_socket.connected_sockets().end();
+	auto it = a_sockts.begin();
+    auto end = a_sockts.end();
 		
 	while(it != end) 
 	{	

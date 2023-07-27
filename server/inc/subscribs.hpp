@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "sha256.hpp"
+#include "cli_cmd.hpp"
 #include "action_out.hpp"
 
 #define SUBSCRIBERS_FILE_PATH "./resources/subscribs.txt"
@@ -21,7 +22,7 @@ struct Subscriber
 class Subscribs
 {
 public:
-    Subscribs(ActionOut& a_action_out);
+    Subscribs(TcpServer& a_tcp);
 
     Subscriber& operator[](std::string& a_name);
     void new_subscriber(Subscriber& a_subscriber, int a_client_socket);
@@ -35,7 +36,7 @@ private:
     void load_subscribs_from_file();
 
 private:
-    ActionOut& m_action_out;
+    ActionOut m_action_out;
     std::unordered_map<std::string, Subscriber> m_subscribs;
 };
 

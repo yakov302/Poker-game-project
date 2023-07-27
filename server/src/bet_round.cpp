@@ -3,7 +3,6 @@
 namespace poker
 {
 
-extern Deck deck;
 extern std::string bet;
 extern std::string fold;
 extern std::string amount;
@@ -19,11 +18,12 @@ extern bool active_player_with_card(PlayersContainer& a_players, std::string& na
 
 }//impl namespace
 
-BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table)
+BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table, Deck& a_deck)
 : m_stop(false)
 , m_min_bet(0)
-, m_max_bet(100000)
+, m_max_bet(0)
 , m_wait()
+, m_deck(a_deck)
 , m_table(a_table)
 , m_action_out(a_action_out)
 , m_players(a_players)
@@ -162,7 +162,7 @@ void BetRound::chack_in()
 void BetRound::fold_in()
 {
     for(int i = 0; i < 2; ++i)
-        deck.push_card(m_players.give_card(m_turn->second->m_name));
+        m_deck.push_card(m_players.give_card(m_turn->second->m_name));
     m_players.turn_on(m_turn->second->m_name, fold);
     m_action_out.fold(m_turn->second->m_name);
     m_action_out.turn_off(m_turn->second->m_name, my_turn);

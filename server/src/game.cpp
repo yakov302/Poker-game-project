@@ -36,7 +36,7 @@ Game::~Game()
 
 void Game::run()
 {
-    while (!m_stop)
+    while(!m_stop)
     {
         if(m_players.num_of_players()< 2 || chack_winer())
         {
@@ -53,6 +53,7 @@ void Game::run()
 void Game::stop()
 {
     m_stop = true;
+    m_players.wait().exit_wait();
 }
 
 void Game::set_open_player()

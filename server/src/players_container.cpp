@@ -3,7 +3,6 @@
 namespace poker
 {
 
-extern Deck deck;
 std::string bet = "bet";
 std::string fold = "fold";
 std::string viewer = "viewer";
@@ -12,8 +11,9 @@ std::string amount = "amount";
 std::string result = "result";
 std::string my_turn = "my_turn";
 
-PlayersContainer::PlayersContainer(ActionOut& a_action_out)
+PlayersContainer::PlayersContainer(ActionOut& a_action_out, Deck& a_deck)
 : m_wait()
+, m_deck(a_deck)
 , m_action_out(a_action_out)
 , m_players()
 {
@@ -53,15 +53,15 @@ bool PlayersContainer::log_in_chack(std::string& a_name,  int a_client_socket)co
     return true;
 }
 
-void PlayersContainer::delete_player(std::string& a_name)
+void PlayersContainer::delete_player(std::string& a_name, int a_client_socket)
 {
     if(m_players.find(a_name) == m_players.end()) [[unlikely]]
         return;
 
     for(int i = 0; i < 2; ++i)
-        deck.push_card(give_card(a_name));
+        m_deck.push_card(give_card(a_name));
     m_players.erase(a_name);
-    m_action_out.delete_player(a_name);
+    m_action_out.delete_player(a_name, a_client_socket);
 }
 
 void PlayersContainer::delete_player(int a_client_socket)
@@ -70,7 +70,7 @@ void PlayersContainer::delete_player(int a_client_socket)
     {
         if(player.second.get()->m_vars[socket] == a_client_socket)
         {
-            delete_player(player.second.get()->m_name);
+            delete_player(player.second.get()->m_name, a_client_socket);
             break;
         }
     }

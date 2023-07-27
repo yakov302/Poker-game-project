@@ -10,6 +10,7 @@
 #include "action_out.hpp"
 #include "tcp_server.hpp"
 #include "server_socket.hpp"
+#include "tables_container.hpp"
 #include "players_container.hpp"
 
 namespace poker
@@ -25,13 +26,8 @@ public:
 private:
     ServerSocket m_socket;
     TcpServer m_tcp;
-    ActionOut m_action_out;
-    PlayersContainer m_players;
-    Subscribs m_subscribs;
-    Table m_table;
-    BetRound m_bet_round;
-    CardRound m_card_round;
-    Game m_game;
+    TablesContainer m_tables_container;
+    Subscribs m_subscribs;  
     ActionIn m_action_in;
     Rauter m_rauter;
 };

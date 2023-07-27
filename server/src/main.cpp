@@ -6,6 +6,7 @@
 #include "tcp_server.hpp"
 #include "subscribs.hpp"
 #include "protocol.hpp"
+#include "cli_cmd.hpp"
 #include "sha256.hpp"
 #include "deck.hpp"
 
@@ -15,10 +16,11 @@ int main()
 {
     ServerManager server;
 
-    char c;
-    while(std::cin >> c)
+    std::string cli_cmd;
+    while(true)
     {
-        if((int)c == 27)
+        std::getline(std::cin, cli_cmd);
+        if(get_cmd(cli_cmd))
         {
             server.stop();
             break;

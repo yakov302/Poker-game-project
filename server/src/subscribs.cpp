@@ -3,8 +3,10 @@
 namespace poker
 {
 
-Subscribs::Subscribs(ActionOut& a_action_out)
-: m_action_out(a_action_out)
+extern bool dbg[NUM_OF_DBG_TYPES];
+
+Subscribs::Subscribs(TcpServer& a_tcp)
+: m_action_out(a_tcp)
 , m_subscribs()
 {
     load_subscribs_from_file();
@@ -31,6 +33,9 @@ bool Subscribs::log_in_chack(std::string& a_name, std::string&  a_password, int 
 {
     if(m_subscribs.find(a_name) == m_subscribs.end() || m_subscribs.find(a_name)->second.m_name == "")
     {
+        if(dbg[SUBSCRIBS])[[unlikely]]
+            std::cout << __func__ << "(): " << "send m_action_out.log_in_wrong_name(" << a_client_socket << ")" << std::endl;
+
         m_action_out.log_in_wrong_name(a_client_socket);
         return false;
     }
@@ -38,9 +43,15 @@ bool Subscribs::log_in_chack(std::string& a_name, std::string&  a_password, int 
     std::string encrypted_password = sha256(a_password);
     if(encrypted_password != m_subscribs[a_name].m_password)
     {
+        if(dbg[SUBSCRIBS])[[unlikely]]
+            std::cout << __func__ << "(): " << "send m_action_out.log_in_wrong_password(" << a_client_socket << ")" << std::endl;
+        
         m_action_out.log_in_wrong_password(a_client_socket);
         return false;
     }
+    
+    if(dbg[SUBSCRIBS])[[unlikely]]
+        std::cout << __func__ << "(): " << "return true" << std::endl;
     
     return true;
 }

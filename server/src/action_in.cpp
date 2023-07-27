@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern bool dbg[NUM_OF_DBG_TYPES];
+
 namespace impl
 {
 
@@ -16,11 +18,10 @@ std::string get_name(char* a_buffer)
 
 }//namespace impl
 
-ActionIn::ActionIn(ActionOut& a_action_out, PlayersContainer& a_players, Subscribs& a_subscribs, BetRound& a_bet_round)
-: m_bet_round(a_bet_round)
+ActionIn::ActionIn(TcpServer& a_tcp, Subscribs& a_subscribs, TablesContainer& a_tables_container)
+: m_action_out(a_tcp)
 , m_subscribs(a_subscribs)
-, m_action_out(a_action_out)
-, m_players(a_players)
+, m_tables_container(a_tables_container)
 {
 
 }
@@ -40,23 +41,23 @@ void ActionIn::get(char* a_buffer, int a_client_socket)
         break;
 
     case START_BET_ACTION:
-        start_bet();
+        start_bet(a_client_socket);
         break;
 
     case BET_ACTION:
-        bet(a_buffer);
+        bet(a_buffer, a_client_socket);
         break;
     
     case FINISH_BET:
-        finish_bet();
+        finish_bet(a_client_socket);
         break;
 
     case CHECK_ACTION:
-        check();
+        check(a_client_socket);
         break;
 
     case FOLD_ACTION:
-        fold();
+        fold(a_client_socket);
         break;
 
     case WAKE_UP_CLIENT:
@@ -84,36 +85,48 @@ void ActionIn::log_in_reques(char* a_buffer, int a_client_socket)
     Args arg(2, 1);
     unpack(a_buffer, arg);
     std::string gender = m_subscribs[arg.m_strings[0]].m_gender;
-    if(m_subscribs.log_in_chack(arg.m_strings[0], arg.m_strings[1], a_client_socket)
-    && m_players.log_in_chack(arg.m_strings[0], a_client_socket))
-        m_players.new_player(arg.m_strings[0], gender, arg.m_ints[0], a_client_socket);
+
+    if(dbg[ACTION_IN])[[unlikely]]
+        std::cout << __func__ << "(): " << "send m_subscribs.log_in_chack(" << arg.m_strings[0] << ", " << arg.m_strings[1]<< ", " << a_client_socket<< ")" << std::endl;
+    
+    if(!m_subscribs.log_in_chack(arg.m_strings[0], arg.m_strings[1], a_client_socket))
+        return;
+
+    if(dbg[ACTION_IN])[[unlikely]]
+        std::cout << __func__ << "(): " << "send m_tables_container.get_player(" << arg.m_strings[0] << ", " << gender << ", " << arg.m_ints[0]<< ", " <<  a_client_socket << ")" << std::endl;
+    m_tables_container.get_player(arg.m_strings[0], gender, arg.m_ints[0], a_client_socket);
 }
 
-void ActionIn::start_bet()
-{
-    m_bet_round.start_bet();
+void ActionIn::start_bet(int a_client_socket)
+{   
+    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    m_tables_container.m_tables[table_id].get()->m_bet_round.start_bet();
 }
 
-void ActionIn::bet(char* a_buffer)
+void ActionIn::bet(char* a_buffer, int a_client_socket)
 {
     Args arg(1,1);
     unpack(a_buffer, arg);
-    m_bet_round.bet_in(arg.m_ints[0]);
+    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    m_tables_container.m_tables[table_id].get()->m_bet_round.bet_in(arg.m_ints[0]);
 }
 
-void ActionIn::finish_bet()
+void ActionIn::finish_bet(int a_client_socket)
 {
-    m_bet_round.finish_bet();
+    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    m_tables_container.m_tables[table_id].get()->m_bet_round.finish_bet();
 }
 
-void ActionIn::check()
+void ActionIn::check(int a_client_socket)
 {
-    m_bet_round.chack_in();
+    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    m_tables_container.m_tables[table_id].get()->m_bet_round.chack_in();
 }
 
-void ActionIn::fold()
+void ActionIn::fold(int a_client_socket)
 {
-    m_bet_round.fold_in();
+    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    m_tables_container.m_tables[table_id].get()->m_bet_round.fold_in();
 }
 
 void ActionIn::wake_up_client(int a_client_socket)
@@ -123,7 +136,8 @@ void ActionIn::wake_up_client(int a_client_socket)
 
 void ActionIn::player_deleted(int a_client_socket)
 {
-    m_bet_round.player_deleted(a_client_socket);
+    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    m_tables_container.m_tables[table_id].get()->m_bet_round.player_deleted(a_client_socket);
 }
 
 

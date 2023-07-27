@@ -13,7 +13,7 @@ namespace poker
 class BetRound
 {
 public:
-    BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table);
+    BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table, Deck& a_deck);
 
     void run(playerIterator a_open_player);
     
@@ -38,6 +38,7 @@ private:
     int m_max_bet;
 
     Wait m_wait;
+    Deck& m_deck;
     Table& m_table;
     ActionOut& m_action_out;
     PlayersContainer& m_players;

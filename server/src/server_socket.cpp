@@ -85,7 +85,7 @@ void ServerSocket::delete_client(std::list<int>::iterator& a_it)
     int socket = *a_it;
 	close(socket);
     FD_CLR(socket, &m_source_fd);
-    m_connected_sockets.erase(a_it);
+    m_connected_sockets.remove(socket);
     m_deleted_sockets.emplace_front(socket);
     --m_num_of_clients;
     --a_it;

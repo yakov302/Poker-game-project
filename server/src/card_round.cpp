@@ -3,7 +3,6 @@
 namespace poker
 {
 
-Deck deck(1);
 extern std::string fold;
 extern std::string amount;
 extern std::string result;
@@ -23,9 +22,10 @@ bool active_player_with_card(PlayersContainer& a_players, std::string& name)
 
 }//impl namespace
 
-CardRound::CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_action_out, BetRound& a_bet_round)
+CardRound::CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_action_out, BetRound& a_bet_round, Deck& a_deck)
 : m_bet(false)
 , m_stop(false)
+, m_deck(a_deck)
 , m_table(a_table)
 , m_bet_round(a_bet_round)
 , m_action_out(a_action_out)
@@ -84,7 +84,7 @@ void CardRound::run(playerIterator a_open_player)
 
 void CardRound::deal_cards()
 {
-    deck.shuffle();
+    m_deck.shuffle();
 
     for(int i = 0; i < 2; ++i)
     {
@@ -98,7 +98,7 @@ void CardRound::deal_cards()
             if(!m_players.is_flag_on(name, viewer))
             {
                 usleep(500000);
-                cardPointer card = deck.pop_card();
+                cardPointer card = m_deck.pop_card();
                 m_players.get_card(name, card);
                 m_action_out.get_card(name, card);
             }
@@ -122,7 +122,7 @@ void CardRound::open_three_cards()
 void CardRound::open_card()
 {
     usleep(500000);
-    cardPointer card = deck.pop_card();
+    cardPointer card = m_deck.pop_card();
     m_table.get_card(card);
     m_action_out.table_get_card(card);
     m_bet = false;
@@ -218,7 +218,7 @@ void CardRound::table_clear_hand()
     {
         usleep(100000);
         m_action_out.table_give_card();
-        deck.push_card(m_table.give_card());
+        m_deck.push_card(m_table.give_card());
     }
 }
 
@@ -238,7 +238,7 @@ void CardRound::clear_hands()
             {
                 usleep(100000);
                 m_action_out.give_card(name);
-                deck.push_card(m_players.give_card(name));
+                m_deck.push_card(m_players.give_card(name));
             }
         }
 

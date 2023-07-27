@@ -8,7 +8,7 @@
 #include "player.hpp"
 #include "action_out.hpp"
 
-#define MAX_NUM_OF_PLAYERS 6
+#define MAX_NUM_OF_PLAYERS 2
 
 namespace poker
 {
@@ -20,7 +20,7 @@ using playerIterator = std::unordered_map<std::string, poker::playerPointer>::it
 class PlayersContainer
 {
 public:
-    PlayersContainer(ActionOut& a_action_out);
+    PlayersContainer(ActionOut& a_action_out, Deck& a_deck);
 
     void new_player(std::string& a_name, std::string& a_gender, int a_amount, int a_client_socket);
     bool log_in_chack(std::string& a_name, int a_client_socket)const;
@@ -45,10 +45,11 @@ public:
     playerIterator begin();
 
 private:
-    void delete_player(std::string& a_name);
+    void delete_player(std::string& a_name, int a_client_socket);
 
 private:
     Wait m_wait; 
+    Deck& m_deck;
     ActionOut& m_action_out;
     std::unordered_map<std::string, playerPointer> m_players;
 };

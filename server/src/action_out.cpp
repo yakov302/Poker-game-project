@@ -23,7 +23,7 @@ void ActionOut::name_and_message(std::string& a_name, Message_type a_message)
     Args arg(1, 0);
     arg.m_strings.emplace_back(a_name);
     int size = pack(buffer, arg, a_message);
-    m_tcp.send_all_clients(buffer, size);
+    m_tcp.send_all_clients(buffer, size, m_sockets);
 }
 
 void ActionOut::just_amount_to_clienet(Message_type a_message, int a_amount, int a_client_socket)
@@ -56,7 +56,7 @@ void ActionOut::pack_and_send_all(Args& a_arg, Message_type a_message)
 {
     char buffer[BUFFER_SIZE];
     int size = pack(buffer, a_arg, a_message);
-    m_tcp.send_all_clients(buffer, size);
+    m_tcp.send_all_clients(buffer, size, m_sockets);
 }
 
 void ActionOut::pack_and_send_to_client(Args& a_arg, Message_type a_message, int a_client_socket)
@@ -73,7 +73,7 @@ void ActionOut::flag(std::string& a_name, std::string& a_flag, Message_type a_me
     arg.m_strings.emplace_back(a_name);
     arg.m_strings.emplace_back(a_flag);
     int size = pack(buffer, arg, a_message);
-    m_tcp.send_all_clients(buffer, size);
+    m_tcp.send_all_clients(buffer, size, m_sockets);
 }
 
 int ActionOut::pack_player(char* a_buffer, std::string& a_name, std::string& a_gender, int a_amount)
@@ -106,6 +106,7 @@ void ActionOut::log_in_success(std::string& a_name, std::string& a_gender, int a
     arg.m_strings.emplace_back(a_name);
     arg.m_strings.emplace_back(a_gender);
     pack_and_send_to_client(arg, LOG_IN_SUCCESS, a_client_socket);
+    m_sockets.emplace_back(a_client_socket);
 }
 
 void ActionOut::log_in_wrong_name(int a_client_socket)
@@ -193,12 +194,13 @@ void ActionOut::get_player(std::string& a_name, std::string& a_gender, int a_amo
 {
     char buffer[BUFFER_SIZE];
     int size = pack_player(buffer, a_name, a_gender, a_amount);
-    m_tcp.send_all_clients(buffer, size);
+    m_tcp.send_all_clients(buffer, size, m_sockets);
 }
 
-void ActionOut::delete_player(std::string& a_name)
+void ActionOut::delete_player(std::string& a_name, int a_socket)
 {
     name_and_message(a_name, DELETE_PLAYER);
+    m_sockets.remove(a_socket);
 }
 
 void ActionOut::reveal_cards(std::string& a_name)

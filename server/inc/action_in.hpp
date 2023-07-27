@@ -1,10 +1,10 @@
 #pragma once
 
+#include "cli_cmd.hpp"
 #include "protocol.hpp"
 #include "subscribs.hpp"
-#include "bet_round.hpp"
 #include "action_out.hpp"
-#include "players_container.hpp"
+#include "tables_container.hpp"
 
 namespace poker
 {
@@ -12,7 +12,7 @@ namespace poker
 class ActionIn
 {
 public:
-    ActionIn(ActionOut& a_action_out, PlayersContainer& a_players, Subscribs& a_subscribs, BetRound& a_bet_round);
+    ActionIn(TcpServer& a_tcp, Subscribs& a_subscribs, TablesContainer& a_tables_container);
 
     void get(char* a_buffer, int a_client_socket);
     void player_deleted(int a_client_socket);
@@ -21,19 +21,18 @@ private:
     void registration_reques(char* a_buffer, int a_client_socket);
     void log_in_reques(char* a_buffer, int a_client_socket);
 
-    void finish_bet();
-    void start_bet();
-    void bet(char* a_buffer);
+    void finish_bet(int a_client_socket);
+    void start_bet(int a_client_socket);
+    void bet(char* a_buffer, int a_client_socket);
 
-    void fold();
-    void check();
+    void fold(int a_client_socket);
+    void check(int a_client_socket);
     void wake_up_client(int a_client_socket);
 
 private:
-    BetRound& m_bet_round;
+    ActionOut m_action_out; 
     Subscribs& m_subscribs;
-    ActionOut& m_action_out; 
-    PlayersContainer& m_players;
+    TablesContainer& m_tables_container;
 };
 
 
