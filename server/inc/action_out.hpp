@@ -4,6 +4,7 @@
 
 #include "tcp_server.hpp"
 #include "protocol.hpp"
+#include "cli_cmd.hpp"
 #include "card.hpp"
 
 #define BUFFER_SIZE 512

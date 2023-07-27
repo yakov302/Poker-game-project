@@ -8,7 +8,7 @@ CC = $(CXX)
 WARNINGS = -pedantic
 WARNINGS += -Wall -Werror
 DEBUG = -g3
-CXX_STD = c++17
+CXX_STD = c++2a
 LDLIBS   = -lpthread
 
 CXXFLAGS = $(WARNINGS) $(DEBUG) -std=$(CXX_STD) $(LDLIBS)

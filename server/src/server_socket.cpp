@@ -80,15 +80,24 @@ ServerSocket::~ServerSocket()
     close_all_clients_sockets();
 }
 
-void ServerSocket::delete_client(std::list<int>::iterator& a_it)
+void ServerSocket::delete_client_by_iterator(std::list<int>::iterator& a_it)
 {
     int socket = *a_it;
 	close(socket);
     FD_CLR(socket, &m_source_fd);
-    m_connected_sockets.remove(socket);
+    m_connected_sockets.erase(a_it);
     m_deleted_sockets.emplace_front(socket);
     --m_num_of_clients;
     --a_it;
+}
+
+void ServerSocket::delete_client_by_socket(int a_socket)
+{
+    close(a_socket);
+    FD_CLR(a_socket, &m_source_fd);
+    m_connected_sockets.remove(a_socket);
+    m_deleted_sockets.emplace_front(a_socket);
+    --m_num_of_clients;
 }
 
 void ServerSocket::insert_client(int a_client_socket)

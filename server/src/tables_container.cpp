@@ -56,6 +56,7 @@ void TablesContainer::new_table()
 void TablesContainer::delete_player(int a_client_socket)
 {
     int table_id = m_socket_to_table_id[a_client_socket];
+    std::cout << __func__ << "(): m_tables[" << table_id << "]->m_players.delete_player(a_client_socket = " << a_client_socket << ")" << std::endl;
     m_tables[table_id].get()->m_players.delete_player(a_client_socket); 
 }
 

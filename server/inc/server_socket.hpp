@@ -28,7 +28,8 @@ public:
 
     void delete_less_active_client();
     void insert_client(int a_client_socket);
-    void delete_client(std::list<int>::iterator& a_it);
+    void delete_client_by_socket(int a_socket);
+    void delete_client_by_iterator(std::list<int>::iterator& a_it);
     void move_client_to_front(std::list<int>::iterator& a_it);
     void delete_from_deleted_sockets(std::list<int>::iterator& a_it);
 

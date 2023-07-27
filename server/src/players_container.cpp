@@ -56,7 +56,10 @@ bool PlayersContainer::log_in_chack(std::string& a_name,  int a_client_socket)co
 void PlayersContainer::delete_player(std::string& a_name, int a_client_socket)
 {
     if(m_players.find(a_name) == m_players.end()) [[unlikely]]
+    {
+        std::cout << __func__ << "(): " << a_name << "does not exist" << std::endl;
         return;
+    }
 
     for(int i = 0; i < 2; ++i)
         m_deck.push_card(give_card(a_name));
@@ -68,8 +71,10 @@ void PlayersContainer::delete_player(int a_client_socket)
 {
     for(auto player : m_players)
     {
+        std::cout << __func__ << "(): comper " <<  player.second.get()->m_vars[socket] << " to " << a_client_socket << std::endl;
         if(player.second.get()->m_vars[socket] == a_client_socket)
         {
+            std::cout << __func__ << "(): delete_player(name: " << player.second.get()->m_name << ", client_socket: " << a_client_socket << ")" << std::endl;
             delete_player(player.second.get()->m_name, a_client_socket);
             break;
         }

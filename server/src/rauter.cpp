@@ -62,7 +62,6 @@ void Rauter::delete_deleted()
 	while(it != end && !m_socket.deleted_sockets().empty())
 	{
 		m_action_in.player_deleted(*it);
-		m_tables_container.delete_player(*it);
 		m_socket.delete_from_deleted_sockets(it);
 
 		if(!m_socket.deleted_sockets().empty())
@@ -93,7 +92,11 @@ void Rauter::take_care_exists_clients()
 		if(m_socket.is_in_active_fd(client_socket))
 		{
 			if(!m_tcp.receive_from_client(client_socket, m_buffer))
-				m_socket.delete_client(it);
+			{
+				std::cout << __func__ << "(): receive_from_client(client_socket = " << client_socket << ") fail!" << std::endl;
+				m_socket.delete_client_by_iterator(it);
+				m_tables_container.delete_player(client_socket);
+			}
 
             else
             {
