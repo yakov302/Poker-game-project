@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern bool dbg[NUM_OF_DBG_TYPES];
+
 namespace impl
 {
 
@@ -93,7 +95,9 @@ void Rauter::take_care_exists_clients()
 		{
 			if(!m_tcp.receive_from_client(client_socket, m_buffer))
 			{
-				std::cout << __func__ << "(): receive_from_client(client_socket = " << client_socket << ") fail!" << std::endl;
+				if(dbg[RAUTER])[[unlikely]]
+					std::cout << __func__ << "(): m_tcp.receive_from_client(client_socket = " << client_socket << ") fail!" << std::endl;
+				
 				m_socket.delete_client_by_iterator(it);
 				m_tables_container.delete_player(client_socket);
 			}

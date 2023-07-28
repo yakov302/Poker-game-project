@@ -2,6 +2,7 @@
 
 #include <thread>
 
+#include "cli_cmd.hpp"
 #include "tcp_server.hpp"
 #include "action_in.hpp"
 #include "server_socket.hpp"

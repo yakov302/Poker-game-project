@@ -17,6 +17,7 @@ public:
     TableManager(TcpServer& a_tcp);
 
     bool is_table_full();
+    bool is_table_empty();
 
 private:
     friend class ActionIn;

@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern bool dbg[NUM_OF_DBG_TYPES];
+
 Table::Table()
 : m_chips()
 , m_cards()

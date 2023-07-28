@@ -2,6 +2,7 @@
 
 #include <thread>
 
+#include "cli_cmd.hpp"
 #include "card_round.hpp"
 #include "action_out.hpp"
 #include "players_container.hpp"

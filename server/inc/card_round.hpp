@@ -3,6 +3,7 @@
 #include "deck.hpp"
 #include "table.hpp"
 #include "winner.hpp"
+#include "cli_cmd.hpp"
 #include "bet_round.hpp"
 #include "action_out.hpp"
 #include "players_container.hpp"

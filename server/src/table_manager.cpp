@@ -20,9 +20,17 @@ TableManager::TableManager(TcpServer& a_tcp)
 bool TableManager::is_table_full()
 {
     if(dbg[TABLE_MANAGER])[[unlikely]]
-        std::cout << __func__ << "(): " << "num_of_players: " << m_players.num_of_players() << ", MAX_NUM_OF_PLAYERS: " << MAX_NUM_OF_PLAYERS << std::endl;
+        std::cout << __func__ << "(): " << "return (num_of_players: " << m_players.num_of_players() << ">= MAX_NUM_OF_PLAYERS: " << MAX_NUM_OF_PLAYERS << ")" << std::endl;
 
     return (m_players.num_of_players() >= MAX_NUM_OF_PLAYERS);
+}
+
+bool TableManager::is_table_empty()
+{
+    if(dbg[TABLE_MANAGER])[[unlikely]]
+        std::cout << __func__ << "(): " << "return (num_of_players: " << m_players.num_of_players() << " <= 0)" << std::endl;
+
+    return (m_players.num_of_players() <= 0);
 }
 
 

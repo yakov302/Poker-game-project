@@ -10,6 +10,7 @@ std::string socket = "socket";
 std::string amount = "amount";
 std::string result = "result";
 std::string my_turn = "my_turn";
+extern bool dbg[NUM_OF_DBG_TYPES];
 
 PlayersContainer::PlayersContainer(ActionOut& a_action_out, Deck& a_deck)
 : m_wait()
@@ -43,13 +44,7 @@ bool PlayersContainer::log_in_chack(std::string& a_name,  int a_client_socket)co
         m_action_out.user_name_alredy_log(a_client_socket);
         return false;
     }
-
-    if(num_of_players() == MAX_NUM_OF_PLAYERS)[[unlikely]]
-    {
-        //implement message ?
-        return false;
-    }
-
+    
     return true;
 }
 
@@ -57,7 +52,8 @@ void PlayersContainer::delete_player(std::string& a_name, int a_client_socket)
 {
     if(m_players.find(a_name) == m_players.end()) [[unlikely]]
     {
-        std::cout << __func__ << "(): " << a_name << "does not exist" << std::endl;
+        if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): " << a_name << "does not exist -> cant delete player" << std::endl;
         return;
     }
 
@@ -71,10 +67,14 @@ void PlayersContainer::delete_player(int a_client_socket)
 {
     for(auto player : m_players)
     {
-        std::cout << __func__ << "(): comper " <<  player.second.get()->m_vars[socket] << " to " << a_client_socket << std::endl;
+        if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): comper " <<  player.second.get()->m_vars[socket] << " to " << a_client_socket << std::endl;
+        
         if(player.second.get()->m_vars[socket] == a_client_socket)
         {
-            std::cout << __func__ << "(): delete_player(name: " << player.second.get()->m_name << ", client_socket: " << a_client_socket << ")" << std::endl;
+            if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+                std::cout << __func__ << "(): call delete_player(name: " << player.second.get()->m_name << ", client_socket: " << a_client_socket << ")" << std::endl;
+            
             delete_player(player.second.get()->m_name, a_client_socket);
             break;
         }

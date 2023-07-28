@@ -7,6 +7,8 @@
 #include <string>
 #include <list>
 
+#include "cli_cmd.hpp"
+
 namespace poker
 {
 

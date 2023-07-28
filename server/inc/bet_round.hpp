@@ -2,6 +2,7 @@
 
 #include "players_container.hpp"
 #include "action_out.hpp"
+#include "cli_cmd.hpp"
 #include "table.hpp"
 #include "deck.hpp"
 

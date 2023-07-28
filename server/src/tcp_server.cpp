@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern bool dbg[NUM_OF_DBG_TYPES];
+
 TcpServer::TcpServer(ServerSocket& a_socket)
 : m_socket(a_socket)
 {
@@ -45,10 +47,12 @@ bool TcpServer::receive_from_client(int a_client_socket, char* a_buffer)
 bool TcpServer::send_to_client(int a_client_socket, char* a_buffer, int a_message_size)
 {
 	Lock loack(m_mutex);
-	std::cout << __func__ << "(): send(client_socket = " << a_client_socket << ")" << std::endl;
 	int sent_byte = 0;
 	while((sent_byte < a_message_size) && (errno != EPIPE))
 	{
+		if(dbg[TCP_SEVER])[[unlikely]]
+			std::cout << __func__ << "(): call send(socket: " << a_client_socket << ", buf size: " << (a_message_size - sent_byte) << ")" << std::endl;
+
     	int current_byte = send(a_client_socket, (a_buffer + sent_byte), (a_message_size - sent_byte), 0);
 		if(current_byte < 0)[[unlikely]]
 			perror("Send fail!\n");
@@ -70,10 +74,15 @@ void TcpServer::send_all_clients(char* a_buffer, int a_message_size, std::list<i
 	while(it != end) 
 	{	
         int client_socket = *it;
-		std::cout << __func__ << "(): send_to_client(socket = " << client_socket << ")" << std::endl;
+
+		if(dbg[TCP_SEVER])[[unlikely]]
+			std::cout << __func__ << "(): call send_to_client(socket: " << client_socket << ", buf size: " << a_message_size << ")" << std::endl;
+		
 		if(!send_to_client(client_socket, a_buffer, a_message_size))
 		{
-			std::cout << __func__ << "(): send fail! delete socket " << client_socket <<  std::endl;
+			if(dbg[TCP_SEVER])[[unlikely]]
+				std::cout << __func__ << "(): send_to_client() fail! delete socket: " << client_socket <<  std::endl;
+			
 			m_socket.delete_client_by_socket(*it);
 			a_sockts.erase(it);
 			--it;

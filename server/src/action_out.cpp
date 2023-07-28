@@ -3,6 +3,8 @@
 namespace poker
 {
 
+extern bool dbg[NUM_OF_DBG_TYPES];
+
 ActionOut::ActionOut(TcpServer& a_tcp)
 : m_tcp(a_tcp)
 {
@@ -23,7 +25,10 @@ void ActionOut::name_and_message(std::string& a_name, Message_type a_message)
     Args arg(1, 0);
     arg.m_strings.emplace_back(a_name);
     int size = pack(buffer, arg, a_message);
-    std::cout << __func__ << "(): send_all_clients(name: " << a_name << ", message: " << a_message << ")" << std::endl;
+
+    if(dbg[ACTION_OUT])[[unlikely]]
+        std::cout << __func__ << "(): call m_tcp.send_all_clients(name: " << a_name << ", message: " << a_message << ")" << std::endl;
+
     m_tcp.send_all_clients(buffer, size, m_sockets);
 }
 
@@ -57,7 +62,10 @@ void ActionOut::pack_and_send_all(Args& a_arg, Message_type a_message)
 {
     char buffer[BUFFER_SIZE];
     int size = pack(buffer, a_arg, a_message);
-    std::cout << __func__ << "(): send_all_clients(message: " << a_message << ")" << std::endl;
+
+    if(dbg[ACTION_OUT])[[unlikely]]
+        std::cout << __func__ << "(): call m_tcp.send_all_clients(message: " << a_message << ")" << std::endl;
+
     m_tcp.send_all_clients(buffer, size, m_sockets);
 }
 
@@ -65,7 +73,10 @@ void ActionOut::pack_and_send_to_client(Args& a_arg, Message_type a_message, int
 {
     char buffer[BUFFER_SIZE];
     int size = pack(buffer, a_arg, a_message);
-    std::cout << __func__ << "(): send_to_client(message: " << a_message << ", client_socket: " << a_client_socket << ")" << std::endl;
+
+    if(dbg[ACTION_OUT])[[unlikely]]
+        std::cout << __func__ << "(): call m_tcp.send_to_client(message: " << a_message << ", client_socket: " << a_client_socket << ")" << std::endl;
+
     m_tcp.send_to_client(a_client_socket, buffer, size);
 }
 
@@ -76,7 +87,10 @@ void ActionOut::flag(std::string& a_name, std::string& a_flag, Message_type a_me
     arg.m_strings.emplace_back(a_name);
     arg.m_strings.emplace_back(a_flag);
     int size = pack(buffer, arg, a_message);
-    std::cout << __func__ << "(): send_all_clients(name: " << a_name << ", flag: " << a_flag << ", message: " << a_message << ")" << std::endl;
+
+    if(dbg[ACTION_OUT])[[unlikely]]
+        std::cout << __func__ << "(): call m_tcp.send_all_clients(name: " << a_name << ", flag: " << a_flag << ", message: " << a_message << ")" << std::endl;
+    
     m_tcp.send_all_clients(buffer, size, m_sockets);
 }
 
@@ -191,7 +205,10 @@ void ActionOut::get_player(std::string& a_name, std::string& a_gender, int a_amo
 {
     char buffer[BUFFER_SIZE];
     int size = pack_player(buffer, a_name, a_gender, a_amount);
-    std::cout << __func__ << "(): send_to_client(name: " << a_name << ", gender: " << a_gender << ", amount: " << a_amount << ", client_socket: " << a_client_socket << ")" << std::endl;
+
+    if(dbg[ACTION_OUT])[[unlikely]]
+        std::cout << __func__ << "(): call m_tcp.send_to_client(name: " << a_name << ", gender: " << a_gender << ", amount: " << a_amount << ", client_socket: " << a_client_socket << ")" << std::endl;
+    
     m_tcp.send_to_client(a_client_socket, buffer, size);
 }
 
@@ -199,15 +216,20 @@ void ActionOut::get_player(std::string& a_name, std::string& a_gender, int a_amo
 {
     char buffer[BUFFER_SIZE];
     int size = pack_player(buffer, a_name, a_gender, a_amount);
-    std::cout << __func__ << "(): send_all_clients(name: " << a_name << ", gender: " << a_gender << ", amount: " << a_amount << ")" << std::endl;
+
+    if(dbg[ACTION_OUT])[[unlikely]]
+        std::cout << __func__ << "(): call m_tcp.send_all_clients(name: " << a_name << ", gender: " << a_gender << ", amount: " << a_amount << ")" << std::endl;
+    
     m_tcp.send_all_clients(buffer, size, m_sockets);
 }
 
 void ActionOut::delete_player(std::string& a_name, int a_socket)
 {
+    if(dbg[ACTION_OUT])[[unlikely]]
+        std::cout << __func__ << "(): call m_sockets.remove(a_socket = " << a_socket << ")" << "\n";
+
     m_sockets.remove(a_socket);
     name_and_message(a_name, DELETE_PLAYER);
-    std::cout << __func__ << "(): m_sockets.remove(a_socket = " << a_socket << ")" << "\n";
 }
 
 void ActionOut::reveal_cards(std::string& a_name)

@@ -16,10 +16,23 @@ void print_dbg_types()
     std::cout << std::endl;
     std::cout << "-------------------------------------------" << std::endl;
     std::cout << "debug types: " << std::endl;
-    std::cout << "0 - for PLAYERS_CONTAINER" << std::endl;
-    std::cout << "1 - for PLAYER_MANAGER" << std::endl;
-    std::cout << "2 - for TABLES_CONTAINER" << std::endl;
-    std::cout << "3 - for TABLE_MANAGER" << std::endl;
+    std::cout << "0  - for ACTION_IN" << std::endl;
+    std::cout << "1  - for ACTION_OUT" << std::endl;
+    std::cout << "2  - for BET_ROUND" << std::endl;
+    std::cout << "3  - for CARD_ROUND" << std::endl;
+    std::cout << "4  - for CARD" << std::endl;
+    std::cout << "5  - for DECK" << std::endl;
+    std::cout << "6  - for GAME" << std::endl;
+    std::cout << "7  - for PLAYER" << std::endl;
+    std::cout << "8  - for PLAYERS_CONTAINER" << std::endl;
+    std::cout << "9  - for RAUTER" << std::endl;
+    std::cout << "10 - for SUBSCRIBS" << std::endl;
+    std::cout << "11 - for TABLE_MANAGER" << std::endl;
+    std::cout << "12 - for PLAYER_MANAGER" << std::endl;
+    std::cout << "13 - for TABLE" << std::endl;
+    std::cout << "14 - for TABLES_CONTAINER" << std::endl;
+    std::cout << "15 - for TCP_SEVER" << std::endl;
+    std::cout << "16 - for WINNER" << std::endl;
     std::cout << "-------------------------------------------" << std::endl;
     std::cout << std::endl;
 }

@@ -17,6 +17,8 @@ public:
     void delete_player(int a_client_socket);
     void stop();
 
+    bool is_table_is_alive(int a_table_id);
+
 private:
     void new_table();
 

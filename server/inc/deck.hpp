@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "card.hpp"
+#include "cli_cmd.hpp"
 
 #define NUM_OF_CARDS_IN_DECK 52
 #define DECK_CONFIG_FILE_PATH "./resources/deck.txt"

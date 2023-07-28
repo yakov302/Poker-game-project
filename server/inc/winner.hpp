@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "card.hpp"
+#include "cli_cmd.hpp"
 #include "players_container.hpp"
 
 namespace poker

@@ -4,6 +4,7 @@ namespace poker
 {
 
 extern std::string viewer;
+extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
 {
@@ -41,6 +42,8 @@ void Game::run()
         if(m_players.num_of_players()< 2 || chack_winer())
         {
             m_players.wait().enter_wait();
+            if(m_stop){break;}
+
             m_action_out.clear_text();
             set_open_player();
         }

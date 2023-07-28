@@ -9,6 +9,7 @@ extern std::string amount;
 extern std::string viewer;
 extern std::string socket;
 extern std::string my_turn;
+extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
 {

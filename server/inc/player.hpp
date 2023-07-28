@@ -4,6 +4,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "cli_cmd.hpp"
 #include "card.hpp"
 
 #define NUM_OF_VARS 4

@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "cli_cmd.hpp"
 #include "card.hpp"
 
 #define NUM_OF_TABLE_CARDS 5

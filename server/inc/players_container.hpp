@@ -6,6 +6,7 @@
 #include "deck.hpp"
 #include "wait.hpp"
 #include "player.hpp"
+#include "cli_cmd.hpp"
 #include "action_out.hpp"
 
 #define MAX_NUM_OF_PLAYERS 2

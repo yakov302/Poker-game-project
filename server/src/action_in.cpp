@@ -30,6 +30,9 @@ void ActionIn::get(char* a_buffer, int a_client_socket)
 {
     Message_type message = message_type(a_buffer);
 
+    if(dbg[ACTION_IN])[[unlikely]]
+        std::cout << __func__ << "(): " << "get  message: " << message << " frome socket: " << a_client_socket << " to table id: " <<  m_tables_container.m_socket_to_table_id[a_client_socket] << std::endl;
+
     switch (message)
     {
     case REGISTRATION_REQUES:
@@ -87,13 +90,14 @@ void ActionIn::log_in_reques(char* a_buffer, int a_client_socket)
     std::string gender = m_subscribs[arg.m_strings[0]].m_gender;
 
     if(dbg[ACTION_IN])[[unlikely]]
-        std::cout << __func__ << "(): " << "send m_subscribs.log_in_chack(" << arg.m_strings[0] << ", " << arg.m_strings[1]<< ", " << a_client_socket<< ")" << std::endl;
+        std::cout << __func__ << "(): " << "call m_subscribs.log_in_chack(" << arg.m_strings[0] << ", " << arg.m_strings[1]<< ", " << a_client_socket<< ")" << std::endl;
     
     if(!m_subscribs.log_in_chack(arg.m_strings[0], arg.m_strings[1], a_client_socket))
         return;
 
     if(dbg[ACTION_IN])[[unlikely]]
-        std::cout << __func__ << "(): " << "send m_tables_container.get_player(" << arg.m_strings[0] << ", " << gender << ", " << arg.m_ints[0]<< ", " <<  a_client_socket << ")" << std::endl;
+        std::cout << __func__ << "(): " << "call m_tables_container.get_player(" << arg.m_strings[0] << ", " << gender << ", " << arg.m_ints[0]<< ", " <<  a_client_socket << ")" << std::endl;
+    
     m_tables_container.get_player(arg.m_strings[0], gender, arg.m_ints[0], a_client_socket);
 }
 
@@ -137,7 +141,8 @@ void ActionIn::wake_up_client(int a_client_socket)
 void ActionIn::player_deleted(int a_client_socket)
 {
     int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
-    m_tables_container.m_tables[table_id].get()->m_bet_round.player_deleted(a_client_socket);
+    if(m_tables_container.is_table_is_alive(table_id))
+        m_tables_container.m_tables[table_id].get()->m_bet_round.player_deleted(a_client_socket);
 }
 
 

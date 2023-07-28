@@ -2,6 +2,8 @@
 
 namespace poker
 {
+    
+extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
 {

@@ -4,6 +4,7 @@
 
 #include "server_socket.hpp"
 #include "tcp_server.hpp"
+#include "cli_cmd.hpp"
 
 namespace poker
 {

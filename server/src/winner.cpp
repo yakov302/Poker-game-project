@@ -6,6 +6,7 @@ namespace poker
 extern std::string fold;
 extern std::string result;
 extern std::string viewer;
+extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
 {

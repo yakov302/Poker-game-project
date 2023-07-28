@@ -34,7 +34,7 @@ bool Subscribs::log_in_chack(std::string& a_name, std::string&  a_password, int 
     if(m_subscribs.find(a_name) == m_subscribs.end() || m_subscribs.find(a_name)->second.m_name == "")
     {
         if(dbg[SUBSCRIBS])[[unlikely]]
-            std::cout << __func__ << "(): " << "send m_action_out.log_in_wrong_name(" << a_client_socket << ")" << std::endl;
+            std::cout << __func__ << "(): " << a_name << " does not exist -> return false" << std::endl;
 
         m_action_out.log_in_wrong_name(a_client_socket);
         return false;
@@ -44,7 +44,7 @@ bool Subscribs::log_in_chack(std::string& a_name, std::string&  a_password, int 
     if(encrypted_password != m_subscribs[a_name].m_password)
     {
         if(dbg[SUBSCRIBS])[[unlikely]]
-            std::cout << __func__ << "(): " << "send m_action_out.log_in_wrong_password(" << a_client_socket << ")" << std::endl;
+            std::cout << __func__ << "(): " << a_name << " password does not match -> return false" << std::endl;
         
         m_action_out.log_in_wrong_password(a_client_socket);
         return false;

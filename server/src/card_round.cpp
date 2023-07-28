@@ -8,6 +8,7 @@ extern std::string amount;
 extern std::string result;
 extern std::string viewer;
 std::string reveal_cards = "reveal_cards";
+extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
 {
