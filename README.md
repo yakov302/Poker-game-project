@@ -32,3 +32,5 @@ Requirements:
           go to directory - Poker-game-project/client/src
           run command - make check.
 
+## License
+This project is licensed under the Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) - see the LICENSE file for details
