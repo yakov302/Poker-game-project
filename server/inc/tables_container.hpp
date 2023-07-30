@@ -23,6 +23,7 @@ public:
 private:
     void new_table();
     void find_match_for_singles();
+    void check_if_table_need_to_delete(int table_id);
 
 private:
     friend class ActionIn;

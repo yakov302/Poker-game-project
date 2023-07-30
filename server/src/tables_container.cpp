@@ -28,6 +28,7 @@ void TablesContainer::get_player(std::string& a_name, std::string& a_gender, int
             {
                 if(dbg[TABLES_CONTAINER])[[unlikely]]
                     std::cout <<__func__ << "(): player(" << a_name << ", " <<  a_gender << ", " << a_amount << ", "  << a_client_socket<< ") alredy in table id: " << table.first << std::endl;
+                player_enter_table = true;
                 break;
             }
 
@@ -81,8 +82,12 @@ void TablesContainer::delete_player(int a_client_socket)
     m_tables[table_id].get()->m_players.delete_player(a_client_socket);
     --m_num_of_players;
 
-    find_match_for_singles(); 
-    
+    find_match_for_singles();    
+    check_if_table_need_to_delete(table_id);
+}
+
+void TablesContainer::check_if_table_need_to_delete(int table_id)
+{
     if(m_tables[table_id].get()->is_table_empty() && m_tables.size() > 1)
     {
         if(dbg[TABLES_CONTAINER])[[unlikely]]
@@ -98,6 +103,7 @@ void TablesContainer::find_match_for_singles()
     if(m_tables.size() <= 1)
         return;
 
+    bool match = false;
     for(auto first_table : m_tables)
     {
         if(first_table.second.get()->m_players.num_of_players() > 1)
@@ -105,6 +111,9 @@ void TablesContainer::find_match_for_singles()
 
         for(auto second_table : m_tables)
         {
+            if(dbg[TABLES_CONTAINER])[[unlikely]]
+                std::cout << __func__ << "(): first_table: " << first_table.first << " second_table: " << second_table.first << std::endl;
+            
             if(first_table.first == second_table.first)
                 continue;
             
@@ -116,10 +125,14 @@ void TablesContainer::find_match_for_singles()
                 auto player = first_table.second.get()->m_players.give_lest_player();
                 second_table.second.get()->m_players.new_player(player.get()->m_name, player.get()->m_gender, player.get()->m_vars[amount], player.get()->m_vars[socket]);
                 first_table.second.get()->m_players.delete_player(player.get()->m_vars[socket]);
-
+                m_socket_to_table_id[player.get()->m_vars[socket]] = second_table.first;
+                check_if_table_need_to_delete(first_table.first);
+                match = true;
                 break;
             }
         }
+
+        if(match){break;}
     }
 }
 
