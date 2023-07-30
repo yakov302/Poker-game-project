@@ -3,13 +3,11 @@
 #include <thread>
 
 #include "cli_cmd.hpp"
-#include "tcp_server.hpp"
 #include "action_in.hpp"
+#include "tcp_server.hpp"
+#include "msg_memory.hpp"
 #include "server_socket.hpp"
 #include "tables_container.hpp"
-
-#define BUFFER_SIZE 512
-#define MAX_SOCKET_NUM_TO_LISTEN 1024
 
 namespace poker
 {
@@ -17,7 +15,7 @@ namespace poker
 class Rauter
 {
 public: 
-    Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action, TablesContainer& a_tables_container);
+    Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action, TablesContainer& a_tables_container, MsgMemory& a_msg_memory);
     ~Rauter();
 
     void run();
@@ -31,13 +29,13 @@ private:
 
 private:
     bool m_stop;
-    char* m_buffer;
     int m_activity;
     std::thread* m_thread;
 
     TcpServer& m_tcp;
     ActionIn& m_action_in;
     ServerSocket& m_socket;
+    MsgMemory& m_msg_memory;
     TablesContainer& m_tables_container;
 };
 

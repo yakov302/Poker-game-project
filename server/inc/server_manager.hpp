@@ -9,9 +9,12 @@
 #include "card_round.hpp"
 #include "action_out.hpp"
 #include "tcp_server.hpp"
+#include "msg_memory.hpp"
 #include "server_socket.hpp"
 #include "tables_container.hpp"
 #include "players_container.hpp"
+
+#define NUM_OF_MESSAGES_IN_MEMORY 512
 
 namespace poker
 {
@@ -27,7 +30,8 @@ private:
     ServerSocket m_socket;
     TcpServer m_tcp;
     TablesContainer m_tables_container;
-    Subscribs m_subscribs;  
+    Subscribs m_subscribs;
+    MsgMemory m_msg_memory;  
     ActionIn m_action_in;
     Rauter m_rauter;
 };

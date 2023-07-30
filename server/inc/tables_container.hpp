@@ -17,6 +17,7 @@ public:
     void delete_player(int a_client_socket);
     void stop();
 
+    int num_of_players();
     bool is_table_is_alive(int a_table_id);
 
 private:
@@ -26,6 +27,8 @@ private:
     friend class ActionIn;
 
     int m_tables_index;
+    int m_num_of_players;
+
     TcpServer& m_tcp;
     std::unordered_map<int, tablePointer> m_tables;
     std::unordered_map<int, int> m_socket_to_table_id;

@@ -7,6 +7,7 @@ extern bool dbg[NUM_OF_DBG_TYPES];
 
 TablesContainer::TablesContainer(TcpServer& a_tcp)
 : m_tables_index(0)
+, m_num_of_players(0)
 , m_tcp(a_tcp)
 {
     if(dbg[TABLES_CONTAINER])[[unlikely]]
@@ -36,6 +37,7 @@ void TablesContainer::get_player(std::string& a_name, std::string& a_gender, int
                 table.second.get()->m_players.new_player(a_name, a_gender, a_amount, a_client_socket);
                 m_socket_to_table_id[a_client_socket] = table.first;
                 player_enter_table = true;
+                ++m_num_of_players;
                 break;
             }
             else
@@ -74,7 +76,8 @@ void TablesContainer::delete_player(int a_client_socket)
     if(dbg[TABLES_CONTAINER])[[unlikely]]
         std::cout << __func__ << "(): call m_tables[" << table_id << "]->m_players.delete_player(a_client_socket = " << a_client_socket << ")" << std::endl;
     
-    m_tables[table_id].get()->m_players.delete_player(a_client_socket); 
+    m_tables[table_id].get()->m_players.delete_player(a_client_socket);
+    --m_num_of_players;
 
     if(m_tables[table_id].get()->is_table_empty() && m_tables.size() > 1)
     {
@@ -97,6 +100,11 @@ bool TablesContainer::is_table_is_alive(int a_table_id)
     if(m_tables.find(a_table_id) == m_tables.end())
         return false;
     return true;
+}
+
+int TablesContainer::num_of_players()
+{
+    return m_num_of_players;
 }
 
 

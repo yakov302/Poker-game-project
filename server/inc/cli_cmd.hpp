@@ -16,6 +16,7 @@ typedef enum
     CARD,
     DECK,
     GAME, 
+    MSG_MEMORY,
     PLAYER,
     PLAYERS_CONTAINER,
     RAUTER,

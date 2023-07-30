@@ -18,13 +18,13 @@ static void* thread_function(void* arg)
 
 } //namespace impl
 
-Rauter::Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action_in, TablesContainer& a_tables_container)
+Rauter::Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action_in, TablesContainer& a_tables_container, MsgMemory& a_msg_memory)
 : m_stop(false)
-, m_buffer(new char[BUFFER_SIZE])
 , m_activity(0)
 , m_tcp(a_tcp)
 , m_action_in(a_action_in)
 , m_socket(a_socket)
+, m_msg_memory(a_msg_memory)
 , m_tables_container(a_tables_container)
 {
 	m_thread = new std::thread(impl::thread_function, this);
@@ -32,7 +32,6 @@ Rauter::Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action_in, 
 
 Rauter::~Rauter()
 {
-	delete[] m_buffer;
 	m_thread->join();
 	delete m_thread;
 }
@@ -40,10 +39,17 @@ Rauter::~Rauter()
 void Rauter::run()
 {
 	while(!m_stop)
-	{		
+	{	
+
+		if(dbg[RAUTER])[[unlikely]]
+			std::cout << __func__ << "(): router enter select" << std::endl;	
+		
 		m_activity = select(MAX_SOCKET_NUM_TO_LISTEN, &m_socket.copy_of_source_fd(), 0, 0, 0);
 		if((m_activity < 0) && (errno != EINTR))[[unlikely]]
 			fatal_error("Select fail!\n");
+		
+		if(dbg[RAUTER])[[unlikely]]
+			std::cout << __func__ << "(): router exit select" << std::endl;
 
 		if(m_socket.is_in_active_fd(m_socket.listen_socket()))
 		{
@@ -81,6 +87,9 @@ void Rauter::accept_new_client()
 		fatal_error("Accept fail!\n");
 
 	m_socket.insert_client(client_socket);
+
+	if(dbg[RAUTER])[[unlikely]]
+		std::cout << __func__ << "(): accept new client socket: " << client_socket << std::endl;
 }
 
 void Rauter::take_care_exists_clients()
@@ -93,7 +102,7 @@ void Rauter::take_care_exists_clients()
         int client_socket = *it;
 		if(m_socket.is_in_active_fd(client_socket))
 		{
-			if(!m_tcp.receive_from_client(client_socket, m_buffer))
+			if(!m_tcp.receive_from_client(client_socket, m_msg_memory.enqueue(client_socket)))
 			{
 				if(dbg[RAUTER])[[unlikely]]
 					std::cout << __func__ << "(): m_tcp.receive_from_client(client_socket = " << client_socket << ") fail!" << std::endl;
@@ -101,13 +110,15 @@ void Rauter::take_care_exists_clients()
 				m_socket.delete_client_by_iterator(it);
 				m_tables_container.delete_player(client_socket);
 			}
-
             else
-            {
-                m_socket.move_client_to_front(it);
-                m_action_in.get(m_buffer, client_socket);
-            }
-			
+			{
+				if(dbg[RAUTER])[[unlikely]]
+					std::cout << __func__ << "(): m_tcp.receive_from_client(client_socket = " << client_socket << ")" << std::endl;
+                
+				m_socket.move_client_to_front(it);
+			}
+
+			m_msg_memory.unlock();
 			--m_activity;
 		}
 		++it; 
