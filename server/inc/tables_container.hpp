@@ -22,6 +22,7 @@ public:
 
 private:
     void new_table();
+    void find_match_for_singles();
 
 private:
     friend class ActionIn;

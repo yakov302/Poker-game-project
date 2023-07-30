@@ -18,7 +18,7 @@ PlayersContainer::PlayersContainer(ActionOut& a_action_out, Deck& a_deck)
 , m_action_out(a_action_out)
 , m_players()
 {
-    m_players.reserve(MAX_NUM_OF_PLAYERS);
+    m_players.reserve(MAX_NUM_OF_PLAYERS_IN_TABLE);
 }
 
 void PlayersContainer::new_player(std::string& a_name, std::string& a_gender, int a_amount, int a_client_socket)
@@ -44,7 +44,7 @@ bool PlayersContainer::log_in_chack(std::string& a_name,  int a_client_socket)co
         m_action_out.user_name_alredy_log(a_client_socket);
         return false;
     }
-    
+
     return true;
 }
 
@@ -185,6 +185,11 @@ playerIterator PlayersContainer::begin()
 playerIterator PlayersContainer::end()
 {
     return m_players.end();
+}
+
+playerPointer& PlayersContainer::give_lest_player()
+{
+    return m_players.begin()->second;
 }
 
 

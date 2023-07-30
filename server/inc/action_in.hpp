@@ -7,7 +7,8 @@
 #include "msg_memory.hpp"
 #include "tables_container.hpp"
 
-#define MAX_SOCKET_NUM_TO_LISTEN 1024
+#define NUM_OF_MESSAGES_IN_MEMORY 128
+#define NUM_OF_PLAYERS_PER_THREADS 32
 
 namespace poker
 {

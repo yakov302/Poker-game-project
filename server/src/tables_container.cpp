@@ -4,6 +4,8 @@ namespace poker
 {
 
 extern bool dbg[NUM_OF_DBG_TYPES];
+extern std::string socket;
+extern std::string amount;
 
 TablesContainer::TablesContainer(TcpServer& a_tcp)
 : m_tables_index(0)
@@ -79,6 +81,8 @@ void TablesContainer::delete_player(int a_client_socket)
     m_tables[table_id].get()->m_players.delete_player(a_client_socket);
     --m_num_of_players;
 
+    find_match_for_singles(); 
+    
     if(m_tables[table_id].get()->is_table_empty() && m_tables.size() > 1)
     {
         if(dbg[TABLES_CONTAINER])[[unlikely]]
@@ -86,6 +90,36 @@ void TablesContainer::delete_player(int a_client_socket)
 
         m_tables[table_id].get()->m_game.stop();
         m_tables.erase(table_id);
+    }
+}
+
+void TablesContainer::find_match_for_singles()
+{
+    if(m_tables.size() <= 1)
+        return;
+
+    for(auto first_table : m_tables)
+    {
+        if(first_table.second.get()->m_players.num_of_players() > 1)
+            continue;
+
+        for(auto second_table : m_tables)
+        {
+            if(first_table.first == second_table.first)
+                continue;
+            
+            if(second_table.second.get()->m_players.num_of_players() < MAX_NUM_OF_PLAYERS_IN_TABLE)
+            {
+                if(dbg[TABLES_CONTAINER])[[unlikely]]
+                    std::cout << __func__ << "(): move lest player from tables " << first_table.first << " to table " << second_table.first << std::endl;
+
+                auto player = first_table.second.get()->m_players.give_lest_player();
+                second_table.second.get()->m_players.new_player(player.get()->m_name, player.get()->m_gender, player.get()->m_vars[amount], player.get()->m_vars[socket]);
+                first_table.second.get()->m_players.delete_player(player.get()->m_vars[socket]);
+
+                break;
+            }
+        }
     }
 }
 

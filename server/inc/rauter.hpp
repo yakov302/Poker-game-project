@@ -9,6 +9,8 @@
 #include "server_socket.hpp"
 #include "tables_container.hpp"
 
+#define MAX_SOCKET_NUM_TO_LISTEN 1024
+
 namespace poker
 {
 

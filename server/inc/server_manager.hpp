@@ -14,8 +14,6 @@
 #include "tables_container.hpp"
 #include "players_container.hpp"
 
-#define NUM_OF_MESSAGES_IN_MEMORY 512
-
 namespace poker
 {
 

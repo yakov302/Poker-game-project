@@ -33,7 +33,7 @@ ActionIn::ActionIn(TcpServer& a_tcp, Subscribs& a_subscribs, TablesContainer& a_
 , m_msg_memory(a_msg_memory)
 , m_tables_container(a_tables_container)
 {
-    m_stop.reserve(MAX_SOCKET_NUM_TO_LISTEN/MAX_NUM_OF_PLAYERS);
+    m_stop.reserve(NUM_OF_PLAYERS_PER_THREADS);
     open_thread();
 }
 
@@ -76,9 +76,9 @@ void ActionIn::check_thread_allocation()
     if(num_of_threads == 0){return;}
     int num_of_payers_per_threads = m_tables_container.num_of_players()/num_of_threads;
 
-    if(num_of_payers_per_threads > MAX_NUM_OF_PLAYERS)
+    if(num_of_payers_per_threads > NUM_OF_PLAYERS_PER_THREADS)
         open_thread();
-    else if((num_of_payers_per_threads < MAX_NUM_OF_PLAYERS/2) && num_of_threads > 1)
+    else if((num_of_payers_per_threads < NUM_OF_PLAYERS_PER_THREADS/2) && num_of_threads > 1)
         delete_thread();
 }
 
