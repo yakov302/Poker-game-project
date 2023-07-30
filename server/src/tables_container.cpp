@@ -61,6 +61,14 @@ void TablesContainer::new_table()
 
 void TablesContainer::delete_player(int a_client_socket)
 {
+    if(m_socket_to_table_id.find(a_client_socket) == m_socket_to_table_id.end())[[unlikely]]
+    {
+        if(dbg[TABLES_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): socket " << a_client_socket << " does not exist in m_socket_to_table_id map -> client not log in yet, no need to delete." << std::endl;
+
+        return;
+    }
+
     int table_id = m_socket_to_table_id[a_client_socket];
 
     if(dbg[TABLES_CONTAINER])[[unlikely]]

@@ -39,7 +39,7 @@ void print_dbg_types()
 
 void turn_on_dbg(int type)
 {
-    if(type < NUM_OF_DBG_TYPES)
+    if(type >= 0 && type < NUM_OF_DBG_TYPES)
     {
         std::cout << "turn on dbg[" << type << "]" << std::endl;
         dbg[type] = true;
@@ -60,7 +60,7 @@ void turn_on_all()
 
 void turn_off_dbg(int type)
 {
-    if(type < NUM_OF_DBG_TYPES)
+    if(type >= 0 && type < NUM_OF_DBG_TYPES)
     {
         std::cout << "turn off dbg[" << type << "]" << std::endl;
         dbg[type] = false;
