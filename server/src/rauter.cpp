@@ -18,14 +18,13 @@ static void* thread_function(void* arg)
 
 } //namespace impl
 
-Rauter::Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action_in, TablesContainer& a_tables_container, MsgMemory& a_msg_memory)
+Rauter::Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action_in, MsgMemory& a_msg_memory)
 : m_stop(false)
 , m_activity(0)
 , m_tcp(a_tcp)
 , m_action_in(a_action_in)
 , m_socket(a_socket)
 , m_msg_memory(a_msg_memory)
-, m_tables_container(a_tables_container)
 {
 	m_thread = new std::thread(impl::thread_function, this);
 }
@@ -69,7 +68,6 @@ void Rauter::delete_deleted()
 
 	while(it != end && !m_socket.deleted_sockets().empty())
 	{
-		m_action_in.player_deleted(*it);
 		m_socket.delete_from_deleted_sockets(it);
 
 		if(!m_socket.deleted_sockets().empty())
@@ -108,7 +106,7 @@ void Rauter::take_care_exists_clients()
 					std::cout << __func__ << "(): m_tcp.receive_from_client(client_socket = " << client_socket << ") fail!" << std::endl;
 				
 				m_socket.delete_client_by_iterator(it);
-				m_tables_container.delete_player(client_socket);
+				m_action_in.player_deleted(client_socket);
 			}
             else
 			{

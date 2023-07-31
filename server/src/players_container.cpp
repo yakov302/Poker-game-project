@@ -24,7 +24,15 @@ PlayersContainer::PlayersContainer(ActionOut& a_action_out, Deck& a_deck)
 void PlayersContainer::new_player(std::string& a_name, std::string& a_gender, int a_amount, int a_client_socket)
 {
     if(m_players.find(a_name) != m_players.end())[[unlikely]]
+    {
+        if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): player " << a_name << " already exists in the table -> return" << std::endl;
+        
         return;
+    }
+
+    if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+        std::cout << __func__ << "(): set m_players[" << a_name << "] = playerPointer(new Player(" << a_name << ", " << a_gender << ", " << a_amount << ", " << a_client_socket << ")" << std::endl;
 
     m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, a_client_socket));
     m_action_out.log_in_success(a_name, a_gender, a_client_socket);
@@ -41,9 +49,15 @@ bool PlayersContainer::log_in_chack(std::string& a_name,  int a_client_socket)co
 {
     if(m_players.find(a_name) != m_players.end())
     {
+        if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): player " << a_name << " already exists in the table -> return false" << std::endl;
+        
         m_action_out.user_name_alredy_log(a_client_socket);
         return false;
     }
+
+    if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): player " << a_name << " does not exist in the table -> return true" << std::endl;
 
     return true;
 }
@@ -53,9 +67,13 @@ void PlayersContainer::delete_player(std::string& a_name, int a_client_socket)
     if(m_players.find(a_name) == m_players.end()) [[unlikely]]
     {
         if(dbg[PLAYERS_CONTAINER])[[unlikely]]
-            std::cout << __func__ << "(): " << a_name << "does not exist -> cant delete player" << std::endl;
+            std::cout << __func__ << "(): player " << a_name << " does not exist in the table -> cant delete player" << std::endl;
+        
         return;
     }
+
+    if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): call m_players.erase(" << a_name << ")" << std::endl;
 
     for(int i = 0; i < 2; ++i)
         m_deck.push_card(give_card(a_name));
@@ -190,6 +208,24 @@ playerIterator PlayersContainer::end()
 playerPointer& PlayersContainer::give_lest_player()
 {
     return m_players.begin()->second;
+}
+
+void PlayersContainer::print_players()
+{
+    auto it = m_players.begin();
+    auto end = m_players.end();
+
+    std::cout << std::endl <<  "----------------print_players----------------" << std::endl;
+    while(it != end)
+    {
+        std::cout << " - name: " << (*it).second.get()->m_name << ", socket: " << (*it).second.get()->m_vars[socket] << ", is viewer: ";
+        if((*it).second.get()->m_vars[viewer])
+            std::cout << "true" << std::endl;
+        else
+            std::cout << "false" << std::endl;
+        it++;
+    }
+    std::cout << "---------------------------------------------" << std::endl << std::endl;
 }
 
 

@@ -3,6 +3,7 @@
 namespace poker
 {
 
+extern std::string socket;
 extern std::string viewer;
 extern bool dbg[NUM_OF_DBG_TYPES];
 
@@ -46,6 +47,12 @@ void Game::run()
 
             m_action_out.clear_text();
             set_open_player();
+        }
+
+        if(dbg[GAME])[[unlikely]]
+        {
+            m_players.print_players();
+            std::cout << __func__ << "(): game m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" << std::endl;
         }
 
         m_card_round.run(m_open_player);
@@ -109,6 +116,38 @@ void Game::next()
     {
         next_it();
         skip_viewers();
+        if(dbg[GAME])[[unlikely]]
+        {
+            m_players.print_players();
+            std::cout << __func__ << "(): m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" << std::endl;
+        }
+    }
+}
+
+void Game::pass_m_open_player_to_previous_player()
+{  
+    int num_of_steps = m_players.num_of_players() - 1;
+    for(int i = 0; i < num_of_steps; ++i)
+        next_it();
+}
+
+void Game::player_going_to_be_deleted(int a_client_socket)
+{
+    if(m_open_player->second->m_vars[socket] == a_client_socket)
+    {
+        if(dbg[GAME])[[unlikely]]
+        {
+            m_players.print_players();
+            std::cout << __func__ << "(): m_open_player : (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket]<< ") is the deleted player" << std::endl;
+        }
+
+        pass_m_open_player_to_previous_player();
+
+        if(dbg[GAME])[[unlikely]]
+        {
+            m_players.print_players();
+            std::cout << __func__ << "(): m_open_player pass to previous player: (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" << std::endl;
+        }
     }
 }
 

@@ -18,13 +18,15 @@ public:
 
     void run();
     void stop();
-    
+    void player_going_to_be_deleted(int a_client_socket);
+
 private:
     void next();
     void next_it();
     void skip_viewers();
     bool chack_winer();
     void set_open_player();
+    void pass_m_open_player_to_previous_player();
 
 private:
     bool m_stop; 

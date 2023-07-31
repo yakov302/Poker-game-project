@@ -17,7 +17,7 @@ namespace poker
 class Rauter
 {
 public: 
-    Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action, TablesContainer& a_tables_container, MsgMemory& a_msg_memory);
+    Rauter(ServerSocket& a_socket, TcpServer& a_tcp, ActionIn& a_action, MsgMemory& a_msg_memory);
     ~Rauter();
 
     void run();
@@ -38,7 +38,6 @@ private:
     ActionIn& m_action_in;
     ServerSocket& m_socket;
     MsgMemory& m_msg_memory;
-    TablesContainer& m_tables_container;
 };
 
 

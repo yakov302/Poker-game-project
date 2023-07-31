@@ -7,6 +7,7 @@ namespace poker
 {
 
 using tablePointer = std::shared_ptr<TableManager>;
+using tableIdAndPtrPair = std::pair<const int, poker::tablePointer>;
 
 class TablesContainer
 {
@@ -22,8 +23,10 @@ public:
 
 private:
     void new_table();
+    void print_table_container();
     void find_match_for_singles();
     void check_if_table_need_to_delete(int table_id);
+    void move_player_to_another_table(tableIdAndPtrPair& dst_table, tableIdAndPtrPair& srs_table);
 
 private:
     friend class ActionIn;

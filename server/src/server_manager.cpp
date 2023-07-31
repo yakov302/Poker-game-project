@@ -10,7 +10,7 @@ ServerManager::ServerManager()
 , m_subscribs(m_tcp)
 , m_msg_memory(NUM_OF_MESSAGES_IN_MEMORY)
 , m_action_in(m_tcp, m_subscribs, m_tables_container, m_msg_memory)
-, m_rauter(m_socket, m_tcp, m_action_in, m_tables_container, m_msg_memory)
+, m_rauter(m_socket, m_tcp, m_action_in, m_msg_memory)
 {
 
 }

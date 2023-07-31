@@ -9,7 +9,7 @@
 #include "cli_cmd.hpp"
 #include "action_out.hpp"
 
-#define MAX_NUM_OF_PLAYERS_IN_TABLE 3
+#define MAX_NUM_OF_PLAYERS_IN_TABLE 6
 
 namespace poker
 {
@@ -44,8 +44,9 @@ public:
     Wait& wait(); 
     playerIterator end();
     playerIterator begin();
-
     playerPointer& give_lest_player();
+
+    void print_players();
 
 private:
     void delete_player(std::string& a_name, int a_client_socket);
