@@ -16,9 +16,9 @@ class BetRound
 public:
     BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table, Deck& a_deck);
 
-    void run(playerIterator a_open_player);
+    void run();
     
-    void player_going_to_be_deleted(int a_client_socket);
+    void bet_round_player_going_to_be_deleted(int a_client_socket);
     void player_deleted();
 
     void bet_in(int a_amount);
@@ -35,7 +35,7 @@ private:
     void close_bet_round();
     bool one_player_left();
     void zero_bets_and_clear_actions();
-    void pass_m_turn_to_previous_player();
+    void move_m_turn_to_previous_player();
 
 private:
     bool m_stop;
@@ -49,7 +49,6 @@ private:
     PlayersContainer& m_players;
 
     playerIterator m_turn;
-    playerIterator m_open_player;
 };
 
 

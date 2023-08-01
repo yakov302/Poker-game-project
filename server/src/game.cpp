@@ -5,6 +5,13 @@ namespace poker
 
 extern std::string socket;
 extern std::string viewer;
+
+Wait wait_to_m_turn;
+playerIterator open_player;
+
+extern bool m_turn_deleted;
+bool open_player_deleted = false;
+
 extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
@@ -25,7 +32,6 @@ Game::Game(PlayersContainer& a_players, CardRound& a_card_round, ActionOut& a_ac
 , m_card_round(a_card_round)
 , m_action_out(a_action_out)
 , m_players(a_players)
-, m_open_player(m_players.begin())
 {
     m_thread = new std::thread(impl::thread_function, this);
 }
@@ -38,6 +44,8 @@ Game::~Game()
 
 void Game::run()
 {
+    open_player = m_players.begin();
+
     while(!m_stop)
     {
         if(m_players.num_of_players()< 2 || chack_winer())
@@ -50,12 +58,9 @@ void Game::run()
         }
 
         if(dbg[GAME])[[unlikely]]
-        {
-            m_players.print_players();
-            std::cout << __func__ << "(): game m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" << std::endl;
-        }
+            std::cout << __func__ << "(): game call card round with open_player (" << open_player->second->m_name << ", " << open_player->second->m_vars[socket] << ")" << std::endl;
 
-        m_card_round.run(m_open_player);
+        m_card_round.run();
         next();
     }
 }
@@ -63,12 +68,13 @@ void Game::run()
 void Game::stop()
 {
     m_stop = true;
+    wait_to_m_turn.exit_wait();
     m_players.wait().exit_wait();
 }
 
 void Game::set_open_player()
 {
-    m_open_player = m_players.begin();
+    open_player = m_players.begin();
     skip_viewers();
 }
 
@@ -99,14 +105,14 @@ bool Game::chack_winer()
 
 void Game::next_it()
 {
-    ++m_open_player;
-    if(m_open_player == m_players.end())
-        m_open_player = m_players.begin();
+    ++open_player;
+    if(open_player == m_players.end())
+        open_player = m_players.begin();
 }
 
 void Game::skip_viewers()
 {
-    while(m_open_player->second.get()->m_vars[viewer])
+    while(open_player->second.get()->m_vars[viewer])
         next_it();
 }
 
@@ -116,38 +122,58 @@ void Game::next()
     {
         next_it();
         skip_viewers();
+
+        if(dbg[GAME])[[unlikely]]
+            std::cout << __func__ << "(): game made ++open_player (" << open_player->second->m_name << ", " << open_player->second->m_vars[socket] << ")" << std::endl;
+    }
+}
+
+void Game::game_player_delete()
+{
+    if(m_players.num_of_players() == 0)
+        return;
+
+    if(open_player_deleted) 
+    {
+        if(dbg[GAME])[[unlikely]]
+            std::cout << __func__ << "(): wait_to_m_turn.enter_wait()" << std::endl;
+        
+        if(m_turn_deleted)
+            wait_to_m_turn.enter_wait();
+        
+        next_it();
+        open_player_deleted = false;
+        
         if(dbg[GAME])[[unlikely]]
         {
             m_players.print_players();
-            std::cout << __func__ << "(): m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" << std::endl;
+            std::cout << __func__ << "(): open_player_deleted flag is on -> moves open_player to the next player (" << open_player->second->m_name << ", " << open_player->second->m_vars[socket] << ")" << std::endl;
         }
     }
 }
 
-void Game::pass_m_open_player_to_previous_player()
+void Game::pass_open_player_to_previous_player()
 {  
     int num_of_steps = m_players.num_of_players() - 1;
     for(int i = 0; i < num_of_steps; ++i)
         next_it();
 }
 
-void Game::player_going_to_be_deleted(int a_client_socket)
+void Game::game_player_going_to_be_deleted(int a_client_socket)
 {
-    if(m_open_player->second->m_vars[socket] == a_client_socket)
+    if(open_player->second->m_vars[socket] == a_client_socket)
     {
         if(dbg[GAME])[[unlikely]]
         {
             m_players.print_players();
-            std::cout << __func__ << "(): m_open_player : (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket]<< ") is the deleted player" << std::endl;
+            std::cout << __func__ << "(): open_player (" << open_player->second->m_name << ", " << open_player->second->m_vars[socket]<< ") is the deleted player" << std::endl;
         }
 
-        pass_m_open_player_to_previous_player();
+        open_player_deleted = true;
+        pass_open_player_to_previous_player();
 
         if(dbg[GAME])[[unlikely]]
-        {
-            m_players.print_players();
-            std::cout << __func__ << "(): m_open_player pass to previous player: (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" << std::endl;
-        }
+            std::cout << __func__ << "(): open_player pass to previous player (" << open_player->second->m_name << ", " << open_player->second->m_vars[socket] << ")" << std::endl;
     }
 }
 

@@ -9,14 +9,26 @@ extern std::string amount;
 extern std::string viewer;
 extern std::string socket;
 extern std::string my_turn;
-extern bool dbg[NUM_OF_DBG_TYPES];
+
+extern Wait wait_to_m_turn;
+extern playerIterator open_player;
 
 bool m_turn_deleted = false;
+extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
 {
 
 extern bool active_player_with_card(PlayersContainer& a_players, std::string& name);
+
+void update_game_i_incremented_turn()
+{
+    if(dbg[BET_ROUND])[[unlikely]]
+        std::cout << __func__ << "(): wait_to_m_turn.exit_wait()" << std::endl;
+        
+    wait_to_m_turn.exit_wait();
+    m_turn_deleted = false; 
+}
 
 
 }//impl namespace
@@ -30,23 +42,18 @@ BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& 
 , m_table(a_table)
 , m_action_out(a_action_out)
 , m_players(a_players)
-, m_turn(a_players.begin())
-, m_open_player(a_players.begin())
+, m_turn()
 {
 
 }
 
-void BetRound::run(playerIterator a_open_player)
+void BetRound::run()
 {
-    m_open_player = a_open_player;
-    m_turn = m_open_player;
+    m_turn = open_player;
     m_stop = false;
 
     if(dbg[BET_ROUND])[[unlikely]]
-    {
-        m_players.print_players();
-        std::cout << __func__ << "() bet round m_turn == m_open_player: (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" << std::endl;
-    }
+        std::cout << __func__ << "() bet round start loop -> m_turn == open_player (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" << std::endl;
 
     while(!m_stop)
     {
@@ -106,72 +113,44 @@ void BetRound::next()
 void BetRound::next_step()
 {
     next();
-    if(dbg[BET_ROUND])[[unlikely]]
-    {
-        m_players.print_players();
-        std::cout << __func__ << "(): m_turn: (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" <<std::endl;
-    }
 
-    if(m_turn == m_open_player)
+    if(dbg[BET_ROUND])[[unlikely]]
+        std::cout << __func__ << "(): bet roun made ++m_turn (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" <<std::endl;
+
+    if(m_turn == open_player)
     {
         if(dbg[BET_ROUND])[[unlikely]]
-        {
-            m_players.print_players();
-            std::cout << __func__ << "(): m_turn == m_open_player: (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ") call close_bet_round()" <<  std::endl;
-        }
+            std::cout << __func__ << "(): bet roun m_turn == open_player (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ") call close_bet_round()" <<  std::endl;
 
         close_bet_round();
     }
+
+    if(m_turn_deleted)
+        impl::update_game_i_incremented_turn();
 }
 
-void BetRound::pass_m_turn_to_previous_player()
+void BetRound::move_m_turn_to_previous_player()
 {  
     int num_of_steps = m_players.num_of_players() - 1;
     for(int i = 0; i < num_of_steps; ++i)
         next();
 }
 
-void BetRound::player_going_to_be_deleted(int a_client_socket)
+void BetRound::bet_round_player_going_to_be_deleted(int a_client_socket)
 {
-    if(m_open_player->second->m_vars[socket] == a_client_socket)
-    {
-        if(dbg[BET_ROUND])[[unlikely]]
-        {
-            m_players.print_players();
-            std::cout << __func__ << "(): m_open_player : (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket]<< ") is the deleted player" << std::endl;
-        }
-
-        int num_of_steps = m_players.num_of_players() - 1;
-        for(int i = 0; i < num_of_steps; ++i)
-        {
-            ++m_open_player;
-            if(m_open_player == m_players.end())   
-                m_open_player = m_players.begin();    
-        }
-
-        if(dbg[BET_ROUND])[[unlikely]]
-        {
-            m_players.print_players();
-            std::cout << __func__ << "(): m_open_player pass to previous player: (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" << std::endl;
-        }
-    }
-
     if(m_turn->second->m_vars[socket] == a_client_socket)
     {
         if(dbg[BET_ROUND])[[unlikely]]
         {
             m_players.print_players();
-            std::cout << __func__ << "(): m_turn : (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket]<< ") is the deleted player" << std::endl;
+            std::cout << __func__ << "(): m_turn: (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket]<< ") is the deleted player" << std::endl;
         }
 
         m_turn_deleted = true;
-        pass_m_turn_to_previous_player();
+        move_m_turn_to_previous_player();
 
         if(dbg[BET_ROUND])[[unlikely]]
-        {
-            m_players.print_players();
-            std::cout << __func__ << "(): m_turn pass to previous player: (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" << std::endl;
-        }
+            std::cout << __func__ << "(): m_turn pass to previous player (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" << std::endl;
     }
 }
 
@@ -181,7 +160,7 @@ void BetRound::player_deleted()
     { 
         if(dbg[BET_ROUND])[[unlikely]]
             std::cout << __func__ << "(): only one player left -> exit wait -> entered wait in game level" << std::endl;
-        
+            
         m_wait.exit_wait();
         return;
     }
@@ -190,7 +169,7 @@ void BetRound::player_deleted()
     {
         if(dbg[BET_ROUND])[[unlikely]]
             std::cout << __func__ << "(): m_turn_deleted flag is on -> exit wait" << std::endl;
-
+        
         m_wait.exit_wait();
     }
 }
@@ -223,7 +202,7 @@ void BetRound::finish_bet()
     else
     {
         if(m_turn->second->m_vars[bet] > m_min_bet)
-            m_open_player = m_turn;
+            open_player = m_turn;
 
         m_min_bet = m_turn->second->m_vars[bet];
         m_action_out.turn_off(m_turn->second.get()->m_name, my_turn);
@@ -261,44 +240,28 @@ bool BetRound::one_player_left()
     int count = 0;
     auto it = m_players.begin();
     auto end = m_players.end();
-
-    if(dbg[BET_ROUND])[[unlikely]]
-    {
-        std::cout << __func__ << "(): " << std::endl;
-        m_players.print_players();
-    }
         
     while(it != end)
     {
         std::string name = it->second.get()->m_name;
 
-        if(impl::active_player_with_card(m_players, name))
-        {
-            if(dbg[BET_ROUND])[[unlikely]]
-                 std::cout << __func__ << "(): " << name << " is active_player_with_card" << std::endl;
-
+        if(impl::active_player_with_card(m_players, name))         
             ++count;
-        }
 
         if(count > 1)
-        {
-            if(dbg[BET_ROUND])[[unlikely]]
-                std::cout << __func__ << "(): find more than one active players returns false" << std::endl;
-
             return false;
-        }
 
         ++it;
     }
 
-    if(dbg[BET_ROUND])[[unlikely]]
-        std::cout << __func__ << "(): dont find more than one active players returns true" << std::endl;
-    
     return true; 
 }
 
 void BetRound::close_bet_round()
 {
+    if(m_turn_deleted)
+        impl::update_game_i_incremented_turn();
+
     m_stop = true; 
     m_min_bet = 0;
     zero_bets_and_clear_actions();
@@ -322,4 +285,3 @@ void BetRound::zero_bets_and_clear_actions()
 
 
 }// poker namespace
-

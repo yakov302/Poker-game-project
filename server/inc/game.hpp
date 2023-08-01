@@ -18,7 +18,8 @@ public:
 
     void run();
     void stop();
-    void player_going_to_be_deleted(int a_client_socket);
+    void game_player_delete();
+    void game_player_going_to_be_deleted(int a_client_socket);
 
 private:
     void next();
@@ -26,7 +27,7 @@ private:
     void skip_viewers();
     bool chack_winer();
     void set_open_player();
-    void pass_m_open_player_to_previous_player();
+    void pass_open_player_to_previous_player();
 
 private:
     bool m_stop; 
@@ -35,8 +36,6 @@ private:
     CardRound& m_card_round;
     ActionOut& m_action_out;
     PlayersContainer& m_players;
-
-    playerIterator m_open_player;
 };
 
 

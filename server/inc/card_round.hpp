@@ -18,12 +18,12 @@ class CardRound
 public:
     CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_action_out, BetRound& a_bet_round, Deck& a_deck);
 
-    void run(playerIterator a_open_player);
+    void run();
 
 private:
     void deal_cards();
 
-    void bet(playerIterator a_open_player);
+    void bet();
     void open_three_cards();
     void open_card();
 

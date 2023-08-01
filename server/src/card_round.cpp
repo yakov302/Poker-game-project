@@ -35,7 +35,7 @@ CardRound::CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_a
 
 }
 
-void CardRound::run(playerIterator a_open_player)
+void CardRound::run()
 {
     std::string name;
     m_stop = false;
@@ -51,28 +51,28 @@ void CardRound::run(playerIterator a_open_player)
         {
         case 0:
             if(!m_bet)
-                bet(a_open_player);
+                bet();
             else
                 open_three_cards();
             break;
 
         case 3:
             if(!m_bet)
-                bet(a_open_player);
+                bet();
             else
                 open_card();
             break;
 
         case 4:
             if(!m_bet)
-                bet(a_open_player);
+                bet();
             else
                 open_card();
             break;
 
         case 5:
             if(!m_bet)
-                bet(a_open_player);
+                bet();
             else
                 close_card_round();
             break;
@@ -108,9 +108,9 @@ void CardRound::deal_cards()
     }
 }
 
-void CardRound::bet(playerIterator a_open_player)
+void CardRound::bet()
 {
-    m_bet_round.run(a_open_player);
+    m_bet_round.run();
     m_bet = true;
 }
 
