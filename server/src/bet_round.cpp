@@ -98,8 +98,9 @@ void BetRound::wait_for_bet()
 {
     if(!impl::active_player_with_card(m_players, m_turn->second.get()->m_name))
         return;
-        
+
     m_action_out.turn_on(m_turn->second.get()->m_name, my_turn);
+    m_turn->second.get()->m_flags[my_turn] = true;
     m_wait.enter_wait();
 }
 
@@ -205,6 +206,7 @@ void BetRound::finish_bet()
             open_player = m_turn;
 
         m_min_bet = m_turn->second->m_vars[bet];
+        m_turn->second.get()->m_flags[my_turn] = false;
         m_action_out.turn_off(m_turn->second.get()->m_name, my_turn);
         m_action_out.turn_off(m_turn->second.get()->m_name, bet);
         m_wait.exit_wait();
@@ -218,6 +220,7 @@ void BetRound::chack_in()
     
     else
     {
+        m_turn->second->m_flags[my_turn] = false;
         m_action_out.turn_off(m_turn->second->m_name, my_turn);
         m_action_out.check(m_turn->second->m_name);
         m_wait.exit_wait();
@@ -231,6 +234,7 @@ void BetRound::fold_in()
     m_players.turn_on(m_turn->second->m_name, fold);
     m_action_out.fold(m_turn->second->m_name);
     m_action_out.turn_off(m_turn->second->m_name, my_turn);
+    m_turn->second->m_flags[my_turn] = false;
     usleep(1000000);
     m_wait.exit_wait();
 }

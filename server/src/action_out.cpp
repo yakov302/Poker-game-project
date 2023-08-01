@@ -191,6 +191,15 @@ void ActionOut::get_card(std::string& a_name, cardPointer a_card)
     pack_and_send_all(arg, GET_CARD);
 }
 
+void ActionOut::get_card(std::string& a_name, cardPointer a_card, int a_socket)
+{
+    Args arg(2, 1);
+    arg.m_strings.emplace_back(a_name);
+    arg.m_strings.emplace_back(a_card.get()->m_suit);
+    arg.m_ints.emplace_back(a_card.get()->m_number);
+    pack_and_send_to_client(arg, GET_CARD, a_socket);
+}
+
 void ActionOut::get_chips(std::string& a_name, int a_chip)
 {
     name_and_amount(a_name, a_chip, GET_CHIP);
@@ -220,7 +229,7 @@ void ActionOut::get_player(std::string& a_name, std::string& a_gender, int a_amo
     if(dbg[ACTION_OUT])[[unlikely]]
         std::cout << __func__ << "(): call m_tcp.send_all_clients(name: " << a_name << ", gender: " << a_gender << ", amount: " << a_amount << ")" << std::endl;
     
-    m_tcp.send_all_clients(buffer, size, m_sockets);
+    m_tcp.send_all_clients(buffer, size, m_sockets);    
 }
 
 void ActionOut::delete_player(std::string& a_name, int a_socket)

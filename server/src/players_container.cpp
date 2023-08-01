@@ -39,7 +39,17 @@ void PlayersContainer::new_player(std::string& a_name, std::string& a_gender, in
     m_action_out.get_player(a_name, a_gender, a_amount);
 
     for(auto player: m_players)
+    {
         m_action_out.get_player(player.second->m_name, player.second->m_gender, player.second->m_vars[amount], a_client_socket);
+        if(!player.second->m_hand.empty())
+        {
+            for(auto card : player.second->m_hand)
+                m_action_out.get_card(player.second->m_name, card, a_client_socket);
+            
+            if(player.second->m_flags[my_turn])
+                m_action_out.turn_on(player.second->m_name, my_turn);
+        }
+    }
 
     if(num_of_players() > 1)
         m_wait.exit_wait();

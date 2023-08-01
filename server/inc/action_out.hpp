@@ -43,6 +43,7 @@ public:
     void reveal_cards(std::string& a_name);
     void get_chips(std::string& a_name, int a_chip);
     void get_card(std::string& a_name, cardPointer a_card);
+    void get_card(std::string& a_name, cardPointer a_card, int a_socket);
 
     void delete_player(std::string& a_name, int a_socket);
     void get_player(std::string& a_name, std::string& a_gender, int a_amount);
