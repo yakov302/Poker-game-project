@@ -19,6 +19,9 @@ public:
     bool is_table_full();
     bool is_table_empty();
 
+    void player_deleted();
+    void player_going_to_be_deleted(int a_client_socket);
+
 private:
     friend class ActionIn;
     friend class TablesContainer;

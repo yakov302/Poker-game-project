@@ -19,7 +19,7 @@ public:
     void run();
     
     void bet_round_player_going_to_be_deleted(int a_client_socket);
-    void player_deleted();
+    void bet_round_player_deleted();
 
     void bet_in(int a_amount);
     void finish_bet();
@@ -28,14 +28,15 @@ public:
     void fold_in();
 
 private:
-    void next();
+    void next(playerIterator& it);
     void next_step();
     void wait_for_bet();
     bool set_max_bet();
     void close_bet_round();
     bool one_player_left();
     void zero_bets_and_clear_actions();
-    void move_m_turn_to_previous_player();
+    void update_m_open_player_deleted();
+    void move_it_to_previous_player(playerIterator& it);
 
 private:
     bool m_stop;
@@ -49,6 +50,7 @@ private:
     PlayersContainer& m_players;
 
     playerIterator m_turn;
+    playerIterator m_open_player;
 };
 
 

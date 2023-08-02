@@ -94,11 +94,9 @@ void TablesContainer::delete_player(int a_client_socket)
     if(dbg[TABLES_CONTAINER])[[unlikely]]
         std::cout << __func__ << "(): call m_tables[" << table_id << "]->m_players.delete_player(socket = " << a_client_socket << ")" << std::endl;
     
-    m_tables[table_id].get()->m_game.game_player_going_to_be_deleted(a_client_socket);
-    m_tables[table_id].get()->m_bet_round.bet_round_player_going_to_be_deleted(a_client_socket);
+    m_tables[table_id].get()->player_going_to_be_deleted(a_client_socket);
     m_tables[table_id].get()->m_players.delete_player(a_client_socket);
-    m_tables[table_id].get()->m_bet_round.player_deleted();
-    m_tables[table_id].get()->m_game.game_player_delete();
+    m_tables[table_id].get()->player_deleted();
     m_socket_to_table_id.erase(a_client_socket);
     --m_num_of_players;
 

@@ -10,26 +10,16 @@ extern std::string viewer;
 extern std::string socket;
 extern std::string my_turn;
 
-extern Wait wait_to_m_turn;
-extern playerIterator open_player;
+extern playerIterator game_open_player;
 
 bool m_turn_deleted = false;
+bool m_open_player_deleted = false;
 extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
 {
 
 extern bool active_player_with_card(PlayersContainer& a_players, std::string& name);
-
-void update_game_i_incremented_turn()
-{
-    if(dbg[BET_ROUND])[[unlikely]]
-        std::cout << __func__ << "(): wait_to_m_turn.exit_wait()" << std::endl;
-        
-    wait_to_m_turn.exit_wait();
-    m_turn_deleted = false; 
-}
-
 
 }//impl namespace
 
@@ -43,17 +33,19 @@ BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& 
 , m_action_out(a_action_out)
 , m_players(a_players)
 , m_turn()
+, m_open_player()
 {
 
 }
 
 void BetRound::run()
 {
-    m_turn = open_player;
+    m_open_player = game_open_player;
+    m_turn = game_open_player;
     m_stop = false;
 
     if(dbg[BET_ROUND])[[unlikely]]
-        std::cout << __func__ << "() bet round start loop -> m_turn == open_player (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" << std::endl;
+        std::cout << __func__ << "() bet round start loop -> m_turn == game_open_player (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" << std::endl;
 
     while(!m_stop)
     {
@@ -104,37 +96,58 @@ void BetRound::wait_for_bet()
     m_wait.enter_wait();
 }
 
-void BetRound::next()
+void BetRound::next(playerIterator& it)
 {
-    ++m_turn;
-    if(m_turn == m_players.end())   
-        m_turn = m_players.begin();
+    ++it;
+    if(it == m_players.end())   
+        it = m_players.begin();
+}
+
+void BetRound::update_m_open_player_deleted()
+{
+    if(m_players.num_of_players() == 0)
+    {
+        m_open_player_deleted = false;
+        m_turn_deleted = false;
+        return;
+    }
+
+    if(m_open_player_deleted)
+    {
+        next(m_open_player);
+        m_open_player_deleted = false;
+
+        if(dbg[BET_ROUND])[[unlikely]]
+            std::cout << __func__ << "(): m_open_player_deleted flag is on bet round made ++m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" <<std::endl;
+    }
+
+    m_turn_deleted = false;
 }
 
 void BetRound::next_step()
 {
-    next();
+    next(m_turn);
 
     if(dbg[BET_ROUND])[[unlikely]]
         std::cout << __func__ << "(): bet roun made ++m_turn (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" <<std::endl;
 
-    if(m_turn == open_player)
+    if(m_turn == m_open_player)
     {
         if(dbg[BET_ROUND])[[unlikely]]
-            std::cout << __func__ << "(): bet roun m_turn == open_player (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ") call close_bet_round()" <<  std::endl;
+            std::cout << __func__ << "(): bet roun m_turn == m_open_player (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ") call close_bet_round()" <<  std::endl;
 
         close_bet_round();
     }
 
     if(m_turn_deleted)
-        impl::update_game_i_incremented_turn();
+        update_m_open_player_deleted();
 }
 
-void BetRound::move_m_turn_to_previous_player()
+void BetRound::move_it_to_previous_player(playerIterator& it)
 {  
     int num_of_steps = m_players.num_of_players() - 1;
     for(int i = 0; i < num_of_steps; ++i)
-        next();
+        next(it);
 }
 
 void BetRound::bet_round_player_going_to_be_deleted(int a_client_socket)
@@ -144,18 +157,33 @@ void BetRound::bet_round_player_going_to_be_deleted(int a_client_socket)
         if(dbg[BET_ROUND])[[unlikely]]
         {
             m_players.print_players();
-            std::cout << __func__ << "(): m_turn: (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket]<< ") is the deleted player" << std::endl;
+            std::cout << __func__ << "(): m_turn (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket]<< ") is the deleted player" << std::endl;
         }
 
         m_turn_deleted = true;
-        move_m_turn_to_previous_player();
+        move_it_to_previous_player(m_turn);
 
         if(dbg[BET_ROUND])[[unlikely]]
             std::cout << __func__ << "(): m_turn pass to previous player (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" << std::endl;
     }
+
+    if(m_open_player->second->m_vars[socket] == a_client_socket)
+    {
+        if(dbg[BET_ROUND])[[unlikely]]
+        {
+            m_players.print_players();
+            std::cout << __func__ << "(): m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket]<< ") is the deleted player" << std::endl;
+        }
+
+        m_open_player_deleted = true;
+        move_it_to_previous_player(m_open_player);
+
+        if(dbg[BET_ROUND])[[unlikely]]
+            std::cout << __func__ << "(): m_open_player pass to previous player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" << std::endl;
+    }
 }
 
-void BetRound::player_deleted()
+void BetRound::bet_round_player_deleted()
 {
     if(m_players.num_of_players() < 2)
     { 
@@ -172,6 +200,15 @@ void BetRound::player_deleted()
             std::cout << __func__ << "(): m_turn_deleted flag is on -> exit wait" << std::endl;
         
         m_wait.exit_wait();
+    }
+
+    if(m_open_player_deleted && !m_turn_deleted)
+    {
+        next(m_open_player);
+        m_open_player_deleted = false;
+
+        if(dbg[BET_ROUND])[[unlikely]]
+            std::cout << __func__ << "(): m_open_player_deleted flag is on bet round made ++m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" <<std::endl;
     }
 }
 
@@ -203,7 +240,7 @@ void BetRound::finish_bet()
     else
     {
         if(m_turn->second->m_vars[bet] > m_min_bet)
-            open_player = m_turn;
+            m_open_player = m_turn;
 
         m_min_bet = m_turn->second->m_vars[bet];
         m_turn->second.get()->m_flags[my_turn] = false;
@@ -264,7 +301,7 @@ bool BetRound::one_player_left()
 void BetRound::close_bet_round()
 {
     if(m_turn_deleted)
-        impl::update_game_i_incremented_turn();
+        update_m_open_player_deleted();
 
     m_stop = true; 
     m_min_bet = 0;
