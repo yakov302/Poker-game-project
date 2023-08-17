@@ -35,7 +35,10 @@ private:
     void close_bet_round();
     bool one_player_left();
     void zero_bets_and_clear_actions();
+    void handle_m_open_player_deleted();
     void update_m_open_player_deleted();
+    void set_origin_open_player_and_m_bet();
+    void handle_open_player_going_to_be_deleted();
     void move_it_to_previous_player(playerIterator& it);
 
 private:

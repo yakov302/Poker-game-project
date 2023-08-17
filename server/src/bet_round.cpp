@@ -11,9 +11,11 @@ extern std::string socket;
 extern std::string my_turn;
 
 extern playerIterator game_open_player;
+playerIterator origin_open_player;
 
 bool m_turn_deleted = false;
 bool m_open_player_deleted = false;
+bool set_origin_open_player = false;
 extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
@@ -103,23 +105,39 @@ void BetRound::next(playerIterator& it)
         it = m_players.begin();
 }
 
+void BetRound::handle_m_open_player_deleted()
+{
+    if(set_origin_open_player)
+    {
+        m_open_player = origin_open_player;
+        set_origin_open_player = false;
+
+        if(dbg[BET_ROUND])[[unlikely]]
+            std::cout << __func__ << "(): set_origin_open_player flag is on bet round set m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" <<std::endl;
+    }
+    else
+    {
+        next(m_open_player);
+        
+        if(dbg[BET_ROUND])[[unlikely]]
+            std::cout << __func__ << "(): m_open_player_deleted flag is on bet round made ++m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" <<std::endl;
+    }
+
+    m_open_player_deleted = false;
+}
+
 void BetRound::update_m_open_player_deleted()
 {
     if(m_players.num_of_players() == 0)
     {
+        set_origin_open_player = false;
         m_open_player_deleted = false;
         m_turn_deleted = false;
         return;
     }
 
     if(m_open_player_deleted)
-    {
-        next(m_open_player);
-        m_open_player_deleted = false;
-
-        if(dbg[BET_ROUND])[[unlikely]]
-            std::cout << __func__ << "(): m_open_player_deleted flag is on bet round made ++m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" <<std::endl;
-    }
+        handle_m_open_player_deleted();
 
     m_turn_deleted = false;
 }
@@ -150,6 +168,66 @@ void BetRound::move_it_to_previous_player(playerIterator& it)
         next(it);
 }
 
+void BetRound::set_origin_open_player_and_m_bet()
+{
+    auto player = m_open_player;
+    next(player);
+    m_min_bet = 0;
+
+    while(player != m_open_player)
+    {
+        if(dbg[BET_ROUND])[[unlikely]]
+            std::cout << __func__ << "(): compare " << (*player).second.get()->m_name << " bet: " << (*player).second.get()->m_vars[bet] <<  " to m_min_bet: " << m_min_bet << std::endl;
+
+        if((*player).second.get()->m_vars[bet] > m_min_bet)
+        {
+            m_min_bet = (*player).second.get()->m_vars[bet];
+            set_origin_open_player = true;
+            origin_open_player = player;
+
+            if(dbg[BET_ROUND])[[unlikely]]
+            {
+                std::cout << __func__ << "(): set m_min_bet to " << (*player).second.get()->m_name << " bet: " << m_min_bet << std::endl;
+                std::cout << __func__ << "(): set origin_open_player (" << origin_open_player->second->m_name << ", " << origin_open_player->second->m_vars[socket] << ")" << std::endl;
+            }
+        }
+
+        next(player);
+    }
+}
+
+void BetRound::handle_open_player_going_to_be_deleted()
+{
+    bool another_player_placed_the_same_bet = false;
+    auto player = m_open_player;
+    next(player);
+
+    while(player != m_open_player)
+    {
+        if(dbg[BET_ROUND])[[unlikely]]
+            std::cout << __func__ << "(): compare " << (*player).second.get()->m_name << " bet: " << (*player).second.get()->m_vars[bet] <<  " to m_min_bet: " << m_min_bet << std::endl;
+
+        if((*player).second.get()->m_vars[bet] == m_min_bet)
+        {
+            if(dbg[BET_ROUND])[[unlikely]]
+                std::cout << __func__ << "(): find another player with the same bet as m_open player -> no need to set origin_open_player and m_bet" << std::endl;
+            
+            another_player_placed_the_same_bet = true;
+            break;
+        }
+        
+        next(player);
+    }
+
+    if(!another_player_placed_the_same_bet)
+    {
+        if(dbg[BET_ROUND])[[unlikely]]
+                std::cout << __func__ << "(): did not find another player with the same bet as m_open_player -> progressing to set origin_open_player and m_bet" << std::endl;
+        
+        set_origin_open_player_and_m_bet();
+    }
+}
+
 void BetRound::bet_round_player_going_to_be_deleted(int a_client_socket)
 {
     if(m_turn->second->m_vars[socket] == a_client_socket)
@@ -174,8 +252,9 @@ void BetRound::bet_round_player_going_to_be_deleted(int a_client_socket)
             m_players.print_players();
             std::cout << __func__ << "(): m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket]<< ") is the deleted player" << std::endl;
         }
-
+        
         m_open_player_deleted = true;
+        handle_open_player_going_to_be_deleted();
         move_it_to_previous_player(m_open_player);
 
         if(dbg[BET_ROUND])[[unlikely]]
@@ -203,13 +282,7 @@ void BetRound::bet_round_player_deleted()
     }
 
     if(m_open_player_deleted && !m_turn_deleted)
-    {
-        next(m_open_player);
-        m_open_player_deleted = false;
-
-        if(dbg[BET_ROUND])[[unlikely]]
-            std::cout << __func__ << "(): m_open_player_deleted flag is on bet round made ++m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" <<std::endl;
-    }
+        handle_m_open_player_deleted();
 }
 
 void BetRound::start_bet()
@@ -240,7 +313,12 @@ void BetRound::finish_bet()
     else
     {
         if(m_turn->second->m_vars[bet] > m_min_bet)
+        {
             m_open_player = m_turn;
+
+            if(dbg[BET_ROUND])[[unlikely]]
+                std::cout << __func__ << "(): player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ") raise bet -> becoming m_open_player"<< std::endl;
+        }
 
         m_min_bet = m_turn->second->m_vars[bet];
         m_turn->second.get()->m_flags[my_turn] = false;
