@@ -82,12 +82,14 @@ private:
     bool check_your_turn();
     bool check_go_button();
     bool check_bet_button();
+    bool check_all_in_button();
     bool check_check_button();
     bool check_fold_button();
     bool check_reveal_cards();
     bool check_exchange_button();
 
     void check_events();
+    void all_in_handler();
 
 private:
     sf::Event m_event;

@@ -67,6 +67,33 @@ void Wallet::pop(int a_amount)
     set_positions();
 }
 
+int Wallet::rand_chip(int amount)
+{
+    if(amount <= 0)
+    {
+        for(auto& vector : m_wallet)
+        {
+            if(!vector.second.empty())
+                return vector.second.back().get()->amount();
+        }
+    }
+    else
+    {   
+        for(auto& vector : m_wallet)
+        {
+            if(!vector.second.empty())
+            {
+                if(vector.second.back().get()->amount() <= amount)
+                    return vector.second.back().get()->amount();
+                else
+                    exchange(amount);
+            }        
+        }
+    }
+
+    return 0;
+}
+
 void Wallet::clear()
 {
     for(auto& vector : m_wallet)

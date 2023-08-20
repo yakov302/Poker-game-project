@@ -38,6 +38,16 @@ Self::Self(std::string a_name, std::string a_gender,  int a_amount)
     set_amount(std::to_string(m_wallet.amount()));
 }
 
+int Self::current_bet()
+{
+    return m_current_bet;
+}
+
+int Self::bet_for_all_in(int amount)
+{
+    return m_wallet.rand_chip(amount);
+}
+
 int Self::bet(int a_x, int a_y)
 {
     return m_wallet.amount_by_position(a_x, a_y);

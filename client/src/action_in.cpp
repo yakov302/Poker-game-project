@@ -10,6 +10,8 @@ extern std::string logged;
 extern std::string bet_flag;
 extern std::string register_flag;
 extern std::string reveal_cards_flag;
+extern int all_in_max_bet_amount;
+extern bool all_in_flag;
 
 namespace impl
 {
@@ -360,8 +362,16 @@ void ActionIn::invalid_bet_min(char* a_buffer)
 
 void ActionIn::invalid_bet_max(char* a_buffer)
 { 
+    int amount = impl::get_amount(a_buffer);
+
+    if(all_in_flag)
+    {
+        all_in_max_bet_amount = amount;
+        return;
+    }
+
     sound.play_invalid();
-    std::string txt = "Invalid bet \nMax bet: " + std::to_string(impl::get_amount(a_buffer));
+    std::string txt = "Invalid bet \nMax bet: " + std::to_string(amount);
     m_table.set_text(txt, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
 }
 

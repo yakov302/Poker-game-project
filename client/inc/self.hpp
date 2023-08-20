@@ -21,7 +21,9 @@ class Self : public Player
 public:
     Self(std::string a_name, std::string a_gender, int a_amount);
     
+    int current_bet();
     int bet(int a_x, int a_y);
+    int bet_for_all_in(int amount);
     bool exchange(int a_x, int a_y);
 
     void bet(int amount) override;

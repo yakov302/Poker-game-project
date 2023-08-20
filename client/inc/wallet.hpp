@@ -33,8 +33,9 @@ public:
     void push(std::vector<int> a_amounts);
     void push(int a_amount);  
     void pop(int a_amount);
+    int rand_chip(int amount);
+    
     void clear();
-
     void exchange(int a_amount);
 
     size_t size() const;

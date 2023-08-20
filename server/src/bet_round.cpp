@@ -77,7 +77,7 @@ bool BetRound::set_max_bet()
         {
             if(m_players.get(name, amount) + m_players.get(name, bet) < min)
                 min = m_players.get(name, amount) + m_players.get(name, bet);
-        }
+            }
         ++it;
     }
 
@@ -268,7 +268,10 @@ void BetRound::bet_round_player_deleted()
     { 
         if(dbg[BET_ROUND])[[unlikely]]
             std::cout << __func__ << "(): only one player left -> exit wait -> entered wait in game level" << std::endl;
-            
+
+        set_origin_open_player = false;
+        m_open_player_deleted = false;
+        m_turn_deleted = false;    
         m_wait.exit_wait();
         return;
     }

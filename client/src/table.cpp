@@ -8,6 +8,8 @@ extern std::string logged;
 extern std::string my_turn;
 extern std::string bet_flag;
 extern std::string exchange;
+int all_in_max_bet_amount = 0;
+bool all_in_flag = false;
 
 std::string request_sent = "Request sent";
 std::string register_flag = "register";
@@ -21,14 +23,15 @@ extern int log_in_text_x_pos(std::string& txt);
 
 void buttons_initialization(std::unordered_map<std::string, buttonPointer>& a_buttons) 
 {
-    a_buttons["go"]         = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 0*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "go",       TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["bet"]        = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 1*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "bet",      TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["fold"]       = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 3*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "fold",     TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["check"]      = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 2*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "check",    TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["exchange"]   = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 4*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "exchange", TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["log_in"]     = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1080,         BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "log in",   20,                 OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
-    a_buttons["register"]   = buttonPointer(new Button(BUTTON_IMAGE_PATH,     580,          BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "register", 50,                 OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
-    a_buttons["background"] = buttonPointer(new Button(BACKGTOUND_IMAGE_PATH, ZERO_POS,     ZERO_POS,                          BACKGTOUND_IMAGE_SCALE,         "",         TEXT_BUTTON_X_GAP,  GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["go"]         = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 0*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "go",       TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["bet"]        = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 1*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "bet",      TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["all in"]     = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 2*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "all in",   TEXT_BUTTON_X_GAP + 4, GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["fold"]       = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 4*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "fold",     TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["check"]      = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 3*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "check",    TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["exchange"]   = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 5*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "exchange", TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["log_in"]     = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1080,         BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "log in",   20,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
+    a_buttons["register"]   = buttonPointer(new Button(BUTTON_IMAGE_PATH,     580,          BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "register", 50,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
+    a_buttons["background"] = buttonPointer(new Button(BACKGTOUND_IMAGE_PATH, ZERO_POS,     ZERO_POS,                          BACKGTOUND_IMAGE_SCALE,         "",         TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
 }
 
 void texts_box_initialization(std::unordered_map<std::string, textBoxPointer>& a_text_boxs)
@@ -107,8 +110,30 @@ void Table::check_events()
         break;
     
     default:
-        break;
+        all_in_handler();
     }
+}
+
+void Table::all_in_handler()
+{
+    if(!all_in_flag)
+        return;
+
+    int bet_remains = all_in_max_bet_amount - m_self.current_bet();
+
+    if(m_self.amount() == 0 || (all_in_max_bet_amount >  0 && bet_remains == 0))
+    {
+        all_in_flag = false;
+        set_text(empty, 0, 0);
+        all_in_max_bet_amount = 0;
+        m_action_out.finish_bet(m_self.name());
+        return;
+    }
+
+    int chip = m_self.bet_for_all_in(bet_remains);
+    m_action_out.bet_action(m_self.name(), chip);
+    all_in_max_bet_amount = 0;
+    usleep(50000);
 }
 
 void Table::draw_login_screen()
@@ -166,7 +191,8 @@ void Table::draw_all()
 
 void Table::draw_your_turn()
 {
-    m_buttons["bet"].get()->draw(m_window); 
+    m_buttons["bet"].get()->draw(m_window);
+    m_buttons["all in"].get()->draw(m_window);  
     m_buttons["check"].get()->draw(m_window); 
     m_buttons["fold"].get()->draw(m_window); 
 }
@@ -195,6 +221,9 @@ void Table::check_mouse_looged()
 bool Table::check_your_turn()
 {
     if(check_bet_button())
+        return true;
+
+    if(check_all_in_button())
         return true;
 
     if(check_check_button())
@@ -254,6 +283,23 @@ bool Table::check_bet_button()
     {
         int chip = m_self.bet(position.x, position.y);
         m_action_out.bet_action(m_self.name(), chip);
+        usleep(100000);
+        return true;
+    }
+
+    return false;
+}
+
+bool Table::check_all_in_button()
+{
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
+    sf::Vector2f position = m_window.mapPixelToCoords(pixelPos);
+
+    if (m_buttons["all in"].get()->is_in_range(position.x, position.y) && !all_in_flag)
+    {
+        all_in_flag = true;
+        sound.play_button();
+        m_action_out.start_bet(m_self.name());
         usleep(100000);
         return true;
     }
