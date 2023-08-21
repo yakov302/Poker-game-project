@@ -35,9 +35,16 @@ void PlayersContainer::new_player(std::string& a_name, std::string& a_gender, in
         std::cout << __func__ << "(): set m_players[" << a_name << "] = playerPointer(new Player(" << a_name << ", " << a_gender << ", " << a_amount << ", " << a_client_socket << ")" << std::endl;
 
     m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, a_client_socket));
-    m_action_out.log_in_success(a_name, a_gender, a_client_socket);
+    m_action_out.play_success(a_client_socket);
     m_action_out.get_player(a_name, a_gender, a_amount);
+    send_to_new_player_all_existing_players(a_client_socket); 
 
+    if(num_of_players() > 1)
+        m_wait.exit_wait();
+}
+
+void PlayersContainer::send_to_new_player_all_existing_players(int a_client_socket)
+{
     for(auto player: m_players)
     {
         m_action_out.get_player(player.second->m_name, player.second->m_gender, player.second->m_vars[amount], a_client_socket);
@@ -50,9 +57,6 @@ void PlayersContainer::new_player(std::string& a_name, std::string& a_gender, in
                 m_action_out.turn_on(player.second->m_name, my_turn);
         }
     }
-
-    if(num_of_players() > 1)
-        m_wait.exit_wait();
 }
 
 bool PlayersContainer::log_in_chack(std::string& a_name,  int a_client_socket)const

@@ -28,6 +28,10 @@ public:
     void log_in_wrong_password(int a_client_socket);
     void log_in_success(std::string& a_name, std::string& a_gender, int a_client_socket);
 
+    void play_success(int a_client_socket);
+    void view_success(int a_client_socket);
+    void delete_viewer(int a_client_socket);
+
     void turn_on(std::string& a_name, std::string& a_flag);
     void turn_off(std::string& a_name, std::string& a_flag);
 

@@ -42,13 +42,25 @@ void ActionOut::registration_request(const std::string& a_name, const std::strin
     pack_and_send(arg, REGISTRATION_REQUES);
 }
 
-void ActionOut::log_in_request(const std::string& a_name, const std::string& a_password, int a_amount)
+void ActionOut::log_in_request(const std::string& a_name, const std::string& a_password)
 {
-    Args arg(2, 1);
+    Args arg(2, 0);
     arg.m_strings.emplace_back(a_name);
     arg.m_strings.emplace_back(a_password);
-    arg.m_ints.emplace_back(a_amount);
     pack_and_send(arg, LOG_IN_REQUEST);
+}
+
+void ActionOut::play_request(const std::string& a_name, int a_amount)
+{
+    Args arg(1, 1);
+    arg.m_strings.emplace_back(a_name);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send(arg, PLAY_REQUEST);
+}
+
+void ActionOut::view_request()
+{
+    just_message(VIEW_REQUEST);
 }
 
 void ActionOut::start_bet(const std::string& a_name)

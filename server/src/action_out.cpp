@@ -122,9 +122,8 @@ void ActionOut::log_in_success(std::string& a_name, std::string& a_gender, int a
 {
     Args arg(2, 0);
     arg.m_strings.emplace_back(a_name);
-    arg.m_strings.emplace_back(a_gender);
+    arg.m_strings.emplace_back(a_gender);    
     pack_and_send_to_client(arg, LOG_IN_SUCCESS, a_client_socket);
-    m_sockets.emplace_back(a_client_socket);
 }
 
 void ActionOut::log_in_wrong_name(int a_client_socket)
@@ -140,6 +139,23 @@ void ActionOut::log_in_wrong_password(int a_client_socket)
 void ActionOut::user_name_alredy_log(int a_client_socket)
 {
     just_message_to_clienet(USER_NAME_ALREADY_LOG, a_client_socket);
+}
+
+void ActionOut::play_success(int a_client_socket)
+{
+    m_sockets.emplace_back(a_client_socket); 
+    just_message_to_clienet(PLAY_SUCCESS, a_client_socket);
+}
+
+void ActionOut::view_success(int a_client_socket)
+{
+    m_sockets.emplace_back(a_client_socket); 
+    just_message_to_clienet(VIEW_SUCCESS, a_client_socket);
+}
+
+void ActionOut::delete_viewer(int a_client_socket)
+{
+    m_sockets.remove(a_client_socket);
 }
 
 void ActionOut::turn_on(std::string& a_name, std::string& a_flag)

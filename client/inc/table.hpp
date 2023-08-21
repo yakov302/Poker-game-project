@@ -11,6 +11,10 @@
 #include "action_out.hpp"
 #include "players_container.hpp"
 
+#define PLAY 1
+#define VIEW 2
+#define NOT_SELECTED_YET 0
+
 #define MAX_TEXTS_SIZE 27
 #define TABLE_TEXT_SIZE 30
 #define LOG_IN_TEXT_Y_POS 80
@@ -62,12 +66,16 @@ public:
     void set_text(std::string& a_text, int x_pos, int y_pos);
 
 private:
-    void run_log_in();
+
+// opening screen section
+
+    void run_opening_screen();
+
     void draw_log_in();
     void draw_register();
-    void draw_login_screen();
+    void draw_opening_screen();
 
-    void check_mouse_not_looged();
+    void check_mouse_opening_screen();
     bool check_register_button(bool a_is_on);
     bool check_log_in_button(bool a_is_on);
     void turn_off_all_bars();
@@ -75,10 +83,20 @@ private:
     bool check_gender_bar();
     bool check_name_bar();
 
-    void draw_all();
+// play or view section
+
+    void run_play_or_view();
+    void draw_play_or_view();
+    void check_mouse_play_or_view();
+
+// play section
+
+    void run_play();
+
+    void draw_play();
     void draw_your_turn();
 
-    void check_mouse_looged();
+    void check_mouse_play();
     bool check_your_turn();
     bool check_go_button();
     bool check_bet_button();
@@ -87,9 +105,16 @@ private:
     bool check_fold_button();
     bool check_reveal_cards();
     bool check_exchange_button();
+    void all_in_handler();
+
+// view section
+
+    void run_view();
+    void draw_view();
+
+// multiple loops section
 
     void check_events();
-    void all_in_handler();
 
 private:
     sf::Event m_event;

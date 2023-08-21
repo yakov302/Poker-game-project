@@ -15,7 +15,9 @@ public:
     TablesContainer(TcpServer& a_tcp);
 
     void get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_client_socket);
+    bool log_in_chack(std::string& a_name, int a_client_socket);
     void delete_player(int a_client_socket);
+    void get_viewer(int a_client_socket);
     void stop();
 
     int num_of_players();

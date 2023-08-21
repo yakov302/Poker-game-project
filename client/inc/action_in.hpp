@@ -8,6 +8,8 @@
 #include "action_out.hpp"
 #include "players_container.hpp"
 
+#define PLAY 1
+#define VIEW 2
 #define MAX_WIN_TEXT_LEN 23
 #define WIN_TEXT_Y_POS 390
 #define GAME_TEXT_Y_POS 680
@@ -32,6 +34,9 @@ private:
     void user_name_alredy_log();
     void log_in_wrong_password();
     void log_in_success(char* a_buffer);
+
+    void play_success();
+    void view_success();
 
     void turn_on(char* a_buffer);
     void turn_off(char* a_buffer);

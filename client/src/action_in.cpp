@@ -11,6 +11,7 @@ extern std::string bet_flag;
 extern std::string register_flag;
 extern std::string reveal_cards_flag;
 extern int all_in_max_bet_amount;
+extern int play_or_view;
 extern bool all_in_flag;
 
 namespace impl
@@ -163,6 +164,14 @@ void ActionIn::get(char* a_buffer)
         user_name_alredy_log();
         break;
 
+    case PLAY_SUCCESS:
+        play_success();
+        break;
+
+    case VIEW_SUCCESS:
+        view_success();
+        break;
+
     case TURN_ON_FLAG:
         turn_on(a_buffer);
         break;
@@ -299,7 +308,6 @@ void ActionIn::log_in_success(char* a_buffer)
     std::string name = arg.m_strings[0];
     std::string gender =  arg.m_strings[1];
     m_self.set_name_and_gender(name, gender);
-    m_players.get_player(name, m_self);
     m_table.turn_off_flag(register_flag);
     m_table.turn_off_flag(log_in);
     m_self.turn_on_flag(logged);
@@ -325,6 +333,22 @@ void ActionIn::user_name_alredy_log()
     sound.play_invalid();
     std::string txt = "User already logged in";
     m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+}
+
+void ActionIn::play_success()
+{
+    sound.play_positive();
+    std::string name = m_self.name();
+    m_players.get_player(name, m_self);
+    play_or_view = PLAY;
+    clear_text();
+}
+
+void ActionIn::view_success()
+{
+    sound.play_positive();
+    play_or_view = VIEW;
+    clear_text();
 }
 
 void ActionIn::turn_on(char* a_buffer)

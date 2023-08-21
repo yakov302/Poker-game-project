@@ -70,7 +70,7 @@ void TcpServer::send_all_clients(char* a_buffer, int a_message_size, std::list<i
 {
 	auto it = a_sockts.begin();
     auto end = a_sockts.end();
-		
+
 	while(it != end) 
 	{	
         int client_socket = *it;

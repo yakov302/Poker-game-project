@@ -16,6 +16,23 @@ TablesContainer::TablesContainer(TcpServer& a_tcp)
         std::cout << __func__<< "(): constructor was built" << std::endl;
 }
 
+bool TablesContainer::log_in_chack(std::string& a_name, int a_client_socket)
+{
+    for(auto table : m_tables)
+    {
+        if(!table.second.get()->m_players.log_in_chack(a_name, a_client_socket))
+        {
+            if(dbg[TABLES_CONTAINER])[[unlikely]]
+                std::cout <<__func__ << "(): player(" << a_name << ", " << a_client_socket<< ") alredy in table id: " << table.first << std::endl;
+
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
 void TablesContainer::get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_client_socket)
 {
     bool player_enter_table = false;
@@ -24,14 +41,6 @@ void TablesContainer::get_player(std::string& a_name, std::string& a_gender, int
     { 
         for(auto table : m_tables)
         {
-            if(!table.second.get()->m_players.log_in_chack(a_name, a_client_socket))
-            {
-                if(dbg[TABLES_CONTAINER])[[unlikely]]
-                    std::cout <<__func__ << "(): player(" << a_name << ", " <<  a_gender << ", " << a_amount << ", "  << a_client_socket<< ") alredy in table id: " << table.first << std::endl;
-                
-                player_enter_table = true;
-                break;
-            }
 
             if(!table.second.get()->is_table_full())
             {
@@ -72,6 +81,18 @@ void TablesContainer::new_table()
         print_table_container();
 }
 
+void TablesContainer::get_viewer(int a_client_socket)
+{
+    // Look for the table with the most players
+    for(auto table : m_tables)
+    {                   
+        m_socket_to_table_id[a_client_socket] = table.first;
+        table.second.get()->m_actio_out.view_success(a_client_socket);
+        table.second.get()->m_players.send_to_new_player_all_existing_players(a_client_socket);
+        break;
+    }
+}
+
 void TablesContainer::delete_player(int a_client_socket)
 {
     if(m_socket_to_table_id.find(a_client_socket) == m_socket_to_table_id.end())[[unlikely]]
@@ -91,10 +112,13 @@ void TablesContainer::delete_player(int a_client_socket)
         return;
     }
 
+    //Ineffective, need to check if player or viewer
+    m_tables[table_id].get()->m_actio_out.delete_viewer(a_client_socket);
+    m_tables[table_id].get()->player_going_to_be_deleted(a_client_socket);
+
     if(dbg[TABLES_CONTAINER])[[unlikely]]
         std::cout << __func__ << "(): call m_tables[" << table_id << "]->m_players.delete_player(socket = " << a_client_socket << ")" << std::endl;
     
-    m_tables[table_id].get()->player_going_to_be_deleted(a_client_socket);
     m_tables[table_id].get()->m_players.delete_player(a_client_socket);
     m_tables[table_id].get()->player_deleted();
     m_socket_to_table_id.erase(a_client_socket);
@@ -138,7 +162,7 @@ void TablesContainer::check_if_table_need_to_delete(int table_id)
 
         m_tables[table_id].get()->m_game.stop();
         m_tables.erase(table_id);
-
+        // move all viewer to another table
         if(dbg[TABLES_CONTAINER])[[unlikely]]
             print_table_container();
     }
