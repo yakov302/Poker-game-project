@@ -83,5 +83,11 @@ bool Hand::is_in_back_range(int a_x, int a_y)const
     return false;
 }
 
+void Hand::clear()
+{
+    while(!m_cards.empty())
+        m_cards.pop_back();
+}
+
 
 }// poker namespace

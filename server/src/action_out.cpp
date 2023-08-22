@@ -19,6 +19,14 @@ void ActionOut::name_and_amount(std::string& a_name, int a_amount, Message_type 
     pack_and_send_all(arg, a_message);
 }
 
+void ActionOut::name_and_amount_to_client(std::string& a_name, int a_amount, Message_type a_message, int a_client_socket)
+{
+    Args arg(1, 1);
+    arg.m_strings.emplace_back(a_name);
+    arg.m_ints.emplace_back(a_amount);
+    pack_and_send_to_client(arg, a_message, a_client_socket);
+}
+
 void ActionOut::name_and_message(std::string& a_name, Message_type a_message)
 {
     char buffer[BUFFER_SIZE];
@@ -147,10 +155,9 @@ void ActionOut::play_success(int a_client_socket)
     just_message_to_clienet(PLAY_SUCCESS, a_client_socket);
 }
 
-void ActionOut::view_success(int a_client_socket)
+void ActionOut::get_viewer(int a_client_socket)
 {
     m_sockets.emplace_back(a_client_socket); 
-    just_message_to_clienet(VIEW_SUCCESS, a_client_socket);
 }
 
 void ActionOut::delete_viewer(int a_client_socket)
@@ -272,6 +279,16 @@ void ActionOut::table_get_chip(int a_amount)
     just_amount_to_all(TABLE_GET_CHIP, a_amount); 
 }
 
+void ActionOut::table_get_card(cardPointer a_card, int a_client_socket)
+{
+    name_and_amount_to_client(a_card.get()->m_suit, a_card.get()->m_number, TABLE_GET_CARD, a_client_socket);
+}
+
+void ActionOut::table_get_chip(int a_amount, int a_client_socket)
+{
+    just_amount_to_clienet(TABLE_GET_CHIP, a_amount, a_client_socket); 
+}
+
 void ActionOut::table_give_card()
 {
     just_message_to_all(TABLE_GIVE_CARD);
@@ -315,6 +332,11 @@ void ActionOut::game_winer(std::string& a_name)
 void ActionOut::clear_text()
 {
     just_message_to_all(CLEAR_TEXT);
+}
+
+void ActionOut::clear_screen(int a_client_socket)
+{
+    just_message_to_clienet(CLEAR_SCREEN, a_client_socket);
 }
 
 void ActionOut::print_result(std::string& a_name, int a_result)

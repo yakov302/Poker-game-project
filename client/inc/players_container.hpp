@@ -40,6 +40,8 @@ public:
     void turn_on_flag(std::string& a_name, std::string& a_flag);
     void turn_off_flag(std::string& a_name, std::string& a_flag);
     void draw_Players(sf::RenderWindow& a_window);
+
+    void clear();
     
 private:
     void find_empty_place(int& a_i, std::string& a_name);

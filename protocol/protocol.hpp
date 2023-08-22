@@ -45,7 +45,6 @@ typedef enum Message_type
     LOG_IN_WRONG_PASSWORD            = 7,
     USER_NAME_ALREADY_LOG            = 8,
     PLAY_SUCCESS                     = 9,
-    VIEW_SUCCESS                     = 10,
     TURN_ON_FLAG                     = 11,
     TURN_OFF_FLAG                    = 12,
     START_BET_UPDATE                 = 13,
@@ -77,13 +76,13 @@ typedef enum Message_type
     REGISTRATION_REQUES              = 36,
     LOG_IN_REQUEST                   = 37,
     PLAY_REQUEST                     = 38,
-    VIEW_REQUEST                     = 39,
     START_BET_ACTION                 = 40,
     BET_ACTION                       = 41,
     FINISH_BET                       = 42,
     CHECK_ACTION                     = 43,
     FOLD_ACTION                      = 44,
-    WAKE_UP_SERVER                   = 45
+    WAKE_UP_SERVER                   = 45,
+    CLEAR_SCREEN                     = 46
 
 }Message_type;
 

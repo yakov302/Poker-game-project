@@ -168,10 +168,6 @@ void ActionIn::get(char* a_buffer)
         play_success();
         break;
 
-    case VIEW_SUCCESS:
-        view_success();
-        break;
-
     case TURN_ON_FLAG:
         turn_on(a_buffer);
         break;
@@ -268,6 +264,10 @@ void ActionIn::get(char* a_buffer)
         clear_text();
         break;
 
+    case CLEAR_SCREEN:
+        clear_screen();
+        break;
+
     case RESULT:
         print_result(a_buffer);
         break;
@@ -311,6 +311,7 @@ void ActionIn::log_in_success(char* a_buffer)
     m_table.turn_off_flag(register_flag);
     m_table.turn_off_flag(log_in);
     m_self.turn_on_flag(logged);
+    play_or_view = VIEW;
     clear_text();
 }
 
@@ -341,13 +342,6 @@ void ActionIn::play_success()
     std::string name = m_self.name();
     m_players.get_player(name, m_self);
     play_or_view = PLAY;
-    clear_text();
-}
-
-void ActionIn::view_success()
-{
-    sound.play_positive();
-    play_or_view = VIEW;
     clear_text();
 }
 
@@ -517,6 +511,12 @@ void ActionIn::game_winer(char* a_buffer)
 void ActionIn::clear_text()
 {
     m_table.set_text(empty, 0, 0);
+}
+
+void ActionIn::clear_screen()
+{
+    m_players.clear();
+    m_table.clear();
 }
 
 void ActionIn::print_result(char* a_buffer)

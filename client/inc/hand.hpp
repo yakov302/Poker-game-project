@@ -27,6 +27,8 @@ public:
    void draw_back(sf::RenderWindow& a_window)const;
    bool is_in_back_range(int a_x, int a_y)const;
 
+   void clear();
+
 private:
     int m_x;
     int m_y;

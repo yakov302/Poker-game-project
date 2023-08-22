@@ -16,7 +16,6 @@ public:
     void registration_request(const std::string& a_name, const std::string& a_password, const std::string& a_gender);
     void log_in_request(const std::string& a_name, const std::string& a_password);
     void play_request(const std::string& a_name, int a_amount);
-    void view_request();
 
     void start_bet(const std::string& a_name);
     void bet_action(const std::string& a_name, int a_chip);

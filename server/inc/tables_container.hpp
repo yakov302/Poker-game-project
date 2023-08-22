@@ -17,6 +17,7 @@ public:
     void get_player(std::string& a_name, std::string& a_gender, int a_amount, int a_client_socket);
     bool log_in_chack(std::string& a_name, int a_client_socket);
     void delete_player(int a_client_socket);
+    void delete_viewer(int a_client_socket);
     void get_viewer(int a_client_socket);
     void stop();
 
@@ -28,7 +29,10 @@ private:
     void print_table_container();
     void find_match_for_singles();
     void check_if_table_need_to_delete(int table_id);
+    void delete_player_impl(tablePointer& a_table, int table_id, int a_client_socket);
+    void send_to_new_client_all_table_objects(tablePointer& a_table, int a_client_socket);
     void move_player_to_another_table(tableIdAndPtrPair& dst_table, tableIdAndPtrPair& srs_table);
+    void move_all_viewers_to_another_table(tablePointer& dst_table, tablePointer& srs_table, int dst_table_id);
 
 private:
     friend class ActionIn;

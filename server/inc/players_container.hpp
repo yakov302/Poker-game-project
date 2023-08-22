@@ -9,7 +9,7 @@
 #include "cli_cmd.hpp"
 #include "action_out.hpp"
 
-#define MAX_NUM_OF_PLAYERS_IN_TABLE 6
+#define MAX_NUM_OF_PLAYERS_IN_TABLE 2
 
 namespace poker
 {

@@ -28,8 +28,8 @@ public:
     void log_in_wrong_password(int a_client_socket);
     void log_in_success(std::string& a_name, std::string& a_gender, int a_client_socket);
 
+    void get_viewer(int a_client_socket);
     void play_success(int a_client_socket);
-    void view_success(int a_client_socket);
     void delete_viewer(int a_client_socket);
 
     void turn_on(std::string& a_name, std::string& a_flag);
@@ -57,21 +57,26 @@ public:
     void table_clear_wallet();
     void table_get_card(cardPointer a_card);
     void table_get_chip(int a_amount);
+    void table_get_card(cardPointer a_card, int a_client_socket);
+    void table_get_chip(int a_amount, int a_client_socket);
     void table_give_chip(int a_amount);
 
     void wake_up_server();
     void wake_up_client(int a_client_socket);
 
     void clear_text();
+    void clear_screen(int a_client_socket);
     void game_winer(std::string& a_name);
     void round_winer(std::string& a_name);
     void clear_action(std::string& a_name);
     void print_result(std::string& a_name, int a_result);
 
 private:
+    friend class TablesContainer;
     void name_and_message(std::string& a_name, Message_type a_message);
     void flag(std::string& a_name, std::string& a_flag, Message_type a_message);
     void name_and_amount(std::string& a_name, int a_amount, Message_type a_message);
+    void name_and_amount_to_client(std::string& a_name, int a_amount, Message_type a_message, int a_client_socket);
 
     void just_message_to_all(Message_type a_message);
     void just_amount_to_all(Message_type a_message, int a_amount);

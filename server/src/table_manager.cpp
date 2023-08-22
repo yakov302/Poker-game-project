@@ -7,12 +7,12 @@ extern bool dbg[NUM_OF_DBG_TYPES];
 
 TableManager::TableManager(TcpServer& a_tcp)
 : m_deck(1)
-, m_table()
-, m_actio_out(a_tcp)
-, m_players(m_actio_out, m_deck)
-, m_bet_round(m_players, m_actio_out, m_table, m_deck)
-, m_card_round(m_players, m_table, m_actio_out, m_bet_round, m_deck)
-, m_game(m_players, m_card_round, m_actio_out)
+, m_table(a_tcp)
+, m_action_out(a_tcp)
+, m_players(m_action_out, m_deck)
+, m_bet_round(m_players, m_action_out, m_table, m_deck)
+, m_card_round(m_players, m_table, m_action_out, m_bet_round, m_deck)
+, m_game(m_players, m_card_round, m_action_out)
 {
 
 }

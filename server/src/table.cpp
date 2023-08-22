@@ -5,8 +5,9 @@ namespace poker
 
 extern bool dbg[NUM_OF_DBG_TYPES];
 
-Table::Table()
-: m_chips()
+Table::Table(TcpServer& a_tcp_server)
+: m_action_out(a_tcp_server)
+, m_chips()
 , m_cards()
 {
     m_cards.reserve(NUM_OF_TABLE_CARDS);
@@ -61,6 +62,15 @@ bool Table::is_hand_empty()
 std::vector<cardPointer>& Table::table_cards()
 {
     return m_cards;
+}
+
+void Table::send_new_player_existing_chips_and_cards(int a_client_socket)
+{
+    for(int chip : m_chips)
+        m_action_out.table_get_chip(chip, a_client_socket);
+
+    for(auto card : m_cards)
+        m_action_out.table_get_card(card, a_client_socket);
 }
 
 

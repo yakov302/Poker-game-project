@@ -59,6 +59,7 @@ public:
     
     void run();
     void stop();
+    void clear();
     bool is_runing();
 
     void turn_on_flag(std::string& a_flag);
@@ -83,15 +84,7 @@ private:
     bool check_gender_bar();
     bool check_name_bar();
 
-// play or view section
-
-    void run_play_or_view();
-    void draw_play_or_view();
-    void check_mouse_play_or_view();
-
 // play section
-
-    void run_play();
 
     void draw_play();
     void draw_your_turn();
@@ -109,11 +102,14 @@ private:
 
 // view section
 
-    void run_view();
     void draw_view();
+    void check_mouse_view();
+    bool check_play_button();
+    bool check_change_table_button();
 
 // multiple loops section
 
+    void run_play_or_view();
     void check_events();
 
 private:

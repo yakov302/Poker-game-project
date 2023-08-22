@@ -149,5 +149,18 @@ void PlayersContainer::draw_Players(sf::RenderWindow& a_window)
     }
 }
 
+void PlayersContainer::clear()
+{
+    while(!m_players.empty())
+    {
+        for(auto player : m_players)
+        {
+            std::string name = player.first;
+            delete_player(name);
+            break;
+        }
+    }
+}
+
 
 }// poker namespace

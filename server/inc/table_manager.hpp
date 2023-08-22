@@ -28,7 +28,7 @@ private:
 
     Deck m_deck;
     Table m_table;
-    ActionOut m_actio_out;
+    ActionOut m_action_out;
     PlayersContainer m_players;
     BetRound m_bet_round;
     CardRound m_card_round;

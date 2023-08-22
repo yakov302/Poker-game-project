@@ -25,17 +25,19 @@ extern int log_in_text_x_pos(std::string& txt);
 
 void buttons_initialization(std::unordered_map<std::string, buttonPointer>& a_buttons) 
 {
-    a_buttons["go"]         = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 0*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "go",       TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["bet"]        = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 1*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "bet",      TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["all in"]     = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 2*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "all in",   TEXT_BUTTON_X_GAP + 4, GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["fold"]       = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 4*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "fold",     TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["check"]      = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 3*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "check",    TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["exchange"]   = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 5*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "exchange", TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
-    a_buttons["log_in"]     = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1080,         BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "log in",   20,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
-    a_buttons["play"]       = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1080,         BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "play",     15,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
-    a_buttons["view"]       = buttonPointer(new Button(BUTTON_IMAGE_PATH,         580,          BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "view ",    18,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
-    a_buttons["register"]   = buttonPointer(new Button(BUTTON_IMAGE_PATH,     580,          BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "register", 50,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
-    a_buttons["background"] = buttonPointer(new Button(BACKGTOUND_IMAGE_PATH, ZERO_POS,     ZERO_POS,                          BACKGTOUND_IMAGE_SCALE,         "",         TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["go"]           = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 0*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "go",              TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["bet"]          = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 1*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "bet",             TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["all in"]       = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 2*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "all in",          9,                     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["fold"]         = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 4*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "fold",            TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["check"]        = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 3*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "check",           TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["exchange"]     = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 5*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "exchange",        TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["play_on"]      = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 2*BUTTON_SIZE, BUTTON_GAME_IMAGE_SCALE,        "play",            TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["change table"] = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1672,         BUTTON_GAME_Y_POS + 3*BUTTON_SIZE, 0.8,                            "change\n  table", -8,                    8,                      GAME_TEXT_SZIE       ));
+    a_buttons["log_in"]       = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1080,         BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "log in",          20,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
+    a_buttons["play"]         = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1080,         BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "play",            15,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
+    a_buttons["view"]         = buttonPointer(new Button(BUTTON_IMAGE_PATH,     580,          BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "view ",           18,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
+    a_buttons["register"]     = buttonPointer(new Button(BUTTON_IMAGE_PATH,     580,          BUTTON_OPEN_SCREEN_Y_POS,          BUTTON_OPEN_SCREEN_IMAGE_SCALE, "register",        50,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
+    a_buttons["background"]   = buttonPointer(new Button(BACKGTOUND_IMAGE_PATH, ZERO_POS,     ZERO_POS,                          BACKGTOUND_IMAGE_SCALE,         "",                TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
 }
 
 void texts_box_initialization(std::unordered_map<std::string, textBoxPointer>& a_text_boxs)
@@ -91,11 +93,6 @@ void Table::run()
 {
     run_opening_screen();
     run_play_or_view();
-
-    if(play_or_view == PLAY)
-        run_play();
-    if(play_or_view == VIEW)
-        run_view();
 }
 
 void Table::stop()
@@ -103,6 +100,12 @@ void Table::stop()
     m_flags["stop"] = true;
     m_action_out.wake_up_client();
     m_window.close();
+}
+
+void Table::clear()
+{
+    m_cards.clear();
+    m_chips.clear();
 }
 
 bool Table::is_runing()
@@ -355,67 +358,7 @@ bool Table::check_register_button(bool a_is_on)
     return false;
 }
 
-// -----------------------------play or view section-----------------------------
-
-void Table::run_play_or_view()
-{
-    while (m_window.isOpen() && !play_or_view && is_runing())
-    {
-        m_window.clear();
-        draw_play_or_view();
-        check_mouse_play_or_view();
-        check_events();
-        m_window.display();
-    }
-}
-
-void Table::draw_play_or_view()
-{
-    m_buttons["background"].get()->draw(m_window);
-    m_buttons["play"].get()->draw(m_window);
-    m_buttons["view"].get()->draw(m_window); 
-}
-
-void Table::check_mouse_play_or_view()
-{
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {  
-        sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
-        sf::Vector2f position = m_window.mapPixelToCoords(pixelPos);
-
-        if(m_buttons["play"].get()->is_in_range(position.x, position.y))
-        {
-            sound.play_button();
-            m_action_out.play_request(m_self.name(), m_self.amount());
-            set_text(request_sent, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
-            usleep(100000);
-            return;
-        }
-
-        if(m_buttons["view"].get()->is_in_range(position.x, position.y))
-        {
-            sound.play_button();
-            m_action_out.view_request();
-            set_text(request_sent, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
-            usleep(100000);
-            return;
-        }
-    }
-}
-
 // --------------------------------play section--------------------------------
-
-void Table::run_play()
-{
-    while (m_window.isOpen() && is_runing())
-    {
-        m_window.clear();
-        draw_play();
-        check_mouse_play();
-        check_events();
-        m_window.display();
-    }
-}
 
 void Table::draw_play()
 {
@@ -646,17 +589,6 @@ void Table::all_in_handler()
 
 // ----------------------------------view section--------------------------------
 
-void Table::run_view()
-{
-    while (m_window.isOpen() && is_runing())
-    {
-        m_window.clear();
-        draw_view();
-        check_events();
-        m_window.display();
-    }
-}
-
 void Table::draw_view()
 {
     m_buttons["background"].get()->draw(m_window);
@@ -664,11 +596,71 @@ void Table::draw_view()
 
     m_players.draw_Players(m_window);
 
+    m_buttons["play_on"].get()->draw(m_window);
+    m_buttons["change table"].get()->draw(m_window);
+
     m_cards.draw_front(m_window);
     m_chips.draw(m_window, true);
 }
 
+void Table::check_mouse_view()
+{
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {    
+        if(check_play_button())
+            return;
+
+        if(check_change_table_button())
+            return;
+    }
+}
+
+bool Table::check_play_button()
+{
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
+    sf::Vector2f position = m_window.mapPixelToCoords(pixelPos);
+
+    if(m_buttons["play_on"].get()->is_in_range(position.x, position.y))
+    {
+        sound.play_button();
+        m_action_out.play_request(m_self.name(), m_self.amount());
+        set_text(request_sent, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
+        usleep(100000);
+        return true;
+    }
+
+    return false;
+}
+
+bool Table::check_change_table_button()
+{
+return false;
+}
+
 // --------------------------------multiple loops--------------------------------
+
+void Table::run_play_or_view()
+{
+    while (m_window.isOpen() && is_runing())
+    {
+        m_window.clear();
+
+        if(play_or_view == PLAY)
+        {
+            draw_play();
+            check_mouse_play();
+            check_events();
+        }
+        else
+        {
+            draw_view();
+            check_mouse_view();
+            check_events();
+        }
+
+        m_window.display();
+    }
+}
 
 void Table::check_events()
 {

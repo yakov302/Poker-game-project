@@ -58,11 +58,6 @@ void ActionOut::play_request(const std::string& a_name, int a_amount)
     pack_and_send(arg, PLAY_REQUEST);
 }
 
-void ActionOut::view_request()
-{
-    just_message(VIEW_REQUEST);
-}
-
 void ActionOut::start_bet(const std::string& a_name)
 {
     name_and_message(a_name, START_BET_ACTION);
