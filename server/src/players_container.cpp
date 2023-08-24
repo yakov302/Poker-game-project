@@ -46,14 +46,27 @@ void PlayersContainer::send_to_new_player_all_existing_players(int a_client_sock
 {
     for(auto player: m_players)
     {
+        if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): call m_action_out.get_player(" << player.second->m_name << ", " << player.second->m_gender << ", " << player.second->m_vars[amount] << ", " << a_client_socket << ")" << std::endl;
+
         m_action_out.get_player(player.second->m_name, player.second->m_gender, player.second->m_vars[amount], a_client_socket);
         if(!player.second->m_hand.empty())
         {
             for(auto card : player.second->m_hand)
+            {
+                if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+                    std::cout << __func__ << "(): call m_action_out.get_card(" << player.second->m_name << ", " << card << ", " << a_client_socket << ")" << std::endl;
+                
                 m_action_out.get_card(player.second->m_name, card, a_client_socket);
+            }
             
             if(player.second->m_flags[my_turn])
+            {
+                if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+                    std::cout << __func__ << "(): call m_action_out.turn_on(" << player.second->m_name << ", my_turn" << ")" << std::endl;
+
                 m_action_out.turn_on(player.second->m_name, my_turn);
+            }
         }
     }
 }
@@ -86,7 +99,7 @@ void PlayersContainer::delete_player(std::string& a_name, int a_client_socket)
     }
 
     if(dbg[PLAYERS_CONTAINER])[[unlikely]]
-            std::cout << __func__ << "(): call m_players.erase(" << a_name << ")" << std::endl;
+        std::cout << __func__ << "(): call m_players.erase(" << a_name << ")" << std::endl;
 
     for(int i = 0; i < 2; ++i)
         m_deck.push_card(give_card(a_name));

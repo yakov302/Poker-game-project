@@ -149,15 +149,18 @@ void PlayersContainer::draw_Players(sf::RenderWindow& a_window)
     }
 }
 
-void PlayersContainer::clear()
+void PlayersContainer::clear(std::string& a_self_name)
 {
-    while(!m_players.empty())
+    while(m_num_of_players > 1)
     {
         for(auto player : m_players)
         {
             std::string name = player.first;
-            delete_player(name);
-            break;
+            if(name != a_self_name)
+            {
+                delete_player(name);
+                break;
+            }
         }
     }
 }

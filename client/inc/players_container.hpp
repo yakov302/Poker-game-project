@@ -41,7 +41,7 @@ public:
     void turn_off_flag(std::string& a_name, std::string& a_flag);
     void draw_Players(sf::RenderWindow& a_window);
 
-    void clear();
+    void clear(std::string& a_self_name);
     
 private:
     void find_empty_place(int& a_i, std::string& a_name);

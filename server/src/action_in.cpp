@@ -116,7 +116,7 @@ void ActionIn::get(char* a_buffer, int a_client_socket)
     Message_type message = message_type(a_buffer);
 
     if(dbg[ACTION_IN])[[unlikely]]
-        std::cout << __func__ << "(): " << "get message: " << message << " frome socket: " << a_client_socket << " to table id: " <<  m_tables_container.m_socket_to_table_id[a_client_socket] << std::endl;
+        std::cout << __func__ << "(): " << "get message: " << message << " frome socket: " << a_client_socket << std::endl;
 
     switch (message)
     {
@@ -207,7 +207,7 @@ void ActionIn::play_reques(char* a_buffer, int a_client_socket)
 
 void ActionIn::start_bet(int a_client_socket)
 {   
-    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    int table_id = m_tables_container.m_player_socket_to_table_id[a_client_socket];
     m_tables_container.m_tables[table_id].get()->m_bet_round.start_bet();
 }
 
@@ -215,25 +215,25 @@ void ActionIn::bet(char* a_buffer, int a_client_socket)
 {
     Args arg(1,1);
     unpack(a_buffer, arg);
-    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    int table_id = m_tables_container.m_player_socket_to_table_id[a_client_socket];
     m_tables_container.m_tables[table_id].get()->m_bet_round.bet_in(arg.m_ints[0]);
 }
 
 void ActionIn::finish_bet(int a_client_socket)
 {
-    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    int table_id = m_tables_container.m_player_socket_to_table_id[a_client_socket];
     m_tables_container.m_tables[table_id].get()->m_bet_round.finish_bet();
 }
 
 void ActionIn::check(int a_client_socket)
 {
-    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    int table_id = m_tables_container.m_player_socket_to_table_id[a_client_socket];
     m_tables_container.m_tables[table_id].get()->m_bet_round.chack_in();
 }
 
 void ActionIn::fold(int a_client_socket)
 {
-    int table_id = m_tables_container.m_socket_to_table_id[a_client_socket];
+    int table_id = m_tables_container.m_player_socket_to_table_id[a_client_socket];
     m_tables_container.m_tables[table_id].get()->m_bet_round.fold_in();
 }
 

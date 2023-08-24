@@ -515,7 +515,8 @@ void ActionIn::clear_text()
 
 void ActionIn::clear_screen()
 {
-    m_players.clear();
+   std::string self_name = m_self.name();
+    m_players.clear(self_name);
     m_table.clear();
 }
 
