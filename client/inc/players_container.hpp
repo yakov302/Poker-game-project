@@ -41,6 +41,7 @@ public:
     void turn_off_flag(std::string& a_name, std::string& a_flag);
     void draw_Players(sf::RenderWindow& a_window);
 
+    int num_of_players();
     void clear(std::string& a_self_name);
     
 private:

@@ -151,7 +151,13 @@ void PlayersContainer::draw_Players(sf::RenderWindow& a_window)
 
 void PlayersContainer::clear(std::string& a_self_name)
 {
-    while(m_num_of_players > 1)
+    int condition;
+    if(m_players.find(a_self_name) != m_players.end())
+        condition = 1;
+    else
+        condition = 0;
+
+    while(m_num_of_players > condition)
     {
         for(auto player : m_players)
         {
@@ -163,6 +169,11 @@ void PlayersContainer::clear(std::string& a_self_name)
             }
         }
     }
+}
+
+int PlayersContainer::num_of_players()
+{
+    return m_num_of_players;
 }
 
 

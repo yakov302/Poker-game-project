@@ -19,6 +19,7 @@ public:
     void delete_player(int a_client_socket);
     void delete_viewer(int a_client_socket);
     void get_viewer(int a_client_socket);
+    void change_table(int a_client_socket);
     void stop();
 
     int num_of_players();
@@ -31,6 +32,7 @@ private:
     int num_of_viewers_in_table(int table_id);
     void check_if_table_need_to_delete(int table_id);
     void delete_player_impl(tablePointer& a_table, int table_id, int a_client_socket);
+    bool check_if_empty_table(tablePointer& table, int table_id, int a_client_socket);
     void move_player_to_another_table(tableIdAndPtrPair& dst_table, tableIdAndPtrPair& srs_table);
     void send_to_new_client_all_table_objects(tablePointer& a_table, int table_id, int a_client_socket);
     void move_all_viewers_to_another_table(tablePointer& dst_table, tablePointer& srs_table, int dst_table_id);

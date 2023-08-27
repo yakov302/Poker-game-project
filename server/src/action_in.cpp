@@ -132,6 +132,10 @@ void ActionIn::get(char* a_buffer, int a_client_socket)
         play_reques(a_buffer, a_client_socket);
         break;
 
+    case CHANGE_TABLE:
+        change_table(a_client_socket);
+        break;
+
     case START_BET_ACTION:
         start_bet(a_client_socket);
         break;
@@ -196,13 +200,18 @@ void ActionIn::play_reques(char* a_buffer, int a_client_socket)
     unpack(a_buffer, arg);
     std::string gender = m_subscribs[arg.m_strings[0]].m_gender;
     
-    m_tables_container.delete_viewer(a_client_socket);
 
     if(dbg[ACTION_IN])[[unlikely]]
         std::cout << __func__ << "(): " << "call m_tables_container.get_player(" << arg.m_strings[0] << ", " << gender << ", " << arg.m_ints[0]<< ", " <<  a_client_socket << ")" << std::endl;
     
     m_tables_container.get_player(arg.m_strings[0], gender, arg.m_ints[0], a_client_socket);
+    m_tables_container.delete_viewer(a_client_socket);
     check_thread_allocation();
+}
+
+void ActionIn::change_table(int a_client_socket)
+{
+   m_tables_container.change_table(a_client_socket);
 }
 
 void ActionIn::start_bet(int a_client_socket)

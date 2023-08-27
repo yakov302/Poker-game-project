@@ -151,13 +151,31 @@ void ActionOut::user_name_alredy_log(int a_client_socket)
 
 void ActionOut::play_success(int a_client_socket)
 {
-    m_sockets.emplace_back(a_client_socket); 
     just_message_to_clienet(PLAY_SUCCESS, a_client_socket);
+
+    if(is_socket_exists(a_client_socket))
+        return;
+
+    m_sockets.emplace_back(a_client_socket); 
 }
 
 void ActionOut::get_viewer(int a_client_socket)
 {
+    if(is_socket_exists(a_client_socket))
+        return;
+
     m_sockets.emplace_back(a_client_socket); 
+}
+
+bool ActionOut::is_socket_exists(int a_client_socket)
+{
+    for(auto socket : m_sockets)
+    {
+        if(socket == a_client_socket)
+            return true;
+    }
+
+    return false;
 }
 
 void ActionOut::delete_viewer(int a_client_socket)
@@ -269,6 +287,16 @@ void ActionOut::reveal_cards(std::string& a_name)
     name_and_message(a_name, REVEAL_CARDS);
 }
 
+void ActionOut::table_is_full(int a_client_socket)
+{
+    just_message_to_clienet(TABLE_FULL, a_client_socket);
+}
+
+void ActionOut::table_is_empty(int a_client_socket)
+{
+    just_message_to_clienet(TABLE_EMPTY, a_client_socket);
+}
+
 void ActionOut::table_get_card(cardPointer a_card)
 {
     name_and_amount(a_card.get()->m_suit, a_card.get()->m_number, TABLE_GET_CARD);
@@ -332,6 +360,11 @@ void ActionOut::game_winer(std::string& a_name)
 void ActionOut::clear_text()
 {
     just_message_to_all(CLEAR_TEXT);
+}
+
+void ActionOut::clear_text(int a_client_socket)
+{
+    just_message_to_clienet(CLEAR_TEXT, a_client_socket);
 }
 
 void ActionOut::clear_screen(int a_client_socket)

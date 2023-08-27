@@ -228,6 +228,14 @@ void BetRound::handle_open_player_going_to_be_deleted()
 
 void BetRound::bet_round_player_going_to_be_deleted(int a_client_socket)
 {
+    if(m_open_player == m_players.end())
+    {
+        if(dbg[BET_ROUND])[[unlikely]]
+            std::cout << __func__ << "(): m_game_open_player not set yet -> return" << std::endl;
+        
+        return;
+    }
+
     if(m_turn->second->m_vars[socket] == a_client_socket)
     {
         if(dbg[BET_ROUND])[[unlikely]]

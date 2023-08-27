@@ -56,6 +56,8 @@ private:
     void get_player(char* a_buffer);
     void delete_player(char* a_buffer);
 
+    void table_is_full();
+    void table_is_empty();
     void table_give_card();
     void table_clear_wallet();
     void table_get_card(char* a_buffer);

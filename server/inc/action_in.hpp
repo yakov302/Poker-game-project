@@ -29,6 +29,7 @@ private:
     void registration_reques(char* a_buffer, int a_client_socket);
     void log_in_reques(char* a_buffer, int a_client_socket);
     void play_reques(char* a_buffer, int a_client_socket);
+    void change_table(int a_client_socket);
 
     void finish_bet(int a_client_socket);
     void start_bet(int a_client_socket);

@@ -60,11 +60,14 @@ public:
     void table_get_card(cardPointer a_card, int a_client_socket);
     void table_get_chip(int a_amount, int a_client_socket);
     void table_give_chip(int a_amount);
+    void table_is_full(int a_client_socket);
+    void table_is_empty(int a_client_socket);
 
     void wake_up_server();
     void wake_up_client(int a_client_socket);
 
     void clear_text();
+    void clear_text(int a_client_socket);
     void clear_screen(int a_client_socket);
     void game_winer(std::string& a_name);
     void round_winer(std::string& a_name);
@@ -86,6 +89,8 @@ private:
     void pack_and_send_all(Args& a_arg, Message_type a_message);
     void pack_and_send_to_client(Args& a_arg, Message_type a_message, int a_client_socket);
     int pack_player(char* a_buffer, std::string& a_name, std::string& a_gender, int a_amount);
+
+    bool is_socket_exists(int a_client_socket);
 
 private:
     TcpServer& m_tcp;

@@ -102,6 +102,11 @@ std::string result(hand_results a_result)
     return "";
 }
 
+int play_text_x_pos(std::string& a_txt)
+{
+    return 930 + ((MAX_TEXTS_SIZE - a_txt.size())/2)*12;
+}
+
 int log_in_text_x_pos(std::string& a_txt)
 {
     return 740 + ((MAX_TEXTS_SIZE - a_txt.size())/2)*12;
@@ -224,6 +229,14 @@ void ActionIn::get(char* a_buffer)
         reveal_cards(a_buffer);
         break;
 
+    case TABLE_FULL:
+        table_is_full();
+        break;
+    
+    case TABLE_EMPTY:
+        table_is_empty();
+        break;
+
     case TABLE_GET_CARD:
         table_get_card(a_buffer);
         break;
@@ -312,7 +325,8 @@ void ActionIn::log_in_success(char* a_buffer)
     m_table.turn_off_flag(log_in);
     m_self.turn_on_flag(logged);
     play_or_view = VIEW;
-    clear_text();
+    if(m_players.num_of_players() > 0)
+        clear_text();
 }
 
 void ActionIn::log_in_wrong_name()
@@ -342,7 +356,8 @@ void ActionIn::play_success()
     std::string name = m_self.name();
     m_players.get_player(name, m_self);
     play_or_view = PLAY;
-    clear_text();
+    if(m_players.num_of_players() > 1)
+        clear_text();
 }
 
 void ActionIn::turn_on(char* a_buffer)
@@ -462,6 +477,19 @@ void ActionIn::table_get_card(char* a_buffer)
 void ActionIn::table_get_chip(char* a_buffer)
 {
     m_chips.push(impl::get_amount(a_buffer));
+}
+
+void ActionIn::table_is_full()
+{
+    std::string txt = "                Table is full\nyou are moved to another table";
+    m_table.set_text(txt, impl::play_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    sleep(3);
+}
+
+void ActionIn::table_is_empty()
+{
+    std::string txt = "Table is empty - waiting for players";
+    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::table_give_card()

@@ -118,7 +118,7 @@ void Game::next_it()
     ++m_game_open_player;
     if(m_game_open_player == m_players.end())
         m_game_open_player = m_players.begin();
-
+    
     if(dbg[GAME])[[unlikely]]
         std::cout << __func__ << "(): new m_game_open_player: " << m_game_open_player->second->m_name << std::endl;
 }
@@ -154,7 +154,7 @@ void Game::game_player_delete()
     if(m_players.num_of_players() == 0)
     {
         if(dbg[GAME])[[unlikely]]
-            std::cout << __func__ << "(): table empty no players exists - > return" << std::endl;
+            std::cout << __func__ << "(): table empty no players exists -> return" << std::endl;
 
         return;
     }
@@ -186,6 +186,14 @@ void Game::game_player_going_to_be_deleted(int a_client_socket)
         if(dbg[GAME])[[unlikely]]
             std::cout << __func__ << "(): table empty no players exists -> return" << std::endl;
 
+        return;
+    }
+
+    if(m_game_open_player == m_players.end())
+    {
+        if(dbg[GAME])[[unlikely]]
+            std::cout << __func__ << "(): m_game_open_player not set yet -> return" << std::endl;
+        
         return;
     }
 
