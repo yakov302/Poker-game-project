@@ -13,7 +13,7 @@ namespace poker
 class Game
 {
 public:
-    Game(PlayersContainer& a_players, CardRound& a_card_round, ActionOut& a_action_out);
+    Game(PlayersContainer& a_players, CardRound& a_card_round, ActionOut& a_action_out, playerIterator& a_game_open_player);
     ~Game();
 
     void run();
@@ -31,11 +31,13 @@ private:
 
 private:
     bool m_stop; 
+    bool m_open_player_deleted;
     std::thread* m_thread;
 
     CardRound& m_card_round;
     ActionOut& m_action_out;
     PlayersContainer& m_players;
+    playerIterator& m_game_open_player;
 };
 
 

@@ -14,7 +14,7 @@ namespace poker
 class BetRound
 {
 public:
-    BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table, Deck& a_deck);
+    BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table, Deck& a_deck, playerIterator& a_game_open_player);
 
     void run();
     
@@ -42,18 +42,24 @@ private:
     void move_it_to_previous_player(playerIterator& it);
 
 private:
-    bool m_stop;
     int m_min_bet;
     int m_max_bet;
+
+    bool m_stop;
+    bool m_turn_deleted;
+    bool m_open_player_deleted;
+    bool m_set_origin_open_player;
 
     Wait m_wait;
     Deck& m_deck;
     Table& m_table;
     ActionOut& m_action_out;
     PlayersContainer& m_players;
+    playerIterator& m_game_open_player;
 
     playerIterator m_turn;
     playerIterator m_open_player;
+    playerIterator m_origin_open_player;
 };
 
 

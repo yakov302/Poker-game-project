@@ -9,13 +9,6 @@ extern std::string amount;
 extern std::string viewer;
 extern std::string socket;
 extern std::string my_turn;
-
-extern playerIterator game_open_player;
-playerIterator origin_open_player;
-
-bool m_turn_deleted = false;
-bool m_open_player_deleted = false;
-bool set_origin_open_player = false;
 extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
@@ -25,29 +18,34 @@ extern bool active_player_with_card(PlayersContainer& a_players, std::string& na
 
 }//impl namespace
 
-BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table, Deck& a_deck)
-: m_stop(false)
-, m_min_bet(0)
+BetRound::BetRound(PlayersContainer& a_players, ActionOut& a_action_out, Table& a_table, Deck& a_deck, playerIterator& a_game_open_player)
+: m_min_bet(0)
 , m_max_bet(0)
+, m_stop(false)
+, m_turn_deleted(false)
+, m_open_player_deleted(false)
+, m_set_origin_open_player(false)
 , m_wait()
 , m_deck(a_deck)
 , m_table(a_table)
 , m_action_out(a_action_out)
 , m_players(a_players)
+, m_game_open_player(a_game_open_player)
 , m_turn()
 , m_open_player()
+, m_origin_open_player()
 {
 
 }
 
 void BetRound::run()
 {
-    m_open_player = game_open_player;
-    m_turn = game_open_player;
+    m_open_player = m_game_open_player;
+    m_turn = m_game_open_player;
     m_stop = false;
 
     if(dbg[BET_ROUND])[[unlikely]]
-        std::cout << __func__ << "() bet round start loop -> m_turn == game_open_player (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" << std::endl;
+        std::cout << __func__ << "() bet round start loop -> m_turn == m_game_open_player (" << m_turn->second->m_name << ", " << m_turn->second->m_vars[socket] << ")" << std::endl;
 
     while(!m_stop)
     {
@@ -107,13 +105,13 @@ void BetRound::next(playerIterator& it)
 
 void BetRound::handle_m_open_player_deleted()
 {
-    if(set_origin_open_player)
+    if(m_set_origin_open_player)
     {
-        m_open_player = origin_open_player;
-        set_origin_open_player = false;
+        m_open_player = m_origin_open_player;
+        m_set_origin_open_player = false;
 
         if(dbg[BET_ROUND])[[unlikely]]
-            std::cout << __func__ << "(): set_origin_open_player flag is on bet round set m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" <<std::endl;
+            std::cout << __func__ << "(): m_set_origin_open_player flag is on bet round set m_open_player (" << m_open_player->second->m_name << ", " << m_open_player->second->m_vars[socket] << ")" <<std::endl;
     }
     else
     {
@@ -130,7 +128,7 @@ void BetRound::update_m_open_player_deleted()
 {
     if(m_players.num_of_players() == 0)
     {
-        set_origin_open_player = false;
+        m_set_origin_open_player = false;
         m_open_player_deleted = false;
         m_turn_deleted = false;
         return;
@@ -182,13 +180,13 @@ void BetRound::set_origin_open_player_and_m_bet()
         if((*player).second.get()->m_vars[bet] > m_min_bet)
         {
             m_min_bet = (*player).second.get()->m_vars[bet];
-            set_origin_open_player = true;
-            origin_open_player = player;
+            m_set_origin_open_player = true;
+            m_origin_open_player = player;
 
             if(dbg[BET_ROUND])[[unlikely]]
             {
                 std::cout << __func__ << "(): set m_min_bet to " << (*player).second.get()->m_name << " bet: " << m_min_bet << std::endl;
-                std::cout << __func__ << "(): set origin_open_player (" << origin_open_player->second->m_name << ", " << origin_open_player->second->m_vars[socket] << ")" << std::endl;
+                std::cout << __func__ << "(): set m_origin_open_player (" << m_origin_open_player->second->m_name << ", " << m_origin_open_player->second->m_vars[socket] << ")" << std::endl;
             }
         }
 
@@ -210,7 +208,7 @@ void BetRound::handle_open_player_going_to_be_deleted()
         if((*player).second.get()->m_vars[bet] == m_min_bet)
         {
             if(dbg[BET_ROUND])[[unlikely]]
-                std::cout << __func__ << "(): find another player with the same bet as m_open player -> no need to set origin_open_player and m_bet" << std::endl;
+                std::cout << __func__ << "(): find another player with the same bet as m_open player -> no need to set m_origin_open_player and m_bet" << std::endl;
             
             another_player_placed_the_same_bet = true;
             break;
@@ -222,7 +220,7 @@ void BetRound::handle_open_player_going_to_be_deleted()
     if(!another_player_placed_the_same_bet)
     {
         if(dbg[BET_ROUND])[[unlikely]]
-                std::cout << __func__ << "(): did not find another player with the same bet as m_open_player -> progressing to set origin_open_player and m_bet" << std::endl;
+                std::cout << __func__ << "(): did not find another player with the same bet as m_open_player -> progressing to set m_origin_open_player and m_bet" << std::endl;
         
         set_origin_open_player_and_m_bet();
     }
@@ -269,7 +267,7 @@ void BetRound::bet_round_player_deleted()
         if(dbg[BET_ROUND])[[unlikely]]
             std::cout << __func__ << "(): only one player left -> exit wait -> entered wait in game level" << std::endl;
 
-        set_origin_open_player = false;
+        m_set_origin_open_player = false;
         m_open_player_deleted = false;
         m_turn_deleted = false;    
         m_wait.exit_wait();
