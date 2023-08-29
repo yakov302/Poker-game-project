@@ -50,9 +50,13 @@ void TablesContainer::get_player(std::string& a_name, std::string& a_gender, int
         else
         {
             if(dbg[TABLES_CONTAINER])[[unlikely]]
-                std::cout <<__func__ << "(): call m_action_out.table_is_full(" << a_client_socket<< ") to table id: " <<  current_table_id << std::endl;
+                std::cout <<__func__ << "(): call m_action_out.clear_screen(" << a_client_socket<< ") from table id: " <<  current_table_id << std::endl;
             
             m_tables[current_table_id].get()->m_action_out.clear_screen(a_client_socket);
+
+            if(dbg[TABLES_CONTAINER])[[unlikely]]
+                std::cout <<__func__ << "(): call m_action_out.table_is_full(" << a_client_socket<< ") from table id: " <<  current_table_id << std::endl;
+
             m_tables[current_table_id].get()->m_action_out.table_is_full(a_client_socket);
         }
     }
@@ -86,19 +90,32 @@ void TablesContainer::get_player(std::string& a_name, std::string& a_gender, int
     }
 }
 
-bool TablesContainer::check_if_empty_table(tablePointer& table, int table_id, int a_client_socket)
+void TablesContainer::check_if_empty_table(tablePointer& table, int table_id, int a_client_socket)
 {
+    if(dbg[TABLES_CONTAINER])[[unlikely]]
+        std::cout <<__func__ << "(): call m_action_out.clear_screen(" << a_client_socket<< ") from table id: " <<  table_id << std::endl;
+
+    table.get()->m_action_out.clear_screen(a_client_socket);
+
     if(table.get()->is_table_empty())
     {
         if(dbg[TABLES_CONTAINER])[[unlikely]]
-            std::cout <<__func__ << "(): new table without players call m_action_out.clear_screen(" << a_client_socket<< ") from table id: " <<  table_id << std::endl;
+            std::cout <<__func__ << "(): empty table without players call m_action_out.table_is_empty(" << a_client_socket<< ") from table id: " <<  table_id << std::endl;
 
-        table.get()->m_action_out.clear_screen(a_client_socket);
         table.get()->m_action_out.table_is_empty(a_client_socket);
-        return true;
     }
+    else
+    {
+        if(dbg[TABLES_CONTAINER])[[unlikely]]
+            std::cout <<__func__ << "(): call m_tables[" << table_id << "]->m_action_out.clear_screen(" << a_client_socket << ")" << std::endl;                
 
-    return false;
+        send_to_new_client_all_table_objects(table, table_id, a_client_socket);
+
+        if(dbg[TABLES_CONTAINER])[[unlikely]]
+            std::cout <<__func__ << "(): call m_tables[" << table_id << "]->m_action_out.clear_text(" << a_client_socket << ")" << std::endl;                
+    
+        table.get()->m_action_out.clear_text(a_client_socket);
+    }
 }
 
 void TablesContainer::enter_player_impl(tablePointer& a_table, int table_id, std::string& a_name, std::string& a_gender, int a_amount, int a_client_socket)
@@ -131,31 +148,65 @@ void TablesContainer::new_table()
     ++m_tables_index;
 
     if(dbg[TABLES_CONTAINER])[[unlikely]]
+        std::cout <<__func__ << "(): m_tables_index increase to: " << m_tables_index << std::endl;
+
+    if(dbg[TABLES_CONTAINER])[[unlikely]]
         print_table_container();
+}
+
+int TablesContainer::low_table_id()
+{
+    int table_id;
+    for(auto table : m_tables)
+        table_id = table.first;
+    return table_id;
 }
 
 void TablesContainer::change_table(int a_client_socket)
 {   
+    int low_table_id_number = low_table_id();
     int current_table_id = m_viewer_socket_to_table_id[a_client_socket];
+
+    if(dbg[TABLES_CONTAINER])[[unlikely]]
+        std::cout <<__func__ << "(): " << current_table_id << " is the current table id" << std::endl;                
+
     for(auto table : m_tables)
-    {   
+    {  
+        if(dbg[TABLES_CONTAINER])[[unlikely]]
+            std::cout <<__func__ << "(): compare " << current_table_id << " current table id to " << table.first << " table id" << std::endl;                
+
         if(table.first == current_table_id)
+        {
+            if(dbg[TABLES_CONTAINER])[[unlikely]]
+                std::cout <<__func__ << "(): same table -> continues" << std::endl;                
+
             continue;
+        }
+        
+        if((current_table_id != low_table_id_number) && 
+           (table.first > current_table_id))
+        {
+            if(dbg[TABLES_CONTAINER])[[unlikely]]
+                std::cout <<__func__ << "(): looking lower table id -> continues" << std::endl; 
+
+            continue;
+        }
 
         if(dbg[TABLES_CONTAINER])[[unlikely]]
             std::cout <<__func__ << "(): set m_viewer_socket_to_table_id[" << a_client_socket << "] = " << table.first << std::endl;                
         
         m_viewer_socket_to_table_id[a_client_socket] = table.first;
 
-        m_tables[current_table_id].get()->m_action_out.delete_viewer(a_client_socket);
-        table.second.get()->m_action_out.get_viewer(a_client_socket);
-        if(!check_if_empty_table(table.second, table.first, a_client_socket))
-        {
-            table.second.get()->m_action_out.clear_screen(a_client_socket);
-            send_to_new_client_all_table_objects(table.second, table.first, a_client_socket);
-            table.second.get()->m_action_out.clear_text(a_client_socket);
-        }
+        if(dbg[TABLES_CONTAINER])[[unlikely]]
+            std::cout <<__func__ << "(): call m_tables[" << current_table_id << "]->m_action_out.delete_viewer(" << a_client_socket << ")" << std::endl;                
 
+        m_tables[current_table_id].get()->m_action_out.delete_viewer(a_client_socket);
+
+        if(dbg[TABLES_CONTAINER])[[unlikely]]
+            std::cout <<__func__ << "(): call m_tables[" << table.first << "]->m_action_out.get_viewer(" << a_client_socket << ")" << std::endl;                
+
+        table.second.get()->m_action_out.get_viewer(a_client_socket);
+        check_if_empty_table(table.second, table.first, a_client_socket);
         break;
     }
 
@@ -179,8 +230,7 @@ void TablesContainer::get_viewer(int a_client_socket)
             std::cout <<__func__ << "(): call m_action_out.get_viewer(" << a_client_socket<< ") to table id: " <<  table.first << std::endl;
 
         table.second.get()->m_action_out.get_viewer(a_client_socket);
-        if(!check_if_empty_table(table.second, table.first, a_client_socket))
-            send_to_new_client_all_table_objects(table.second, table.first, a_client_socket);
+        check_if_empty_table(table.second, table.first, a_client_socket);
         break;
     }
 
