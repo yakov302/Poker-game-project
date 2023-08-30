@@ -96,6 +96,7 @@ private:
     bool check_all_in_button();
     bool check_check_button();
     bool check_fold_button();
+    bool check_unplay_button();
     bool check_reveal_cards();
     bool check_exchange_button();
     void all_in_handler();

@@ -173,6 +173,10 @@ void ActionIn::get(char* a_buffer)
         play_success();
         break;
 
+    case VIEW_SUCCESS:
+        view_success();
+        break;
+
     case TURN_ON_FLAG:
         turn_on(a_buffer);
         break;
@@ -358,6 +362,12 @@ void ActionIn::play_success()
     play_or_view = PLAY;
     if(m_players.num_of_players() > 1)
         clear_text();
+}
+
+void ActionIn::view_success()
+{
+    sound.play_positive();
+    play_or_view = VIEW;
 }
 
 void ActionIn::turn_on(char* a_buffer)

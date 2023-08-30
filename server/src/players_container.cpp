@@ -125,6 +125,20 @@ void PlayersContainer::delete_player(int a_client_socket)
     }
 }
 
+std::string PlayersContainer::name(int a_client_socket)
+{
+    for(auto player : m_players)
+    {
+        if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): comper " <<  player.second.get()->m_vars[socket] << " to " << a_client_socket << std::endl;
+        
+        if(player.second.get()->m_vars[socket] == a_client_socket)
+            return player.second.get()->m_name;
+    }
+
+    return "";
+}
+
 int PlayersContainer::num_of_players()const
 {
     return m_players.size();

@@ -58,6 +58,11 @@ void ActionOut::play_request(const std::string& a_name, int a_amount)
     pack_and_send(arg, PLAY_REQUEST);
 }
 
+void ActionOut::view_request()
+{
+    just_message(VIEW_REQUEST);
+}
+
 void ActionOut::change_table()
 {
     just_message(CHANGE_TABLE);

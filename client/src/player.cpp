@@ -75,7 +75,7 @@ void Player::get_card(std::string& a_suit, int a_number)
 
 void Player::give_card()
 {
-    m_hand.pop();
+                    m_hand.pop();
 }
 
 void Player::set_action(std::string a_action)

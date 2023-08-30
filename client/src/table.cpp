@@ -31,6 +31,7 @@ void buttons_initialization(std::unordered_map<std::string, buttonPointer>& a_bu
     a_buttons["fold"]         = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 4*BUTTON_SIZE,      BUTTON_GAME_IMAGE_SCALE,        "fold",            TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
     a_buttons["check"]        = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 3*BUTTON_SIZE,      BUTTON_GAME_IMAGE_SCALE,        "check",           TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
     a_buttons["exchange"]     = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 5*BUTTON_SIZE,      BUTTON_GAME_IMAGE_SCALE,        "exchange",        TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
+    a_buttons["unplay"]       = buttonPointer(new Button(BUTTON_IMAGE_PATH,     BUTTON_X_POS, BUTTON_GAME_Y_POS + 6*BUTTON_SIZE,      BUTTON_GAME_IMAGE_SCALE,        "unplay",          TEXT_BUTTON_X_GAP,     GAME_TEXT_BUTTON_Y_GAP, GAME_TEXT_SZIE       ));
     a_buttons["play_on"]      = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1665,         BUTTON_GAME_Y_POS + 1*BUTTON_SIZE + 50, BUTTON_OPEN_SCREEN_IMAGE_SCALE, "play",            13,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
     a_buttons["change_table"] = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1665,         BUTTON_GAME_Y_POS + 3*BUTTON_SIZE,      BUTTON_OPEN_SCREEN_IMAGE_SCALE, "change\n  table", -10,                   8,                      OPEN_SCREEN_TEXT_SZIE));
     a_buttons["log_in"]       = buttonPointer(new Button(BUTTON_IMAGE_PATH,     1080,         BUTTON_OPEN_SCREEN_Y_POS,               BUTTON_OPEN_SCREEN_IMAGE_SCALE, "log in",          20,                    OPEN_SCREEN_TEXT_Y_GAP, OPEN_SCREEN_TEXT_SZIE));
@@ -372,6 +373,7 @@ void Table::draw_play()
 
     m_buttons["go"].get()->draw(m_window) ;
     m_buttons["exchange"].get()->draw(m_window);
+    m_buttons["unplay"].get()->draw(m_window);
 
     if(m_self.is_flag_on(my_turn))
         draw_your_turn();
@@ -396,6 +398,9 @@ void Table::check_mouse_play()
             return;
 
         if(check_exchange_button())
+            return;
+
+        if(check_unplay_button())
             return;
 
         if(m_self.is_flag_on(my_turn))
@@ -468,6 +473,22 @@ bool Table::check_exchange_button()
     if(m_self.is_flag_on(exchange) && m_self.is_in_wallet_range(position.x, position.y))
     {
         m_self.exchange(position.x, position.y);
+        usleep(100000);
+        return true;
+    }
+
+    return false;
+}
+
+bool Table::check_unplay_button()
+{
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(m_window);
+    sf::Vector2f position = m_window.mapPixelToCoords(pixelPos);
+
+    if (m_buttons["unplay"].get()->is_in_range(position.x, position.y))
+    {
+        sound.play_button();
+        m_action_out.view_request();
         usleep(100000);
         return true;
     }

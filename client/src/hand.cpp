@@ -55,7 +55,7 @@ void Hand::pop()
     if(m_cards.empty())[[unlikely]]
         return; 
     m_cards.pop_back();
-}
+        }
 
 void Hand::draw_front(sf::RenderWindow& a_window)const
 {

@@ -36,6 +36,7 @@ private:
     void log_in_success(char* a_buffer);
 
     void play_success();
+    void view_success();
 
     void turn_on(char* a_buffer);
     void turn_off(char* a_buffer);

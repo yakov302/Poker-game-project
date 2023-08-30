@@ -132,6 +132,10 @@ void ActionIn::get(char* a_buffer, int a_client_socket)
         play_reques(a_buffer, a_client_socket);
         break;
 
+    case VIEW_REQUEST:
+        view_request(a_client_socket);
+        break;
+
     case CHANGE_TABLE:
         change_table(a_client_socket);
         break;
@@ -212,6 +216,13 @@ void ActionIn::play_reques(char* a_buffer, int a_client_socket)
 void ActionIn::change_table(int a_client_socket)
 {
    m_tables_container.change_table(a_client_socket);
+}
+
+void ActionIn::view_request(int a_client_socket)
+{
+    m_tables_container.unplay_player(a_client_socket);
+    m_action_out.view_success(a_client_socket);
+    check_thread_allocation();
 }
 
 void ActionIn::start_bet(int a_client_socket)

@@ -3,6 +3,7 @@
 namespace poker
 {
 
+extern int play_or_view;
 std::string logged = "logged";
 std::string exchange = "exchange";
 
@@ -80,6 +81,9 @@ void Self::get_chip(int a_chip)
 
 void Self::draw_player(sf::RenderWindow& a_window)
 {
+    if(play_or_view == VIEW)
+        return;
+        
     a_window.draw(m_shape);
     m_wallet.draw(a_window, false);
     m_hand.draw_back(a_window);

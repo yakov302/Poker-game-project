@@ -159,6 +159,11 @@ void ActionOut::play_success(int a_client_socket)
     m_sockets.emplace_back(a_client_socket); 
 }
 
+void ActionOut::view_success(int a_client_socket)
+{
+    just_message_to_clienet(VIEW_SUCCESS, a_client_socket);
+}
+
 void ActionOut::get_viewer(int a_client_socket)
 {
     if(is_socket_exists(a_client_socket))

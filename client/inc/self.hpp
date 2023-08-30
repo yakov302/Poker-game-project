@@ -3,6 +3,7 @@
 #include"player.hpp"
 #include"wallet.hpp"
 
+#define VIEW 2
 #define HAND_X_POS 1260
 #define HAND_Y_POS 630
 #define HAND_SCALE 1.8

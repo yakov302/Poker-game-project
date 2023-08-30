@@ -40,7 +40,9 @@ public:
 
     void turn_on(std::string& a_name, std::string& a_flag);
     void turn_off(std::string& a_name, std::string& a_flag);
-    bool is_flag_on(std::string& a_name, std::string& a_flag) ;
+    bool is_flag_on(std::string& a_name, std::string& a_flag);
+
+    std::string name(int a_client_socket);
 
     Wait& wait(); 
     playerIterator end();
