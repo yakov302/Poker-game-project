@@ -220,7 +220,8 @@ void ActionIn::change_table(int a_client_socket)
 
 void ActionIn::view_request(int a_client_socket)
 {
-    m_tables_container.unplay_player(a_client_socket);
+    m_tables_container.delete_player(a_client_socket);
+    m_tables_container.get_viewer(a_client_socket);
     m_action_out.view_success(a_client_socket);
     check_thread_allocation();
 }

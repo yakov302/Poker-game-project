@@ -103,6 +103,7 @@ void PlayersContainer::delete_player(std::string& a_name, int a_client_socket)
 
     for(int i = 0; i < 2; ++i)
         m_deck.push_card(give_card(a_name));
+
     m_players.erase(a_name);
     m_action_out.delete_player(a_name, a_client_socket);
 }

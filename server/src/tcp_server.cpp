@@ -56,7 +56,7 @@ bool TcpServer::send_to_client(int a_client_socket, char* a_buffer, int a_messag
     	int current_byte = send(a_client_socket, (a_buffer + sent_byte), (a_message_size - sent_byte), 0);
 		if(current_byte < 0)[[unlikely]]
 			perror("Send fail!\n");
-
+		
 		sent_byte += current_byte;
 	}
 

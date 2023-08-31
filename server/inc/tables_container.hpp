@@ -30,7 +30,6 @@ private:
     int low_table_id();
     void print_table_container();
     void find_match_for_singles();
-    void unplay_player(int a_client_socket);
     int num_of_viewers_in_table(int table_id);
     void check_if_table_need_to_delete(int table_id);
     void delete_player_impl(tablePointer& a_table, int table_id, int a_client_socket);

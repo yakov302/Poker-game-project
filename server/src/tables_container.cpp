@@ -106,9 +106,6 @@ void TablesContainer::update_client_screen(tablePointer& table, int table_id, in
     }
     else
     {
-        if(dbg[TABLES_CONTAINER])[[unlikely]]
-            std::cout <<__func__ << "(): call m_tables[" << table_id << "]->m_action_out.clear_screen(" << a_client_socket << ")" << std::endl;                
-
         send_to_client_all_table_objects(table, table_id, a_client_socket);
 
         if(dbg[TABLES_CONTAINER])[[unlikely]]
@@ -237,6 +234,9 @@ void TablesContainer::get_viewer(int a_client_socket)
 
     if(m_player_socket_to_table_id.find(a_client_socket) != m_player_socket_to_table_id.end())
     {
+        if(dbg[TABLES_CONTAINER])[[unlikely]]
+            std::cout <<__func__ << "(): socket " << a_client_socket << " found in m_player_socket_to_table_id -> enter by current table id" << std::endl;
+
         int current_table_id = m_player_socket_to_table_id[a_client_socket];
         enter_viewer_impl(m_tables[current_table_id], current_table_id, a_client_socket);
         update_client_screen(m_tables[current_table_id], current_table_id, a_client_socket);
@@ -244,7 +244,10 @@ void TablesContainer::get_viewer(int a_client_socket)
     else
     {
         for(auto table : m_tables)
-        {   
+        { 
+            if(dbg[TABLES_CONTAINER])[[unlikely]]
+                std::cout <<__func__ << "(): socket " << a_client_socket << " dont found in m_player_socket_to_table_id -> enter by rand table id" << std::endl;
+
             enter_viewer_impl(table.second, table.first, a_client_socket);
             update_client_screen(table.second, table.first, a_client_socket);
             break;
@@ -349,23 +352,6 @@ void TablesContainer::delete_player_impl(tablePointer& a_table, int table_id, in
         print_table_container();
 }
 
-void TablesContainer::unplay_player(int a_client_socket)
-{
-    if(m_player_socket_to_table_id.find(a_client_socket) == m_player_socket_to_table_id.end())[[unlikely]]
-        return;
-    
-    int current_table_id = m_player_socket_to_table_id[a_client_socket];
-    delete_player_impl(m_tables[current_table_id], current_table_id, a_client_socket);
-
-    std::string name = m_tables[current_table_id].get()->m_players.name(a_client_socket);
-    m_tables[current_table_id].get()->m_action_out.give_card(name);
-
-    enter_viewer_impl(m_tables[current_table_id], current_table_id, a_client_socket);
-
-    for(auto socket : m_tables[current_table_id].get()->m_action_out.m_sockets)
-        update_client_screen(m_tables[current_table_id], current_table_id, socket);
-}
-
 int TablesContainer::num_of_viewers_in_table(int table_id)
 {
     int num_of_viewers = 0;
@@ -423,6 +409,9 @@ void TablesContainer::check_if_table_need_to_delete(int table_id)
 
         for(auto dst_table : m_tables)
         {
+            if(dst_table.first == table_id)
+                continue;
+
             if(!dst_table.second.get()->is_table_empty())
             {
                 move_all_viewers_to_another_table(dst_table.second, m_tables[table_id], dst_table.first);

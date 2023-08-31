@@ -3,6 +3,10 @@
 namespace poker
 {
 
+extern std::string bet_flag;
+extern std::string my_turn;
+extern std::string reveal_cards_flag;
+
 namespace impl
 {
 
@@ -50,7 +54,7 @@ void PlayersContainer::get_player(std::string& a_name, Self& a_player)
 {
     if(m_players.find(a_name) != m_players.end())[[unlikely]]
         return;
-        
+
     m_players[a_name] = playerPointer(&a_player);
     ++m_num_of_players;
 }
@@ -58,10 +62,10 @@ void PlayersContainer::get_player(std::string& a_name, Self& a_player)
 void PlayersContainer::delete_player(std::string& a_name)
 {
     if(m_players.find(a_name) == m_players.end())[[unlikely]]
-        return;
-
+            return;
+    
     m_players.erase(a_name);
-    set_as_empty_place(a_name, 5);
+    set_as_empty_place(a_name, MAX_NUM_OF_PAYERS_IN_TABLE);
     --m_num_of_players;
 }
 
@@ -139,6 +143,16 @@ void PlayersContainer::turn_off_flag(std::string& a_name, std::string& a_flag)
         return;
 
     m_players[a_name].get()->turn_off_flag(a_flag);
+}
+
+void PlayersContainer::turn_off_all_flags(std::string& a_name)
+{
+    if(m_players.find(a_name) == m_players.end())[[unlikely]]
+        return;
+
+    m_players[a_name].get()->turn_off_flag(bet_flag);
+    m_players[a_name].get()->turn_off_flag(my_turn);
+    m_players[a_name].get()->turn_off_flag(reveal_cards_flag);
 }
 
 void PlayersContainer::draw_Players(sf::RenderWindow& a_window)

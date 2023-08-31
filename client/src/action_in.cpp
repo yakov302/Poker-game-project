@@ -367,6 +367,11 @@ void ActionIn::play_success()
 void ActionIn::view_success()
 {
     sound.play_positive();
+    std::string name = m_self.name();
+    for(int i = 0; i < 2; ++i)
+        m_players.give_card(name);
+    m_players.turn_off_all_flags(name);
+    m_players.set_action(name, "");
     play_or_view = VIEW;
 }
 
