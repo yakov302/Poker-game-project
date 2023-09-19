@@ -21,5 +21,10 @@ ClientManager::ClientManager()
 
 }
 
+void ClientManager::stop()
+{
+    m_table.stop();
+}
+
 
 }// poker namespace

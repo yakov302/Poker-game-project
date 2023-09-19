@@ -32,6 +32,8 @@ class ClientManager
 {
 public:
     ClientManager();
+    
+    void stop();
 
 private:
     Hand m_cards; 
