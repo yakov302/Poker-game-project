@@ -29,4 +29,16 @@ check: $(TARGET)
 clean:
 	@$(RM) $(TARGET) $(OBJS)
 
+debug:
+	gdb ./$(TARGET)  
+
+debug1:
+	valgrind --log-file=V1.log ./$(TARGET)  
+
+debug2:
+	valgrind --log-file=V2.log --leak-check=full --track-origins=yes ./$(TARGET)  
+
+debug3:
+	valgrind --log-file=V3.log --leak-check=full --track-origins=yes -s ./$(TARGET) 
+	
 .PHONY: check clean
