@@ -106,6 +106,11 @@ void line_to_words(std::string& line)
     }
 }
 
+void reset_cli_input()
+{
+    for(int i = 0 ; i < MAX_NUM_OF_WORDS_IN_CMD; ++i)
+        cli_input[i].clear();
+}
 
 }//impl namespace
 
@@ -121,17 +126,27 @@ bool get_cmd(std::string& cmd)
             impl::print_dbg_types();
         else if(cli_input[1] == "on")
         {
-            if(cli_input[2] == "all")
-                impl::turn_on_all();
+            if(!cli_input[2].empty())
+            {
+                if(cli_input[2] == "all")
+                    impl::turn_on_all();
+                else
+                    impl::turn_on_dbg(std::stoi(cli_input[2]));
+            }
             else
-                impl::turn_on_dbg(std::stoi(cli_input[2]));
+                impl::prints_cmds();
         }
         else if(cli_input[1] == "off")
         {
-            if(cli_input[2] == "all")
-                impl::turn_off_all();
+            if(!cli_input[2].empty())
+            {
+                if(cli_input[2] == "all")
+                    impl::turn_off_all();
+                else
+                    impl::turn_off_dbg(std::stoi(cli_input[2]));
+            }
             else
-                impl::turn_off_dbg(std::stoi(cli_input[2]));
+                impl::prints_cmds();
         }
         else
             impl::prints_cmds();
@@ -139,6 +154,7 @@ bool get_cmd(std::string& cmd)
     else
         impl::prints_cmds();
 
+    impl::reset_cli_input();
     return false;
 }
 

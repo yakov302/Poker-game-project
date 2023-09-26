@@ -1,5 +1,8 @@
 #include "table.hpp"
 
+extern bool main_loop;
+extern poker::Wait main_loop_wait;
+
 namespace poker
 {
 
@@ -98,9 +101,11 @@ void Table::run()
 
 void Table::stop()
 {
+    main_loop = false;
     m_flags["stop"] = true;
     m_action_out.wake_up_client();
     m_window.close();
+    main_loop_wait.exit_wait();
 }
 
 void Table::clear()

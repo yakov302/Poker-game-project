@@ -2,6 +2,7 @@
 
 #include <thread>
 
+#include "wait.hpp"
 #include "hand.hpp"
 #include "self.hpp"
 #include "wallet.hpp"
