@@ -3,6 +3,7 @@
 namespace poker
 {
 
+extern int play_or_view;
 extern std::string bet_flag;
 extern std::string my_turn;
 extern std::string reveal_cards_flag;
@@ -32,6 +33,13 @@ void PlayersContainer::get_player(std::string& a_name, std::string& a_gender, in
 {
     if(m_players.find(a_name) != m_players.end())[[unlikely]]
         return;
+
+    if((m_num_of_players == MAX_NUM_OF_PAYERS_IN_TABLE) && (play_or_view == VIEW))
+    {
+        m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, SELF_X_POS,  SELF_Y_POS, SELF_X_POS + GAP_BETWEEN_CARDS_AND_PLAYER, SELF_Y_POS + 40, CARDS_SCLAE, GAP_BETWEEN_FRONT_CARDS_, GAP_BETWEEN_BACK_CARDS_));
+        ++m_num_of_players;
+        return;
+    }
 
     int i = 0;
     find_empty_place(i, a_name);

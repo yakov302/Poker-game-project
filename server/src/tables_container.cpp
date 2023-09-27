@@ -277,15 +277,13 @@ void TablesContainer::delete_viewer(int a_client_socket)
         return;
     }
 
-    if(m_player_socket_to_table_id.find(a_client_socket) != m_player_socket_to_table_id.end())
+    if((m_player_socket_to_table_id.find(a_client_socket) == m_player_socket_to_table_id.end()) ||
+       ((m_player_socket_to_table_id.find(a_client_socket) != m_player_socket_to_table_id.end()) && (m_player_socket_to_table_id[a_client_socket] != table_id)))
     {
-        if(m_player_socket_to_table_id[a_client_socket] != table_id)
-        {
-            if(dbg[TABLES_CONTAINER])[[unlikely]]
-                std::cout << __func__ << "(): call m_tables[" << table_id << "]->m_action_out.delete_viewer(socket = " << a_client_socket << ")" << std::endl;
+        if(dbg[TABLES_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): call m_tables[" << table_id << "]->m_action_out.delete_viewer(socket = " << a_client_socket << ")" << std::endl;
 
-            m_tables[table_id].get()->m_action_out.delete_viewer(a_client_socket);
-        }
+        m_tables[table_id].get()->m_action_out.delete_viewer(a_client_socket);
     }
     
     if(dbg[TABLES_CONTAINER])[[unlikely]]
