@@ -4,6 +4,7 @@ namespace poker
 {
 
 extern std::string fold;
+extern std::string socket;
 extern std::string amount;
 extern std::string result;
 extern std::string viewer;
@@ -269,8 +270,11 @@ void CardRound::reset_players_variables()
 
         ++it;
     }
-    
-    m_action_out.clear_text();
+
+    if(m_players.num_of_players() > 1)   
+        m_action_out.clear_text();
+    else if(m_players.num_of_players() > 0)
+        m_action_out.table_is_empty(m_players.begin()->second.get()->m_vars[socket]);
 }
 
 

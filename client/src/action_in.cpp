@@ -289,6 +289,10 @@ void ActionIn::get(char* a_buffer)
         print_result(a_buffer);
         break;
 
+    case MOVES_TO_ANOTHER_TABLE:
+        moves_to_another_table();
+        break;
+
     default:
         break;
     }
@@ -567,6 +571,14 @@ void ActionIn::print_result(char* a_buffer)
 {
     std::pair<std::string, int> pair = impl::name_and_amount(a_buffer);
     m_players.set_action(pair.first, impl::result((hand_results)pair.second));
+}
+
+void ActionIn::moves_to_another_table()
+{
+    std::string txt = "This table closes - you are moved to another table";
+    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    sleep(3);
+    clear_text();
 }
 
 

@@ -444,6 +444,7 @@ void TablesContainer::move_player_to_another_table(tableIdAndPtrPair& dst_table,
         std::cout << __func__ << "(): call table[" << dst_table.first << "]->m_action_out.clear_screen(" << player.get()->m_vars[socket] << ")" << std::endl;
 
     dst_table.second.get()->m_action_out.clear_screen(player.get()->m_vars[socket]);
+    dst_table.second.get()->m_action_out.moves_to_another_table(player.get()->m_vars[socket]);
     send_to_client_all_table_objects(dst_table.second, dst_table.first, player.get()->m_vars[socket]);
 
     enter_player_impl(dst_table.second, dst_table.first, player.get()->m_name, player.get()->m_gender, player.get()->m_vars[amount], player.get()->m_vars[socket]);
@@ -558,6 +559,7 @@ void TablesContainer::move_all_viewers_to_another_table(tablePointer& dst_table,
             std::cout << __func__ << "(): call m_action_out.clear_screen(" << viewer.first << ")" << std::endl;
 
         dst_table.get()->m_action_out.clear_screen(viewer.first);
+        dst_table.get()->m_action_out.moves_to_another_table(viewer.first);
         send_to_client_all_table_objects(dst_table, dst_table_id, viewer.first);
     }
 }

@@ -68,6 +68,7 @@ private:
     void clear_text();
     void clear_screen();
     void wake_up_server();
+    void moves_to_another_table();
     void clear_action(char* a_buffer);
     void round_winer(char* a_buffer);
     void game_winer(char* a_buffer);

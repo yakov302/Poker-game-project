@@ -40,7 +40,7 @@ void ActionOut::name_and_message(std::string& a_name, Message_type a_message)
     m_tcp.send_all_clients(buffer, size, m_sockets);
 }
 
-void ActionOut::just_amount_to_clienet(Message_type a_message, int a_amount, int a_client_socket)
+void ActionOut::just_amount_to_client(Message_type a_message, int a_amount, int a_client_socket)
 {
     Args arg(0, 1);
     arg.m_ints.emplace_back(a_amount);
@@ -54,7 +54,7 @@ void ActionOut::just_amount_to_all(Message_type a_message, int a_amount)
     pack_and_send_all(arg, a_message); 
 }
 
-void ActionOut::just_message_to_clienet(Message_type a_message, int a_client_socket)
+void ActionOut::just_message_to_client(Message_type a_message, int a_client_socket)
 {
     Args arg(0, 0);
     pack_and_send_to_client(arg, a_message, a_client_socket);
@@ -113,17 +113,17 @@ int ActionOut::pack_player(char* a_buffer, std::string& a_name, std::string& a_g
 
 void ActionOut::registration_success(int a_client_socket)
 {
-    just_message_to_clienet(REGISTRATION_SUCCESS, a_client_socket);
+    just_message_to_client(REGISTRATION_SUCCESS, a_client_socket);
 }
 
 void ActionOut::registration_duplicare_name(int a_client_socket)
 {
-    just_message_to_clienet(REGISTRATION_DUPLICATE_USER_NAME, a_client_socket);
+    just_message_to_client(REGISTRATION_DUPLICATE_USER_NAME, a_client_socket);
 }
 
 void ActionOut::registration_wrong_gender(int a_client_socket)
 {
-    just_message_to_clienet(REGISTRATION_WRONG_GENDER, a_client_socket);
+    just_message_to_client(REGISTRATION_WRONG_GENDER, a_client_socket);
 }
 
 void ActionOut::log_in_success(std::string& a_name, std::string& a_gender, int a_client_socket)
@@ -136,22 +136,22 @@ void ActionOut::log_in_success(std::string& a_name, std::string& a_gender, int a
 
 void ActionOut::log_in_wrong_name(int a_client_socket)
 {
-    just_message_to_clienet(LOG_IN_WRONG_USER_NAME, a_client_socket);
+    just_message_to_client(LOG_IN_WRONG_USER_NAME, a_client_socket);
 }
 
 void ActionOut::log_in_wrong_password(int a_client_socket)
 {
-    just_message_to_clienet(LOG_IN_WRONG_PASSWORD, a_client_socket);
+    just_message_to_client(LOG_IN_WRONG_PASSWORD, a_client_socket);
 }
 
 void ActionOut::user_name_alredy_log(int a_client_socket)
 {
-    just_message_to_clienet(USER_NAME_ALREADY_LOG, a_client_socket);
+    just_message_to_client(USER_NAME_ALREADY_LOG, a_client_socket);
 }
 
 void ActionOut::play_success(int a_client_socket)
 {
-    just_message_to_clienet(PLAY_SUCCESS, a_client_socket);
+    just_message_to_client(PLAY_SUCCESS, a_client_socket);
 
     if(is_socket_exists(a_client_socket))
         return;
@@ -161,7 +161,7 @@ void ActionOut::play_success(int a_client_socket)
 
 void ActionOut::view_success(int a_client_socket)
 {
-    just_message_to_clienet(VIEW_SUCCESS, a_client_socket);
+    just_message_to_client(VIEW_SUCCESS, a_client_socket);
 }
 
 void ActionOut::get_viewer(int a_client_socket)
@@ -210,12 +210,12 @@ void ActionOut::bet(std::string& a_name, int a_amount)
 
 void ActionOut::invalid_bet_min(int a_amount, int a_client_socket)
 {
-    just_amount_to_clienet(INVALID_BET_MIN, a_amount, a_client_socket);
+    just_amount_to_client(INVALID_BET_MIN, a_amount, a_client_socket);
 }
 
 void ActionOut::invalid_bet_max(int a_amount, int a_client_socket)
 {
-    just_amount_to_clienet(INVALID_BET_MAX, a_amount, a_client_socket);
+    just_amount_to_client(INVALID_BET_MAX, a_amount, a_client_socket);
 }
 
 void ActionOut::check(std::string& a_name)
@@ -294,12 +294,12 @@ void ActionOut::reveal_cards(std::string& a_name)
 
 void ActionOut::table_is_full(int a_client_socket)
 {
-    just_message_to_clienet(TABLE_FULL, a_client_socket);
+    just_message_to_client(TABLE_FULL, a_client_socket);
 }
 
 void ActionOut::table_is_empty(int a_client_socket)
 {
-    just_message_to_clienet(TABLE_EMPTY, a_client_socket);
+    just_message_to_client(TABLE_EMPTY, a_client_socket);
 }
 
 void ActionOut::table_get_card(cardPointer a_card)
@@ -319,7 +319,7 @@ void ActionOut::table_get_card(cardPointer a_card, int a_client_socket)
 
 void ActionOut::table_get_chip(int a_amount, int a_client_socket)
 {
-    just_amount_to_clienet(TABLE_GET_CHIP, a_amount, a_client_socket); 
+    just_amount_to_client(TABLE_GET_CHIP, a_amount, a_client_socket); 
 }
 
 void ActionOut::table_give_card()
@@ -339,7 +339,7 @@ void ActionOut::table_give_chip(int a_amount)
 
 void ActionOut::wake_up_client(int a_client_socket)
 {
-    just_message_to_clienet(WAKE_UP_CLIENT, a_client_socket);
+    just_message_to_client(WAKE_UP_CLIENT, a_client_socket);
 }
 
 void ActionOut::wake_up_server()
@@ -369,12 +369,17 @@ void ActionOut::clear_text()
 
 void ActionOut::clear_text(int a_client_socket)
 {
-    just_message_to_clienet(CLEAR_TEXT, a_client_socket);
+    just_message_to_client(CLEAR_TEXT, a_client_socket);
 }
 
 void ActionOut::clear_screen(int a_client_socket)
 {
-    just_message_to_clienet(CLEAR_SCREEN, a_client_socket);
+    just_message_to_client(CLEAR_SCREEN, a_client_socket);
+}
+
+void ActionOut::moves_to_another_table(int a_client_socket)
+{
+    just_message_to_client(MOVES_TO_ANOTHER_TABLE, a_client_socket);
 }
 
 void ActionOut::print_result(std::string& a_name, int a_result)

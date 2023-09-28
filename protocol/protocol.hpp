@@ -73,6 +73,7 @@ typedef enum Message_type
     GAME_WINER                      ,
     CLEAR_TEXT                      ,
     RESULT                          ,
+    MOVES_TO_ANOTHER_TABLE          ,
 
     //client to server
 

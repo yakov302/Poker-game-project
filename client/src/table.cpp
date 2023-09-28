@@ -667,7 +667,6 @@ bool Table::check_change_table_button()
     {
         sound.play_button();
         m_action_out.change_table();
-        set_text(request_sent, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
         usleep(100000);
         return true;
     }

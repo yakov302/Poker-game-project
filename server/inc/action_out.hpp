@@ -73,6 +73,7 @@ public:
     void game_winer(std::string& a_name);
     void round_winer(std::string& a_name);
     void clear_action(std::string& a_name);
+    void moves_to_another_table(int a_client_socket);
     void print_result(std::string& a_name, int a_result);
 
 private:
@@ -84,8 +85,8 @@ private:
 
     void just_message_to_all(Message_type a_message);
     void just_amount_to_all(Message_type a_message, int a_amount);
-    void just_message_to_clienet(Message_type a_message, int a_client_socket);
-    void just_amount_to_clienet(Message_type a_message, int a_amount, int a_client_socket);
+    void just_message_to_client(Message_type a_message, int a_client_socket);
+    void just_amount_to_client(Message_type a_message, int a_amount, int a_client_socket);
 
     void pack_and_send_all(Args& a_arg, Message_type a_message);
     void pack_and_send_to_client(Args& a_arg, Message_type a_message, int a_client_socket);
