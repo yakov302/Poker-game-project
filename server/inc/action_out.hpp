@@ -73,6 +73,7 @@ public:
     void game_winer(std::string& a_name);
     void round_winer(std::string& a_name);
     void clear_action(std::string& a_name);
+    void no_more_tables(int a_client_socket);
     void moves_to_another_table(int a_client_socket);
     void print_result(std::string& a_name, int a_result);
 

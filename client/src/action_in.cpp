@@ -293,6 +293,9 @@ void ActionIn::get(char* a_buffer)
         moves_to_another_table();
         break;
 
+    case NO_MORE_TABLES:
+        no_more_table();
+
     default:
         break;
     }
@@ -578,6 +581,14 @@ void ActionIn::moves_to_another_table()
     std::string txt = "This table closes - you are moved to another table";
     m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
     sleep(3);
+    clear_text();
+}
+
+void ActionIn::no_more_table()
+{
+    std::string txt = "no more tables";
+    m_table.set_text(txt, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
+    sleep(1);
     clear_text();
 }
 

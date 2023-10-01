@@ -7,6 +7,7 @@ extern int play_or_view;
 extern std::string bet_flag;
 extern std::string my_turn;
 extern std::string reveal_cards_flag;
+extern bool dbg[NUM_OF_DBG_TYPES];
 
 namespace impl
 {
@@ -36,8 +37,18 @@ void PlayersContainer::get_player(std::string& a_name, std::string& a_gender, in
 
     if((m_num_of_players == MAX_NUM_OF_PAYERS_IN_TABLE) && (play_or_view == VIEW))
     {
+        if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): [m_num_of_players (" << m_num_of_players << ") <= MAX_NUM_OF_PAYERS_IN_TABLE("<< MAX_NUM_OF_PAYERS_IN_TABLE << ")] && [play_or_view == VIEW]" << std::endl;
+        
+        if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): m_players[" << a_name << "] = playerPointer(new Player(" << a_name << ", " << a_gender << ", " << a_amount << ", " << SELF_X_POS << ", " <<  SELF_Y_POS << ", " << SELF_X_POS + GAP_BETWEEN_CARDS_AND_PLAYER << ", " << SELF_Y_POS + 40 << ", " << CARDS_SCLAE << ", " << GAP_BETWEEN_FRONT_CARDS_<< ", " << GAP_BETWEEN_BACK_CARDS_ << "))" << std::endl;
+        
         m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, SELF_X_POS,  SELF_Y_POS, SELF_X_POS + GAP_BETWEEN_CARDS_AND_PLAYER, SELF_Y_POS + 40, CARDS_SCLAE, GAP_BETWEEN_FRONT_CARDS_, GAP_BETWEEN_BACK_CARDS_));
         ++m_num_of_players;
+
+        if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+            std::cout << __func__ << "(): ++m_num_of_players: " <<  m_num_of_players << std::endl;
+        
         return;
     }
 
@@ -46,8 +57,14 @@ void PlayersContainer::get_player(std::string& a_name, std::string& a_gender, in
     int player_x_pos = i*PLAYER_SIZE + PLAYERS_X_POS;
     int card_x_pos = player_x_pos + GAP_BETWEEN_CARDS_AND_PLAYER; 
 
+    if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+        std::cout << __func__ << "(): m_players[" << a_name << "] = playerPointer(new Player(" << a_name << ", " <<  a_gender << ", " <<  a_amount << ", " <<  player_x_pos << ", " <<   PLAYERS_Y_POS << ", " <<  card_x_pos << ", " <<  CARD_Y_POS << ", " << CARDS_SCLAE << ", " <<  GAP_BETWEEN_FRONT_CARDS_ << ", " <<  GAP_BETWEEN_BACK_CARDS_ << "))" << std::endl;
+
     m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, player_x_pos,  PLAYERS_Y_POS, card_x_pos, CARD_Y_POS, CARDS_SCLAE, GAP_BETWEEN_FRONT_CARDS_, GAP_BETWEEN_BACK_CARDS_));
     ++m_num_of_players;
+
+    if(dbg[PLAYERS_CONTAINER])[[unlikely]]
+        std::cout << __func__ << "(): ++m_num_of_players: " <<  m_num_of_players << std::endl;
 }
 
 void PlayersContainer::find_empty_place(int& a_i, std::string& a_name)

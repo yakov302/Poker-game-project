@@ -67,6 +67,7 @@ private:
 
     void clear_text();
     void clear_screen();
+    void no_more_table();
     void wake_up_server();
     void moves_to_another_table();
     void clear_action(char* a_buffer);

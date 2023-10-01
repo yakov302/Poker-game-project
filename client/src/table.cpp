@@ -14,7 +14,7 @@ extern std::string exchange;
 
 bool all_in_flag = false;
 int all_in_max_bet_amount = 0;
-int play_or_view = NOT_SELECTED_YET;
+int play_or_view = VIEW;
 
 std::string request_sent = "Request sent";
 std::string register_flag = "register";

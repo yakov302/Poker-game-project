@@ -14,7 +14,6 @@
 
 #define PLAY 1
 #define VIEW 2
-#define NOT_SELECTED_YET 0
 
 #define MAX_TEXTS_SIZE 27
 #define TABLE_TEXT_SIZE 30

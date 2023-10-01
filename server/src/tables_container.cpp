@@ -164,6 +164,14 @@ void TablesContainer::change_table(int a_client_socket)
     int low_table_id_number = low_table_id();
     int current_table_id = m_viewer_socket_to_table_id[a_client_socket];
 
+    if(m_tables.size() < 2)
+    {
+        if(dbg[TABLES_CONTAINER])[[unlikely]]
+            std::cout <<__func__ << "(): There are no more tables" << std::endl;  
+        
+        m_tables[current_table_id].get()->m_action_out.no_more_tables(a_client_socket);
+    }
+
     if(dbg[TABLES_CONTAINER])[[unlikely]]
         std::cout <<__func__ << "(): " << current_table_id << " is the current table id" << std::endl;                
 
@@ -412,7 +420,7 @@ void TablesContainer::check_if_table_need_to_delete(int table_id)
 
             if(!dst_table.second.get()->is_table_empty())
             {
-                move_all_viewers_to_another_table(dst_table.second, m_tables[table_id], dst_table.first);
+                move_all_viewers_to_another_table(dst_table.second, m_tables[table_id], dst_table.first, table_id);
                 break;
             }
         }
@@ -465,7 +473,7 @@ void TablesContainer::find_match_for_singles()
     bool match = false;
     for(auto srs_table : m_tables)
     {
-        if(srs_table.second.get()->m_players.num_of_players() > 1)
+        if(srs_table.second.get()->m_players.num_of_players() != 1)
         {
             if(dbg[TABLES_CONTAINER])[[unlikely]]
                 std::cout << __func__ << "(): in table " << srs_table.first << " no single player continue to next table" << std::endl;
@@ -533,10 +541,18 @@ void TablesContainer::send_to_client_all_table_objects(tablePointer& a_table, in
     a_table.get()->m_table.send_new_player_existing_chips_and_cards(a_client_socket);
 }
 
-void TablesContainer::move_all_viewers_to_another_table(tablePointer& dst_table, tablePointer& srs_table, int dst_table_id)
+void TablesContainer::move_all_viewers_to_another_table(tablePointer& dst_table, tablePointer& srs_table, int dst_table_id, int srs_table_id)
 {
     for(auto viewer : m_viewer_socket_to_table_id)
     {
+        if(m_viewer_socket_to_table_id[viewer.first] != srs_table_id)
+        {
+            if(dbg[TABLES_CONTAINER])[[unlikely]]
+                std::cout << __func__ << "(): m_viewer_socket_to_table_id[" << viewer.first << "] (" <<  m_viewer_socket_to_table_id[viewer.first] << ") != " << "srs_table_id (" << srs_table_id << ") -> continue" << std::endl;
+
+            continue;
+        }
+
         if(dbg[TABLES_CONTAINER])[[unlikely]]
             std::cout << __func__ << "(): move viewer from table " << m_viewer_socket_to_table_id[viewer.first] << " to table " << dst_table_id << std::endl;
         

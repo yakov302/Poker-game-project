@@ -377,6 +377,11 @@ void ActionOut::clear_screen(int a_client_socket)
     just_message_to_client(CLEAR_SCREEN, a_client_socket);
 }
 
+void  ActionOut::no_more_tables(int a_client_socket)
+{
+    just_message_to_client(NO_MORE_TABLES, a_client_socket);
+}
+
 void ActionOut::moves_to_another_table(int a_client_socket)
 {
     just_message_to_client(MOVES_TO_ANOTHER_TABLE, a_client_socket);

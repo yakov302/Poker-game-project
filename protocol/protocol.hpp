@@ -74,6 +74,7 @@ typedef enum Message_type
     CLEAR_TEXT                      ,
     RESULT                          ,
     MOVES_TO_ANOTHER_TABLE          ,
+    NO_MORE_TABLES                   ,
 
     //client to server
 

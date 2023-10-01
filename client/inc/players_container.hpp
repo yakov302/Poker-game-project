@@ -2,6 +2,7 @@
 
 #include<vector>
 
+#include"cli_cmd.hpp"
 #include"player.hpp"
 #include"self.hpp"
 
