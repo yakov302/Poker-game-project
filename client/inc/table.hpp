@@ -64,7 +64,7 @@ public:
 
     void turn_on_flag(std::string& a_flag);
     void turn_off_flag(std::string& a_flag);
-    void set_text(std::string& a_text, int x_pos, int y_pos);
+    void set_text(std::string& a_text, int index, int x_pos, int y_pos);
 
 private:
 
@@ -117,8 +117,8 @@ private:
     sf::Event m_event;
     sf::RenderWindow m_window;
 
-    textPointer m_text;
     std::thread* m_thread;
+    std::vector<textPointer> m_text;
     std::unordered_map<std::string, bool> m_flags;
     std::unordered_map<std::string, buttonPointer> m_buttons;
     std::unordered_map<std::string, textBoxPointer> m_text_boxs;

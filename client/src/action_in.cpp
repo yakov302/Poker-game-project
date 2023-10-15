@@ -305,7 +305,7 @@ void ActionIn::registration_success()
 {
     sound.play_positive();
     std::string txt = "Registration was successful";
-    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
     m_table.turn_off_flag(register_flag);
     m_table.turn_on_flag(log_in);
 }
@@ -314,14 +314,14 @@ void ActionIn::registration_duplicare_name()
 {
     sound.play_invalid();
     std::string txt = "That name is already taken";
-    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::registration_wrong_gender()
 {
     sound.play_invalid();
     std::string txt = "Wrong gender";
-    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::log_in_success(char* a_buffer)
@@ -344,21 +344,21 @@ void ActionIn::log_in_wrong_name()
 {
     sound.play_invalid();
     std::string txt = "Wrong name";
-    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::log_in_wrong_password()
 {
     sound.play_invalid();
     std::string txt = "Wrong password";
-    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::user_name_alredy_log()
 {
     sound.play_invalid();
     std::string txt = "User already logged in";
-    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::play_success()
@@ -412,7 +412,7 @@ void ActionIn::invalid_bet_min(char* a_buffer)
 {
     sound.play_invalid(); 
     std::string txt = "Invalid bet \nMin bet: " + std::to_string(impl::get_amount(a_buffer));
-    m_table.set_text(txt, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
 }
 
 void ActionIn::invalid_bet_max(char* a_buffer)
@@ -427,7 +427,7 @@ void ActionIn::invalid_bet_max(char* a_buffer)
 
     sound.play_invalid();
     std::string txt = "Invalid bet \nMax bet: " + std::to_string(amount);
-    m_table.set_text(txt, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
 }
 
 void ActionIn::check(char* a_buffer)
@@ -504,14 +504,14 @@ void ActionIn::table_get_chip(char* a_buffer)
 void ActionIn::table_is_full()
 {
     std::string txt = "                Table is full\nyou are moved to another table";
-    m_table.set_text(txt, impl::play_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::play_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
     sleep(3);
 }
 
 void ActionIn::table_is_empty()
 {
     std::string txt = "Table is empty - waiting for players";
-    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
 }
 
 void ActionIn::table_give_card()
@@ -543,9 +543,18 @@ void ActionIn::ActionIn::clear_action(char* a_buffer)
 
 void ActionIn::round_winer(char* a_buffer)
 {
+    Args arg(MAX_NUM_OF_PAYERS_IN_TABLE + 1, 0);
+    unpack(a_buffer, arg);
+    
     sound.play_positive();
-    std::string txt = impl::get_name(a_buffer) + " won!";
-    m_table.set_text(txt, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
+    int y_pos = GAME_TEXT_Y_POS - 40;
+    int num_of_winners = arg.m_strings.size();
+    
+    for(int i = 0; i < num_of_winners; ++i)
+    {
+        std::string txt = arg.m_strings[i] + " won!";
+        m_table.set_text(txt, i, impl::game_text_x_pos(txt), y_pos += 40);
+    }
 }
 
 void ActionIn::game_winer(char* a_buffer)
@@ -555,12 +564,13 @@ void ActionIn::game_winer(char* a_buffer)
         sound.play_positive();
 
     std::string txt = impl::get_name(a_buffer) + " won the game!";
-    m_table.set_text(txt, impl::win_text_x_pos(txt), WIN_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::win_text_x_pos(txt), WIN_TEXT_Y_POS);
 }
 
 void ActionIn::clear_text()
 {
-    m_table.set_text(empty, 0, 0);
+    for(int i = 0; i < MAX_NUM_OF_PAYERS_IN_TABLE + 1; ++i)
+        m_table.set_text(empty, i, 0, 0);
 }
 
 void ActionIn::clear_screen()
@@ -579,7 +589,7 @@ void ActionIn::print_result(char* a_buffer)
 void ActionIn::moves_to_another_table()
 {
     std::string txt = "This table closes - you are moved to another table";
-    m_table.set_text(txt, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::log_in_text_x_pos(txt), LOG_IN_TEXT_Y_POS);
     sleep(3);
     clear_text();
 }
@@ -587,7 +597,7 @@ void ActionIn::moves_to_another_table()
 void ActionIn::no_more_table()
 {
     std::string txt = "no more tables";
-    m_table.set_text(txt, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
+    m_table.set_text(txt, 1, impl::game_text_x_pos(txt), GAME_TEXT_Y_POS);
     sleep(1);
     clear_text();
 }

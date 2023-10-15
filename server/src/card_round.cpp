@@ -38,7 +38,7 @@ CardRound::CardRound(PlayersContainer& a_players, Table& a_table, ActionOut& a_a
 
 void CardRound::run()
 {
-    std::string name;
+    std::vector<std::string> name;
     m_stop = false;
     deal_cards();
 
@@ -130,7 +130,7 @@ void CardRound::open_card()
     m_bet = false;
 }
 
-bool CardRound::one_player_left(std::string& a_name)
+bool CardRound::one_player_left(std::vector<std::string>& a_names)
 {
     int count = 0;
     auto it = m_players.begin();
@@ -142,12 +142,16 @@ bool CardRound::one_player_left(std::string& a_name)
 
         if(impl::active_player_with_card(m_players, name))
         {
-            a_name = name;
+            a_names.emplace_back(name);
             ++count;
         }
         
         if(count > 1)
+        {
+            for(int i = 0; i < count; ++i)
+                a_names.pop_back();
             return false;
+        }
 
         ++it;
     }
@@ -155,12 +159,12 @@ bool CardRound::one_player_left(std::string& a_name)
     return true; 
 }
 
-void CardRound::stop(std::string& name)
+void CardRound::stop(std::vector<std::string>& names)
 {
-    m_action_out.round_winer(name);
-    usleep(1000000);
+    m_action_out.round_winer(names); 
 
-    pay_to_winner(name);
+    usleep(1000000);
+    pay_to_winner(names);
     table_clear_hand();
     clear_hands();
     reset_players_variables();
@@ -171,15 +175,17 @@ void CardRound::stop(std::string& name)
 
 void CardRound::close_card_round()
 {
-    std::string name;
-    if(!one_player_left(name))
+    std::vector<std::string> winners;
+    winners.reserve(m_players.num_of_players());
+
+    if(!one_player_left(winners))
     {
-        name = chack_winner(m_players, m_table.table_cards());
+        chack_winner(winners, m_players, m_table.table_cards());
         reveal_cards_and_print_result();
         usleep(4000000);
     }
 
-    stop(name);
+    stop(winners);
 }
 
 void CardRound::reveal_cards_and_print_result()
@@ -201,17 +207,48 @@ void CardRound::reveal_cards_and_print_result()
     }
 }
 
-void CardRound::pay_to_winner(std::string& a_winner)
+void CardRound::pay_to_winner(std::vector<std::string>& a_winners)
 {
-   while(!m_table.is_wallet_empty())
-   {
-        usleep(100000);
-        int chip = m_table.give_chip();
-        m_action_out.table_give_chip(chip);
-        m_action_out.get_chips(a_winner, chip);
-        m_players.take_chip(a_winner, chip);
-   } 
-   m_action_out.table_clear_wallet(); //Unnecessary?
+    int player_amount = 0;
+    int player_part = m_table.total_chips_amount()/a_winners.size();
+
+    if(dbg[CARD_ROUND])[[unlikely]]
+        std::cout << __func__ << "(): total chips in table is: " << m_table.total_chips_amount() << " num of winers is: " <<  a_winners.size() << " each winner's share is: " <<  player_part << std::endl;
+    
+    for(auto winner : a_winners)
+    {  
+        if(dbg[CARD_ROUND])[[unlikely]]
+            std::cout << __func__ << "(): start pay to : " << winner << std::endl;   
+        
+        while(player_amount < player_part)
+        {
+            if(dbg[CARD_ROUND])[[unlikely]]
+                std::cout << __func__ << "(): call m_table.give_chips(chips, (" << player_part - player_amount << ")" << std::endl;
+        
+            std::vector<int> chips;
+            if(!m_table.give_chips(chips, (player_part - player_amount)))
+                break;
+
+            for(auto chip : chips)
+            {                
+                usleep(100000);
+                player_amount += chip;
+                m_action_out.table_give_chip(chip);
+                m_action_out.get_chips(winner, chip);
+                m_players.take_chip(winner, chip);
+
+                if(dbg[CARD_ROUND])[[unlikely]]
+                    std::cout << __func__ << "(): winner get: " << chip << " total: " << player_amount << std::endl;
+            }
+        }
+
+        player_amount = 0;
+    }
+
+    if(dbg[CARD_ROUND])[[unlikely]]
+        std::cout << __func__ << "(): call m_action_out.table_clear_wallet() " << std::endl;
+    
+    m_action_out.table_clear_wallet(); //Unnecessary?
 }
 
 void CardRound::table_clear_hand()

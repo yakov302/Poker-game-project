@@ -352,9 +352,17 @@ void ActionOut::clear_action(std::string& a_name)
     name_and_message(a_name, CLEAR_ACTION);
 }
 
-void ActionOut::round_winer(std::string& a_name)
+void ActionOut::round_winer(std::vector<std::string>& a_name)
 {
-    name_and_message(a_name, ROUND_WINER);
+    char buffer[BUFFER_SIZE];
+    int num_of_winners = a_name.size();
+    Args arg(num_of_winners, 0);
+
+    for(auto winner : a_name)
+        arg.m_strings.emplace_back(winner);
+
+    int size = pack(buffer, arg, ROUND_WINER);
+    m_tcp.send_all_clients(buffer, size, m_sockets);
 }
 
 void ActionOut::game_winer(std::string& a_name)

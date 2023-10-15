@@ -58,6 +58,13 @@ static void flags_initialization(std::unordered_map<std::string, bool>& a_flags)
     a_flags["register"] = false;
 }
 
+static void text_initialization(std::vector<textPointer>& a_texts)
+{
+    a_texts.reserve(MAX_NUM_OF_PAYERS_IN_TABLE + 1);
+    for(int i = 0; i <  MAX_NUM_OF_PAYERS_IN_TABLE + 1; ++i)
+        a_texts.emplace_back(new Text(ARIAL_FONT_PATH, "", TEXT_COLOR, TABLE_TEXT_SIZE, 0, 0));
+}
+
 static void* thread_function(void* a_arg)
 {
     Table* table = static_cast<Table*>(a_arg);
@@ -72,7 +79,6 @@ static void* thread_function(void* a_arg)
 
 Table::Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_players, ActionOut& a_action_out)
 : m_window(sf::VideoMode::getDesktopMode(), "My Texas Hold'em")
-, m_text(new Text(ARIAL_FONT_PATH, "", TEXT_COLOR, TABLE_TEXT_SIZE, 0, 0))
 , m_buttons()
 , m_text_boxs()
 , m_self(a_self)
@@ -81,6 +87,7 @@ Table::Table(Hand& a_cards, Wallet& a_chips, Self& a_self, PlayersContainer& a_p
 , m_action_out(a_action_out)
 , m_players(a_players)
 {
+    impl::text_initialization(m_text);
     impl::buttons_initialization(m_buttons);
     impl::texts_box_initialization(m_text_boxs);
     impl::flags_initialization(m_flags);
@@ -135,10 +142,10 @@ void Table::turn_off_flag(std::string& a_flag)
     m_flags[a_flag] = false;
 }
 
-void Table::set_text(std::string& a_text, int x_pos, int y_pos)
+void Table::set_text(std::string& a_text, int index, int x_pos, int y_pos)
 {
-    m_text.get()->set_text(a_text);
-    m_text.get()->set_position(x_pos, y_pos);
+    m_text[index].get()->set_text(a_text);
+    m_text[index].get()->set_position(x_pos, y_pos);
 }
 
 // ----------------------------opening screen section----------------------------
@@ -158,7 +165,8 @@ void Table::run_opening_screen()
 void Table::draw_opening_screen()
 {
     m_buttons["background"].get()->draw(m_window);
-    m_text.get()->draw(m_window);
+    for(auto text : m_text)
+        text.get()->draw(m_window);
 
     if(m_flags["log_in"])
     {
@@ -324,7 +332,7 @@ bool Table::check_log_in_button(bool a_is_on)
             m_action_out.log_in_request(m_text_boxs["name"].get()->give_string(), m_text_boxs["password"].get()->give_string());
             m_text_boxs["name"].get()->clear();
             m_text_boxs["password"].get()->clear();
-            set_text(request_sent, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
+            set_text(request_sent, 1, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
             usleep(100000);
             return true;
         }
@@ -356,7 +364,7 @@ bool Table::check_register_button(bool a_is_on)
             m_text_boxs["name"].get()->clear();
             m_text_boxs["password"].get()->clear();
             m_text_boxs["gender"].get()->clear();
-            set_text(request_sent, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
+            set_text(request_sent, 1, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
             usleep(100000);
             return true;
         }
@@ -369,7 +377,8 @@ bool Table::check_register_button(bool a_is_on)
 void Table::draw_play()
 {
     m_buttons["background"].get()->draw(m_window);
-    m_text.get()->draw(m_window);
+    for(auto text : m_text)
+        text.get()->draw(m_window);
 
     m_players.draw_Players(m_window);
 
@@ -452,7 +461,7 @@ bool Table::check_go_button()
 
         if(m_self.is_flag_on(bet_flag))
         {
-            set_text(empty, 0, 0);
+            set_text(empty, 1, 0, 0);
             m_action_out.finish_bet(m_self.name());
             return true;
         }
@@ -601,7 +610,7 @@ void Table::all_in_handler()
     if(m_self.amount() == 0 || (all_in_max_bet_amount > 0 && bet_remains == 0))
     {
         all_in_flag = false;
-        set_text(empty, 0, 0);
+        set_text(empty, 1, 0, 0);
         all_in_max_bet_amount = 0;
         m_action_out.finish_bet(m_self.name());
         return;
@@ -618,7 +627,8 @@ void Table::all_in_handler()
 void Table::draw_view()
 {
     m_buttons["background"].get()->draw(m_window);
-    m_text.get()->draw(m_window);
+    for(auto text : m_text)
+        text.get()->draw(m_window);
 
     m_players.draw_Players(m_window);
 
@@ -650,7 +660,7 @@ bool Table::check_play_button()
     {
         sound.play_button();
         m_action_out.play_request(m_self.name(), m_self.amount());
-        set_text(request_sent, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
+        set_text(request_sent, 1, impl::log_in_text_x_pos(request_sent), LOG_IN_TEXT_Y_POS);
         usleep(100000);
         return true;
     }

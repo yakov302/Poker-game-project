@@ -11,7 +11,7 @@ namespace poker
 
 using cardPointer = std::shared_ptr<Card>;
 
-std::string chack_winner(PlayersContainer& a_players, std::vector<cardPointer>& a_table_card);
+void chack_winner(std::vector<std::string>& a_winners, PlayersContainer& a_players, std::vector<cardPointer>& a_table_card);
 
 
 }//namespace poker

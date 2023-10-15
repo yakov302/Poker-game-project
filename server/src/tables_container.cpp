@@ -167,9 +167,10 @@ void TablesContainer::change_table(int a_client_socket)
     if(m_tables.size() < 2)
     {
         if(dbg[TABLES_CONTAINER])[[unlikely]]
-            std::cout <<__func__ << "(): There are no more tables" << std::endl;  
+            std::cout <<__func__ << "(): There are no more tables -> return" << std::endl;  
         
         m_tables[current_table_id].get()->m_action_out.no_more_tables(a_client_socket);
+        return;
     }
 
     if(dbg[TABLES_CONTAINER])[[unlikely]]
