@@ -147,7 +147,6 @@ bool full_house(PlayersContainer& a_players, std::string& a_name, std::vector<ca
     return false;
 }
 
-
 bool flush(PlayersContainer& a_players, std::string& a_name, std::vector<cardPointer>& a_cards)
 {
     int count = 1;
@@ -229,7 +228,6 @@ bool three_of_a_kind(PlayersContainer& a_players, std::string& a_name, std::vect
     return false;
 }
 
-
 bool pairs(PlayersContainer& a_players, std::string& a_name, std::vector<cardPointer>& a_cards)
 {
     int count = 1;
@@ -291,72 +289,196 @@ void set_result(PlayersContainer& a_players, std::string& a_name, std::vector<ca
     a_players.set(a_name, result, HIGH_CARD);
 }
 
-// std::string compare_high_card(PlayersContainer& a_players)
-// {
-//     int max = 1;
-//     std::string winner = "";
-//     std::pair<cardPointer, cardPointer> cards;
+void compare_by_second_card(std::vector<std::string>& a_winners, PlayersContainer& a_players, int a_high_card)
+{
+    int max = 1;
+    int low_card;
+    std::vector<std::string> new_winners;
+    std::pair<cardPointer, cardPointer> cards;
 
-//     auto it = a_players.begin();
-//     auto end = a_players.end();
+    for(auto winner : a_winners)
+    {
+        cards = a_players.show_cards(winner);
+       
+        if(cards.first->m_number != a_high_card)
+            low_card = cards.first->m_number;
+        else
+            low_card = cards.second->m_number;
 
-//     while(it != end)
-//     {
-//         std::string name = it->second.get()->m_name;
+        if(low_card > max)
+        {
+            max = low_card; 
+            new_winners.clear();
+            new_winners.emplace_back(winner);
+        }
+        else if(low_card == max)
+            new_winners.emplace_back(winner);
+    }
 
-//         if(impl::active_player_with_card(a_players, name))
-//         {
-//             cards = a_players.show_cards(name);
-//             if(cards.first->m_number > max)
-//             {
-//                 max = cards.first->m_number;
-//                 winner = name;
-//             }
-//             if(cards.second->m_number > max)
-//             {
-//                 max = cards.second->m_number;
-//                 winner = name;
-//             }
-//         }
-//         ++it;
-//     }
+    a_winners = new_winners;
+}
 
-//     return winner;
-// }
+void handle_multiple_high_card(std::vector<std::string>& a_winners, PlayersContainer& a_players)
+{
+    int high_card = 1;
+    a_winners.clear();
+    std::pair<cardPointer, cardPointer> cards;
 
-// bool the_same(PlayersContainer& a_players)
-// {
-//     int prev = 0;
-//     bool first = true;
-//     auto it = a_players.begin();
-//     auto end = a_players.end();
+    for(auto player : a_players)
+    {
+        std::string name = player.second.get()->m_name;
 
-//     while(it != end)
-//     {
-//         std::string name = it->second.get()->m_name;
+        if(impl::active_player_with_card(a_players, name))
+        {
+            cards = a_players.show_cards(name);
+            if(cards.first->m_number > high_card)
+            {
+                high_card = cards.first->m_number;
+                a_winners.clear();
+                a_winners.emplace_back(name);
+            }
+            else if(cards.first->m_number == high_card)
+                a_winners.emplace_back(name);
 
-//         if(impl::active_player_with_card(a_players, name))
-//         {
-//             if(first)
-//             {
-//                prev = a_players.get(name, result);
-//                first = false;
-//             }
-//             else
-//             {
-//                 if(a_players.get(name, result) != prev)
-//                     return false;
-//                 else
-//                     prev = a_players.get(name, result); 
-//             }    
-//         }
-//         ++it;
-//     }
+            if(cards.second->m_number > high_card)
+            {
+                high_card = cards.second->m_number;
+                a_winners.clear();
+                a_winners.emplace_back(name);
+            }
+            else if(cards.second->m_number == high_card)
+                a_winners.emplace_back(name);
+        }
+    }
 
-//     return true;
-// }
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, high_card);
+}
 
-void find_winner(std::vector<std::string>& a_winners, PlayersContainer& a_players)
+int find_pair_value(std::vector<cardPointer>& a_cards)
+{
+    int size = a_cards.size();
+    for(int i = 0; i < size - 1; ++i)
+    {
+        if(a_cards[i].get()->m_number == a_cards[i + 1].get()->m_number)
+            return a_cards[i].get()->m_number;
+    }
+
+    return 0;
+}
+ 
+void compare_pairs(std::vector<std::string>& a_winners, CardsMap& a_cards_map)
+{
+    int max = 1;
+    int pair_val;
+    std::vector<std::string> new_winners;
+
+    for(auto winner : a_winners)
+    {
+        pair_val = find_pair_value(a_cards_map[winner]);
+        if(pair_val > max)
+        {
+            max = pair_val; 
+            new_winners.clear();
+            new_winners.emplace_back(winner);
+        }
+        else if(pair_val == max)
+            new_winners.emplace_back(winner);
+    }
+
+    a_winners = new_winners;
+}
+
+void find_high_card_multiple_one_pair_case(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
+{
+    int max = 1;
+    int pair_val;
+    int card_val;
+    std::vector<std::string> new_winners;
+    std::pair<cardPointer, cardPointer> cards;
+
+    for(auto winner : a_winners)
+    {
+        cards = a_players.show_cards(winner);
+        pair_val = find_pair_value(a_cards_map[winner]);
+        
+        if(cards.first->m_number != pair_val)
+            card_val = cards.first->m_number;
+        else
+            card_val = cards.second->m_number;
+
+        if(card_val > max)
+        {
+            max = card_val; 
+            new_winners.clear();
+            new_winners.emplace_back(winner);
+        }
+        else if(card_val == max)
+            new_winners.emplace_back(winner);
+    }
+
+    a_winners = new_winners;
+}
+
+void handle_multiple_one_pair(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
+{
+    compare_pairs(a_winners, a_cards_map);
+    if(a_winners.size() > 1)
+        find_high_card_multiple_one_pair_case(a_winners, a_players, a_cards_map);
+}
+
+void handle_multiple_winners(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
+{
+    int winners_result = a_players.get(a_winners[0], result);
+
+    switch (winners_result)
+    {
+        case HIGH_CARD:
+            handle_multiple_high_card(a_winners, a_players);
+            break;
+
+        case ONE_PAIR:
+            handle_multiple_one_pair(a_winners, a_players, a_cards_map);
+            break;
+
+        case TWO_PAIR:
+            /* code */
+            break;
+
+        case THREE_OF_A_KING:
+            /* code */
+            break;
+
+        case STRAIGHT:
+            /* code */
+            break;
+
+        case FLUSH:
+            /* code */
+            break;
+
+        case FULL_HOUSE:
+            /* code */
+            break;
+
+        case FOR_OF_A_KING:
+            /* code */
+            break;
+
+        case STRAIGHT_FLUSH:
+            /* code */
+            break;
+
+        case ROYAL_STRAIGHT_FLUSH:
+            /* code */
+            break;    
+
+        default:
+            break;
+    }
+}
+
+void find_winner(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
 {
     int max_result = 1;
 
@@ -379,8 +501,8 @@ void find_winner(std::vector<std::string>& a_winners, PlayersContainer& a_player
         }
     }
 
-    // if(winners.size() > 1)
-    //     return function to implement(a_winners)
+    if(a_winners.size() > 1)
+        handle_multiple_winners(a_winners, a_players, a_cards_map);
 }
 
 
@@ -388,20 +510,21 @@ void find_winner(std::vector<std::string>& a_winners, PlayersContainer& a_player
 
 void chack_winner(std::vector<std::string>& a_winners, PlayersContainer& a_players, std::vector<cardPointer>& a_table_card)
 {
+    CardsMap cards_map;
+
     for(auto player : a_players)
     {
         std::string name = player.second.get()->m_name;
 
         if(impl::active_player_with_card(a_players, name))       
         {
-            std::vector<cardPointer> cards;
-            impl::combine_player_cards_with_table_cards(a_players, name, a_table_card, cards);
-            impl::set_result(a_players, name, cards);
+            impl::combine_player_cards_with_table_cards(a_players, name, a_table_card, cards_map[name]);
+            impl::set_result(a_players, name, cards_map[name]);
         }
        
     }
 
-    impl::find_winner(a_winners, a_players);
+    impl::find_winner(a_winners, a_players, cards_map);
 }
 
 
