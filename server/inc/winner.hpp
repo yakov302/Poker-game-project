@@ -6,6 +6,9 @@
 #include "cli_cmd.hpp"
 #include "players_container.hpp"
 
+#define SMALL false
+#define BIG true
+
 namespace poker
 {
 
