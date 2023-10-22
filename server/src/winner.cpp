@@ -364,11 +364,73 @@ void choose_small_or_big(bool small_or_big, int& a_destination, int a_first, int
 }
 
 void choose_not_equal_to(int& a_destination, int a_first, int a_second, int not_equal_to)
-{        
-    if(a_first != not_equal_to)
-        a_destination = a_first;
-    else
-        a_destination = a_second;
+{  
+    choose_small_or_big(BIG, a_destination, a_first, a_second);
+    if(a_destination == not_equal_to)
+    {
+        choose_small_or_big(SMALL, a_destination, a_first, a_second);
+        if(a_destination == not_equal_to)
+            choose_small_or_big(BIG, a_destination, a_first, a_second);
+    }
+}
+
+bool is_card_exist_in_result(int a_card, std::vector<int>& a_result)
+{
+    for(auto card : a_result)
+    {
+        if(card == a_card)
+            return true;
+    }
+
+     return false;
+}
+
+bool flush_condition(cardPointer& a_first, cardPointer& a_second)
+{
+    return (a_first.get()->m_suit == a_second.get()->m_suit);
+}
+
+bool straight_condition(cardPointer& a_first, cardPointer& a_second)
+{
+    return (a_first.get()->m_number - a_second.get()->m_number == 1);
+}
+
+bool straight_flush_condition(cardPointer& a_first, cardPointer& a_second)
+{
+    return (a_first.get()->m_suit == a_second.get()->m_suit &&
+           (a_first.get()->m_number - a_second.get()->m_number == 1));
+}
+
+//-----find result value:
+
+int find_high_card_of_suit(std::vector<cardPointer>& a_cards, bool suit_condition(cardPointer& a_first, cardPointer& a_second))
+{
+    int count = 1;
+    int high_card;
+    bool find_match = false;
+    int size = a_cards.size();
+    for(int i = size - 1; i > 0; --i)
+    {
+        if(suit_condition(a_cards[i], a_cards[i - 1]))
+        {
+            if(!find_match)
+            {
+                find_match = true;
+                high_card = a_cards[i].get()->m_number;
+            }
+            ++count;
+        }
+        else
+        {
+           find_match = false;
+           count = 1;
+        }
+
+        if(count == 5)
+            return high_card;
+    }
+    
+   return 0;
 }
 
 int find_pair_value(std::vector<cardPointer>& a_cards, int a_index)
@@ -407,16 +469,235 @@ int find_tree_value(std::vector<cardPointer>& a_cards, int a_index)
     return 0;
 }
 
+int find_straight_value(std::vector<cardPointer>& a_cards, int a_index)
+{
+    return find_high_card_of_suit(a_cards, straight_condition);
+}
+
+int find_flush_value(std::vector<cardPointer>& a_cards, int a_index)
+{
+    return find_high_card_of_suit(a_cards, flush_condition);
+}
+
+int find_pair_of_full_house_value(std::vector<cardPointer>& a_cards, int a_index)
+{
+    std::unordered_map<int, int> count_map;
+
+    for(auto card : a_cards)
+        count_map[card.get()->m_number]++;
+
+    for(auto card : count_map)
+    {
+        if(card.second == 2)
+            return card.first;
+    }
+
+    return 0;
+}
+
+int find_four_value(std::vector<cardPointer>& a_cards, int a_index)
+{
+    std::unordered_map<int, int> count_map;
+
+    for(auto card : a_cards)
+        count_map[card.get()->m_number]++;
+
+    for(auto card : count_map)
+    {
+        if(card.second == 4)
+            return card.first;
+    }
+
+    return 0;
+}
+
+int find_straight_flush_value(std::vector<cardPointer>& a_cards, int a_index)
+{
+    return find_high_card_of_suit(a_cards, straight_flush_condition);
+}
+
 void compare_results(const char* func, std::vector<std::string>& a_winners, CardsMap& a_cards_map, std::string results_str, int (*results_value)(std::vector<cardPointer>& cards, int index), int a_index)
 {
     int max = 1;
-    int pair_val;
+    int results_val;
     std::vector<std::string> new_winners;
 
     for(auto winner : a_winners)
     {
-        pair_val = results_value(a_cards_map[winner], a_index);
-        check_if_value_greater_or_equal_to_max(func, pair_val, max, winner, results_str, new_winners);
+        results_val = results_value(a_cards_map[winner], a_index);
+        check_if_value_greater_or_equal_to_max(func, results_val, max, winner, results_str, new_winners);
+    }
+
+    a_winners = new_winners;
+
+    if(dbg[WINNER])[[unlikely]]
+        print_winners(a_winners);
+}
+
+//-----find second carde:
+
+void give_result_cards(std::vector<cardPointer>& a_cards, std::vector<int>& a_straight, bool result_condition(cardPointer& a_first, cardPointer& a_second))
+{
+    int count = 1;
+    int size = a_cards.size();
+    for(int i = size - 1; i > 0; --i)
+    {
+        if(result_condition(a_cards[i], a_cards[i - 1]))
+        {
+            a_straight.emplace_back(a_cards[i].get()->m_number);
+            ++count;
+        }
+        else
+        {
+           a_straight.clear();
+           count = 1;
+        }
+
+        if(count == 5)
+            return;
+    }   
+}
+
+int find_second_card_series_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name, bool series_condition(cardPointer& a_first, cardPointer& a_second))
+{
+    int second_card;
+    std::vector<int> series_cards;
+    std::pair<cardPointer, cardPointer> player_cards;
+
+    player_cards = a_players.show_cards(winner_name);
+    give_result_cards(a_cards_map[winner_name], series_cards, series_condition);
+    bool first = is_card_exist_in_result(player_cards.first.get()->m_number, series_cards);
+    bool second = is_card_exist_in_result(player_cards.second.get()->m_number, series_cards);
+
+    if(!first && second)
+        return player_cards.first.get()->m_number;
+    else if(!second && first)
+        return player_cards.second.get()->m_number;
+    else    
+        choose_small_or_big(BIG, second_card, player_cards.first.get()->m_number, player_cards.second.get()->m_number);
+
+    return second_card;
+}
+
+int find_second_card_simple_single_result_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name, int result_value(std::vector<cardPointer>& a_cards, int a_index))
+{
+    int result_val;
+    int second_card;
+    std::pair<cardPointer, cardPointer> cards;
+
+    cards = a_players.show_cards(winner_name);
+    result_val = result_value(a_cards_map[winner_name], 1);
+    choose_not_equal_to(second_card, cards.first->m_number, cards.second->m_number, result_val);
+    return second_card;
+}
+
+int find_second_card_royal_straight_flush_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name)
+{
+    return find_second_card_series_case(a_players, a_cards_map, winner_name, straight_flush_condition);
+}
+
+int find_second_card_straight_flush_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name)
+{
+    return find_second_card_series_case(a_players, a_cards_map, winner_name, straight_flush_condition);
+}
+
+int find_second_card_four_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name)
+{
+    return find_second_card_simple_single_result_case(a_players, a_cards_map, winner_name, find_four_value);
+}
+
+int find_second_card_full_house_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name)
+{
+    int pair_val;
+    int tree_val;
+    int second_card;
+    std::pair<cardPointer, cardPointer> cards;
+
+    cards = a_players.show_cards(winner_name);
+    tree_val = find_tree_value(a_cards_map[winner_name], 1);
+    pair_val = find_pair_of_full_house_value(a_cards_map[winner_name], 1);
+    
+    choose_small_or_big(BIG, second_card, cards.first->m_number, cards.second->m_number);
+    if((second_card == tree_val) || 
+       (second_card == pair_val))
+    {
+        choose_small_or_big(SMALL, second_card, cards.first->m_number, cards.second->m_number);
+        if((second_card == tree_val) || 
+           (second_card == pair_val))
+        {
+            choose_small_or_big(BIG, second_card, cards.first->m_number, cards.second->m_number);
+        }
+    }
+
+    return second_card;
+}
+
+int find_second_card_flush_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name)
+{
+    return find_second_card_series_case(a_players, a_cards_map, winner_name, flush_condition);
+}
+
+int find_second_card_straight_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name)
+{
+    return find_second_card_series_case(a_players, a_cards_map, winner_name, straight_condition);
+}
+
+int find_second_card_three_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name)
+{
+   return find_second_card_simple_single_result_case(a_players, a_cards_map, winner_name, find_tree_value);
+}
+
+int find_second_card_two_pair_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name)
+{
+    int second_card;
+    int first_pair_val;
+    int second_pair_val;
+    std::pair<cardPointer, cardPointer> cards;
+
+    cards = a_players.show_cards(winner_name);
+    first_pair_val = find_pair_value(a_cards_map[winner_name], 1);
+    second_pair_val = find_pair_value(a_cards_map[winner_name], 2);
+    
+    choose_small_or_big(BIG, second_card, cards.first->m_number, cards.second->m_number);
+    if((second_card == first_pair_val) || 
+       (second_card == second_pair_val))
+    {
+        choose_small_or_big(SMALL, second_card, cards.first->m_number, cards.second->m_number);
+        if((second_card == first_pair_val) || 
+           (second_card == second_pair_val))
+        {
+            choose_small_or_big(BIG, second_card, cards.first->m_number, cards.second->m_number);
+        }
+    }
+
+    return second_card;
+}
+
+int find_second_card_one_pair_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name)
+{
+    return find_second_card_simple_single_result_case(a_players, a_cards_map, winner_name, find_pair_value);
+}
+
+int find_second_card_high_card_case(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name)
+{
+    int second_card;
+    std::pair<cardPointer, cardPointer> cards;
+
+    cards = a_players.show_cards(winner_name);
+    choose_small_or_big(SMALL, second_card, cards.first->m_number, cards.second->m_number);
+    return second_card;
+}
+
+void compare_by_second_card(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map, const char* func_name, int (*find_second_card)(PlayersContainer& a_players, CardsMap& a_cards_map, std::string& winner_name))
+{
+    int max = 1;
+    int second_card;
+    std::vector<std::string> new_winners;
+
+    for(auto winner : a_winners)
+    {
+        second_card = find_second_card(a_players, a_cards_map, winner);
+        check_if_value_greater_or_equal_to_max(func_name, second_card, max, winner, "second card", new_winners);
     }
 
     a_winners = new_winners;
@@ -427,27 +708,7 @@ void compare_results(const char* func, std::vector<std::string>& a_winners, Card
 
 //-----high_card:
 
-void compare_by_second_card(std::vector<std::string>& a_winners, PlayersContainer& a_players, int a_high_card)
-{
-    int max = 1;
-    int low_card;
-    std::vector<std::string> new_winners;
-    std::pair<cardPointer, cardPointer> cards;
-
-    for(auto winner : a_winners)
-    {
-        cards = a_players.show_cards(winner);
-        choose_not_equal_to(low_card, cards.first->m_number, cards.second->m_number, a_high_card);
-        check_if_value_greater_or_equal_to_max(__func__, low_card, max, winner, "low card", new_winners);
-    }
-
-    a_winners = new_winners;
-
-    if(dbg[WINNER])[[unlikely]]
-        print_winners(a_winners);
-}
-
-void handle_multiple_high_card(std::vector<std::string>& a_winners, PlayersContainer& a_players)
+void handle_multiple_high_card(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
 {
     int high_card = 1;
     a_winners.clear();
@@ -469,82 +730,31 @@ void handle_multiple_high_card(std::vector<std::string>& a_winners, PlayersConta
         print_winners(a_winners);
 
     if(a_winners.size() > 1)
-        compare_by_second_card(a_winners, a_players, high_card);
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_high_card_case);
 }
 
 //-----one_pair:
-
-void find_high_card_multiple_one_pair_case(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
-{
-    int max = 1;
-    int pair_val;
-    int card_val;
-    std::vector<std::string> new_winners;
-    std::pair<cardPointer, cardPointer> cards;
-
-    for(auto winner : a_winners)
-    {
-        cards = a_players.show_cards(winner);
-        pair_val = find_pair_value(a_cards_map[winner], 1);
-        choose_not_equal_to(card_val, cards.first->m_number, cards.second->m_number, pair_val);
-        check_if_value_greater_or_equal_to_max(__func__, card_val, max, winner, "card", new_winners);
-    }
-
-    a_winners = new_winners;
-
-    if(dbg[WINNER])[[unlikely]]
-        print_winners(a_winners);
-}
 
 void handle_multiple_one_pair(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
 {
     compare_results(__func__, a_winners, a_cards_map, "pair", find_pair_value, 1);
     if(a_winners.size() > 1)
-        find_high_card_multiple_one_pair_case(a_winners, a_players, a_cards_map);
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_one_pair_case);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_high_card_case);
 }
 
 //-----two_pair:
 
-void find_high_card_multiple_two_pair_case(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
-{
-    int max = 1;
-    int card_val;
-    int first_pair_val;
-    int second_pair_val;
-    std::vector<std::string> new_winners;
-    std::pair<cardPointer, cardPointer> cards;
-
-    for(auto winner : a_winners)
-    {
-        cards = a_players.show_cards(winner);
-        first_pair_val = find_pair_value(a_cards_map[winner], 1);
-        second_pair_val = find_pair_value(a_cards_map[winner], 2);
-        
-        if((cards.first->m_number != first_pair_val) && 
-           (cards.first->m_number != second_pair_val))
-            card_val = cards.first->m_number;
-        else if((cards.second->m_number != first_pair_val) && 
-                (cards.second->m_number != second_pair_val))
-            card_val = cards.second->m_number;
-        else
-            choose_small_or_big(BIG, card_val, cards.first->m_number, cards.second->m_number);
-
-        check_if_value_greater_or_equal_to_max(__func__, card_val, max, winner, "card", new_winners);
-    }
-
-    a_winners = new_winners;
-
-    if(dbg[WINNER])[[unlikely]]
-        print_winners(a_winners);
-}
-
 void handle_multiple_two_pair(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
 {
-    compare_results(__func__,  a_winners, a_cards_map, "pair", find_pair_value, 1);
+    compare_results(__func__,  a_winners, a_cards_map, "high pair", find_pair_value, 1);
     if(a_winners.size() > 1)
         compare_results(__func__,  a_winners, a_cards_map, "low pair", find_pair_value, 2);
     if(a_winners.size() > 1)
-        find_high_card_multiple_two_pair_case(a_winners, a_players, a_cards_map);
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_two_pair_case);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_high_card_case);
 }
 
 //-----three:
@@ -552,8 +762,76 @@ void handle_multiple_two_pair(std::vector<std::string>& a_winners, PlayersContai
 void handle_multiple_three(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
 {
     compare_results(__func__, a_winners, a_cards_map, "three", find_tree_value, 1);
-    // if(a_winners.size() > 1)
-    //     find_high_card_multiple_three_case(a_winners, a_players, a_cards_map); //make jenral with one card
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_three_case);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_high_card_case);
+}
+
+//-----straight:
+
+void handle_multiple_straight(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
+{
+    compare_results(__func__, a_winners, a_cards_map, "high straight", find_straight_value, 1);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_straight_case);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_high_card_case);
+}
+
+//-----flush:
+
+void handle_multiple_flush(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
+{
+    compare_results(__func__, a_winners, a_cards_map, "high flush", find_flush_value, 1);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_flush_case);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_high_card_case);
+}
+
+//-----full_house:
+
+void handle_multiple_full_house(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
+{
+    compare_results(__func__, a_winners, a_cards_map, "full house tree", find_tree_value, 1);
+    if(a_winners.size() > 1)
+        compare_results(__func__, a_winners, a_cards_map, "full house pair", find_pair_of_full_house_value, 1); 
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_full_house_case);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_high_card_case);
+}
+
+//-----four:
+
+void handle_multiple_four(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
+{
+    compare_results(__func__, a_winners, a_cards_map, "four", find_four_value, 1);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_four_case);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_high_card_case);
+}
+
+//-----straight_flush:
+
+void handle_multiple_straight_flush(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
+{
+    compare_results(__func__, a_winners, a_cards_map, "high straight flush", find_straight_flush_value, 1);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_straight_flush_case);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_high_card_case);
+}
+
+//-----royal_straight_flush:
+
+void handle_multiple_royal_straight_flush(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
+{
+    compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_royal_straight_flush_case);
+    if(a_winners.size() > 1)
+        compare_by_second_card(a_winners, a_players, a_cards_map, __func__, find_second_card_high_card_case);
 }
 
 void handle_multiple_winners(std::vector<std::string>& a_winners, PlayersContainer& a_players, CardsMap& a_cards_map)
@@ -563,7 +841,7 @@ void handle_multiple_winners(std::vector<std::string>& a_winners, PlayersContain
     switch (winners_result)
     {
         case HIGH_CARD:
-            handle_multiple_high_card(a_winners, a_players);
+            handle_multiple_high_card(a_winners, a_players,a_cards_map);
             break;
 
         case ONE_PAIR:
@@ -579,27 +857,27 @@ void handle_multiple_winners(std::vector<std::string>& a_winners, PlayersContain
             break;
 
         case STRAIGHT:
-            /* code */
+            handle_multiple_straight(a_winners, a_players, a_cards_map);
             break;
 
         case FLUSH:
-            /* code */
+            handle_multiple_flush(a_winners, a_players, a_cards_map);
             break;
 
         case FULL_HOUSE:
-            /* code */
+            handle_multiple_full_house(a_winners, a_players, a_cards_map);
             break;
 
         case FOR_OF_A_KING:
-            /* code */
+            handle_multiple_four(a_winners, a_players, a_cards_map);
             break;
 
         case STRAIGHT_FLUSH:
-            /* code */
+            handle_multiple_straight_flush(a_winners, a_players, a_cards_map);
             break;
 
         case ROYAL_STRAIGHT_FLUSH:
-            /* code */
+            handle_multiple_royal_straight_flush(a_winners, a_players, a_cards_map);
             break;    
 
         default:
