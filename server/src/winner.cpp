@@ -479,7 +479,7 @@ int find_flush_value(std::vector<cardPointer>& a_cards, int a_index)
     return find_high_card_of_suit(a_cards, flush_condition);
 }
 
-int find_pair_of_full_house_value(std::vector<cardPointer>& a_cards, int a_index)
+int find_result_value_by_map(std::vector<cardPointer>& a_cards, int a_result)
 {
     std::unordered_map<int, int> count_map;
 
@@ -488,27 +488,21 @@ int find_pair_of_full_house_value(std::vector<cardPointer>& a_cards, int a_index
 
     for(auto card : count_map)
     {
-        if(card.second == 2)
+        if(card.second == a_result)
             return card.first;
     }
 
     return 0;
 }
 
+int find_pair_of_full_house_value(std::vector<cardPointer>& a_cards, int a_index)
+{
+    find_result_value_by_map(a_cards, 2);
+}
+
 int find_four_value(std::vector<cardPointer>& a_cards, int a_index)
 {
-    std::unordered_map<int, int> count_map;
-
-    for(auto card : a_cards)
-        count_map[card.get()->m_number]++;
-
-    for(auto card : count_map)
-    {
-        if(card.second == 4)
-            return card.first;
-    }
-
-    return 0;
+    find_result_value_by_map(a_cards, 4);
 }
 
 int find_straight_flush_value(std::vector<cardPointer>& a_cards, int a_index)
