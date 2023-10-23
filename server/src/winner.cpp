@@ -497,12 +497,12 @@ int find_result_value_by_map(std::vector<cardPointer>& a_cards, int a_result)
 
 int find_pair_of_full_house_value(std::vector<cardPointer>& a_cards, int a_index)
 {
-    find_result_value_by_map(a_cards, 2);
+    return find_result_value_by_map(a_cards, 2);
 }
 
 int find_four_value(std::vector<cardPointer>& a_cards, int a_index)
 {
-    find_result_value_by_map(a_cards, 4);
+    return find_result_value_by_map(a_cards, 4);
 }
 
 int find_straight_flush_value(std::vector<cardPointer>& a_cards, int a_index)
