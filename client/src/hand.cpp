@@ -49,13 +49,19 @@ void Hand::push(std::string& a_suit, int a_number)
     impl::set_position(m_cards, m_x, m_y, m_gap_between_cards);
 }
 
+void Hand::set_front_position(int a_x, int a_y)
+{
+    m_x = a_x;
+    m_y = a_y;
+}
+
 void Hand::pop()
 {
     Lock lock(m_mutex);
     if(m_cards.empty())[[unlikely]]
         return; 
     m_cards.pop_back();
-        }
+}
 
 void Hand::draw_front(sf::RenderWindow& a_window)const
 {

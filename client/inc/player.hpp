@@ -32,7 +32,8 @@ public:
 
     void give_card();
     void get_card(std::string& a_suit, int a_number);
-
+    void set_card_position(int a_x, int a_y);
+    
     void set_action(std::string a_action);
     virtual void turn_on_flag(std::string& a_flag);
     virtual void turn_off_flag(std::string& a_flag);

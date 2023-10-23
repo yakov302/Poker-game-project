@@ -46,6 +46,8 @@ void PlayersContainer::get_player(std::string& a_name, std::string& a_gender, in
         m_players[a_name] = playerPointer(new Player(a_name, a_gender, a_amount, SELF_X_POS,  SELF_Y_POS, SELF_X_POS + GAP_BETWEEN_CARDS_AND_PLAYER, SELF_Y_POS + 40, CARDS_SCLAE, GAP_BETWEEN_FRONT_CARDS_, GAP_BETWEEN_BACK_CARDS_));
         ++m_num_of_players;
 
+        m_players[a_name].get()->set_card_position(SELF_X_POS + GAP_BETWEEN_CARDS_AND_PLAYER, SELF_Y_POS);
+
         if(dbg[PLAYERS_CONTAINER])[[unlikely]]
             std::cout << __func__ << "(): ++m_num_of_players: " <<  m_num_of_players << std::endl;
         
